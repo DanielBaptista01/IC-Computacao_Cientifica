@@ -1,0 +1,7 @@
+{
+  "global_unitary_valid": 1.0,
+  "max_abs_difference_reduced_vs_kraus": 0.0,
+  "p": 0.25,
+  "reduced_entropy": 0.28344193552945884,
+  "reduced_purity": 0.9062499999999996
+}
