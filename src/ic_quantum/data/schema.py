@@ -24,6 +24,10 @@ class ExperimentRecord:
     recovery_fidelity: float | None
     reversibility_class: str
     random_seed: int
+    linear_invertible: bool | None = None
+    inverse_cptp: bool | None = None
+    direct_unitary_inverse: bool | None = None
+    superoperator_condition_number: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
