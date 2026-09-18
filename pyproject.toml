@@ -19,7 +19,8 @@ dependencies = [
 dev = ["pytest>=8.0"]
 
 [project.scripts]
-ic-first-experiment = "ic_quantum.experiments.runner:main"\nic-interdepth-experiment = "ic_quantum.experiments.interdepth_runner:main"
+ic-first-experiment = "ic_quantum.experiments.runner:main"
+ic-interdepth-experiment = "ic_quantum.experiments.interdepth_runner:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
