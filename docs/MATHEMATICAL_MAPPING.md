@@ -139,3 +139,39 @@ A_a\neq A_b
 \]
 
 Essa questão deverá ser investigada com dados temporais, parâmetros físicos, respostas a estados de prova e outras observáveis além da identificação nominal do canal.
+
+## Transformação Causal Latente entre profundidades
+
+A hipótese computacional inter-depth é representada por
+
+```math
+rho_{d+1} = G_{d+1} o C_d o G_d (rho_{d-1}).
+```
+
+`dynamics/causal_latent.py` implementa `LatentCausalTransform`. A classe representa a transformação efetiva no intervalo e mantém `agent_id` separado da transformação. Portanto, o código não identifica a transformação observada com sua causa física por definição.
+
+Isso preserva a possibilidade científica de dois Agentes Causais distintos produzirem a mesma dinâmica reduzida.
+
+As representações atualmente suportadas são identidade, transformação unitária e canal CPTP por Kraus. A categoria `custom` existe para extensões futuras e não recebe automaticamente uma classe de reversibilidade.
+
+### Recuperação unitária direta
+
+Quando `C_d(rho) = U_d rho U_d^dagger`, a implementação retorna explicitamente `U_d^-1 = U_d^dagger` e testa numericamente a recuperação do estado anterior. Esse é o controle positivo da hipótese de reversibilidade local.
+
+### Limite de uma porta unitária após geração de mistura
+
+Considere um alvo puro e um canal que produza um estado misto `rho_prime`. Toda unitária aplicada somente ao sistema preserva o espectro de `rho_prime` e, portanto, também preserva sua pureza. Uma unitária pode rotacionar autovetores, mas não transformar um estado genuinamente misto em um estado puro.
+
+Para um alvo puro, a maior fidelidade possível sob qualquer unitária sobre o sistema é:
+
+```math
+max_U F(rho_target, U rho_prime U^dagger) = lambda_max(rho_prime).
+```
+
+Se `lambda_max(rho_prime) < 1`, nenhuma porta unitária isolada sobre o sistema pode realizar recuperação perfeita.
+
+`dynamics/reversibility.py` implementa esse limite em `max_unitary_recovery_fidelity_to_pure_target`.
+
+No experimento mínimo, `G1 = H` prepara `|+>`, e o dephasing com `p = 0.35` produz autovalores `0.825` e `0.175`. Logo, o limite de recuperação por qualquer unitária é `0.825 < 1`.
+
+Essa conclusão é deliberadamente limitada a unitárias no sistema reduzido. Ela não implica impossibilidade de recuperação com acesso ao ambiente, informação lateral, redundância, condicionamento ou correção de erros.

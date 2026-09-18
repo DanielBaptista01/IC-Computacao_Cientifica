@@ -131,3 +131,39 @@ Toda funcionalidade deve seguir:
 Modelos autorais permanecem hipóteses até que sejam formalmente testados e comparados contra baselines.
 
 Consulte `docs/MATHEMATICAL_MAPPING.md` para as definições matemáticas implementadas.
+
+## Experimento inter-depth: Operador Causal Latente
+
+A infraestrutura representa explicitamente uma transformação física não programada entre duas profundidades do circuito:
+
+```text
+|0> -- H -- C_A -- H
+```
+
+A abstração `LatentCausalTransform`, em `dynamics/causal_latent.py`, não assume que `C_A` seja uma porta lógica. Cada instância é classificada por sua representação matemática atual:
+
+- `identity`: controle ideal;
+- `unitary`: perturbação coerente `rho -> U rho U^dagger`;
+- `kraus_cptp`: canal quântico `rho -> sum_i K_i rho K_i^dagger`;
+- `custom`: ponto de extensão para modelos estruturados futuros, sem classificação automática de reversibilidade.
+
+Execute:
+
+```bash
+ic-interdepth-experiment --output-dir results
+```
+
+ou:
+
+```bash
+python -m ic_quantum.experiments.interdepth_runner --output-dir results
+```
+
+O experimento compara `C_A = I`, uma rotação unitária em Z e um canal de dephasing. No caso unitário, `U_A^dagger` é aplicado e a recuperação é testada diretamente. No caso de dephasing, a implementação calcula o limite máximo de fidelidade que qualquer unitária atuando somente no sistema pode atingir para um alvo puro.
+
+Se o estado reduzido tornou-se genuinamente misto, esse limite é o maior autovalor do estado e é estritamente menor que 1. Isso demonstra somente a impossibilidade de recuperação perfeita por uma única unitária em `S`; não exclui recuperação condicionada, acesso ao ambiente, correção de erros ou outros recursos.
+
+Saídas reproduzíveis:
+
+- `results/interdepth_latent_experiment.csv`;
+- `results/interdepth_latent_experiment_metadata.json`.
