@@ -19,3 +19,10 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Run scientific tests
         run: pytest
+      - name: Run inter-depth experiment
+        run: ic-interdepth-experiment --output-dir ci-results
+      - name: Upload inter-depth results
+        uses: actions/upload-artifact@v4
+        with:
+          name: interdepth-latent-results
+          path: ci-results/
