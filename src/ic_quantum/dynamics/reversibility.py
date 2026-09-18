@@ -15,7 +15,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from ic_quantum.core.validation import DEFAULT_ATOL, validate_kraus, validate_unitary
+from ic_quantum.core.validation import (\n    DEFAULT_ATOL,\n    validate_density_matrix,\n    validate_kraus,\n    validate_unitary,\n)
 
 
 @dataclass(frozen=True, slots=True)
@@ -198,3 +198,32 @@ def assess_unitary_reversibility(
         unitary.shape[0],
         atol,
     )
+
+
+def max_unitary_recovery_fidelity_to_pure_target(
+    rho_after: np.ndarray,
+    target_rho: np.ndarray,
+    atol: float = DEFAULT_ATOL,
+) -> float:
+    """Upper bound for recovery of a pure target using only a system unitary.
+
+    For a pure target |psi><psi|, maximizing
+    <psi| U rho_after U^dagger |psi> over all unitaries U yields the largest
+    eigenvalue of rho_after. The reason is spectral: a unitary may rotate the
+    eigenvectors but cannot change the eigenvalues (or purity) of rho_after.
+
+    Therefore, if a channel maps a pure state to a genuinely mixed state,
+    lambda_max(rho_after) < 1 proves that no single unitary acting only on the
+    observed system can perfectly recover that target state.
+    """
+    rho_after = np.asarray(rho_after, dtype=complex)
+    target_rho = np.asarray(target_rho, dtype=complex)
+    validate_density_matrix(rho_after, atol=atol)
+    validate_density_matrix(target_rho, atol=atol)
+
+    target_purity = float(np.real(np.trace(target_rho @ target_rho)))
+    if not np.isclose(target_purity, 1.0, atol=atol, rtol=0.0):
+        raise ValueError("target_rho must be a pure-state density matrix.")
+
+    eigenvalues = np.linalg.eigvalsh(0.5 * (rho_after + rho_after.conjugate().T))
+    return float(np.clip(np.max(np.real(eigenvalues)), 0.0, 1.0))
