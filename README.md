@@ -18,13 +18,15 @@ src/ic_quantum/
 ├── agents/        # abstração do Agente Causal e baselines canônicos
 ├── channels/      # canais unitários e representações de Kraus
 ├── metrics/       # entropia, pureza, fidelidade e coerência l1
-├── dynamics/      # dinâmica fechada, aberta e traço parcial
+├── dynamics/      # dinâmica fechada, aberta, traço parcial e reversibilidade
 ├── experiments/   # experimentos reproduzíveis
 └── data/          # schema dos registros experimentais
 tests/             # testes científicos automatizados
 docs/              # correspondência matemática -> código
 results/           # saídas reproduzíveis do experimento inicial
 ```
+
+A lógica científica executável permanece dentro do pacote `src/ic_quantum`. Notebooks não são usados como fonte primária de verdade nesta etapa; quando forem adicionados, deverão consumir a API do pacote em vez de duplicar o formalismo.
 
 ## Instalação
 
@@ -60,7 +62,20 @@ python -m pip install -e ".[dev]"
 pytest
 ```
 
-Os testes verificam, entre outros pontos: estados densidade válidos, unitariedade, completude de Kraus, preservação da entropia por evolução unitária, reversão por `U^dagger`, redução de coerência por dephasing e equivalência entre uma dilatação global unitária e o canal reduzido de amplitude damping.
+Os testes verificam, entre outros pontos:
+
+- estados densidade válidos;
+- unitariedade;
+- completude de Kraus;
+- preservação da entropia por evolução unitária;
+- reversão por `U^dagger`;
+- redução de coerência por dephasing;
+- equivalência entre uma dilatação global unitária e o canal reduzido de amplitude damping;
+- diferença entre invertibilidade linear do superoperador e existência de inversa CPTP;
+- classificação do caso unitário como reversível diretamente no sistema;
+- não invertibilidade linear dos canais canônicos no limite de ruído máximo.
+
+O workflow `scientific-tests` executa automaticamente a suíte em pushes para `main` e `feat/**`, e em pull requests para `main`.
 
 ## Primeiro experimento
 
@@ -87,8 +102,32 @@ Saídas:
 - `results/first_experiment.csv`
 - `results/global_reduced_validation.json`
 
+O experimento registra entropia de von Neumann, pureza, coerência `l1`, fidelidade ao estado ideal e fidelidade após recuperação unitária quando aplicável.
+
+## Diagnóstico de reversibilidade
+
+A implementação não usa `"não unitário" = "irreversível"` como regra.
+
+O módulo `dynamics/reversibility.py` constrói a representação de Liouville do canal e separa numericamente:
+
+1. **invertibilidade linear do superoperador**;
+2. **existência de inversa CPTP**;
+3. **reversibilidade direta por uma unitária sobre o sistema observado**.
+
+Assim, um canal pode possuir inversa como transformação linear e ainda assim sua inversa não ser um canal físico CPTP. Recuperação condicionada, acesso ao ambiente e mitigação aproximada permanecem explicitamente fora dessa classificação automática e exigem modelos adicionais.
+
+## Reprodutibilidade
+
+Os parâmetros experimentais são configuráveis pela linha de comando. Registros experimentais contêm o identificador do experimento, estado inicial, parâmetros do agente/canal e campo de seed. O primeiro experimento é determinístico; o campo de seed é mantido no schema para padronizar a infraestrutura que será usada quando processos estocásticos forem introduzidos.
+
+Resultados não são inseridos manualmente no código de simulação. Eles são produzidos a partir dos modelos e métricas implementados.
+
 ## Princípio de rigor
 
-Toda funcionalidade deve seguir: definição matemática -> implementação -> teste analítico -> teste numérico -> experimento -> resultado. Modelos autorais permanecem hipóteses até que sejam formalmente testados e comparados contra baselines.
+Toda funcionalidade deve seguir:
+
+`definição matemática -> implementação -> teste analítico -> teste numérico -> experimento -> resultado`
+
+Modelos autorais permanecem hipóteses até que sejam formalmente testados e comparados contra baselines.
 
 Consulte `docs/MATHEMATICAL_MAPPING.md` para as definições matemáticas implementadas.
