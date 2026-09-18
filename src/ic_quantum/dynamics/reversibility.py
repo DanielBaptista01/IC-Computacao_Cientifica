@@ -15,7 +15,12 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from ic_quantum.core.validation import (\n    DEFAULT_ATOL,\n    validate_density_matrix,\n    validate_kraus,\n    validate_unitary,\n)
+from ic_quantum.core.validation import (
+    DEFAULT_ATOL,
+    validate_density_matrix,
+    validate_kraus,
+    validate_unitary,
+)
 
 
 @dataclass(frozen=True, slots=True)
