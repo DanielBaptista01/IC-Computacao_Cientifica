@@ -30,6 +30,7 @@ from ic_quantum.dynamics.reversibility import (
 )
 from ic_quantum.metrics.coherence import l1_coherence
 from ic_quantum.metrics.entropy import von_neumann_entropy
+from ic_quantum.metrics.distance import trace_distance
 from ic_quantum.metrics.fidelity import fidelity
 from ic_quantum.metrics.purity import purity
 
@@ -87,6 +88,7 @@ def build_signature(
             "coherence_l1_after": coherence_after,
             "delta_coherence_l1": coherence_after - coherence_before,
             "fidelity_to_input": fidelity(rho_before, rho_after),
+            "trace_distance_to_input": trace_distance(rho_before, rho_after),
         },
         observables=bloch_observables(rho_after),
         spectrum=[float(v) for v in eigenvalues],
@@ -168,7 +170,6 @@ def generate_exchange_relaxation_samples(
         assessment = _assessment_payload(
             assess_kraus_reversibility(amplitude_damping_kraus(probability))
         )
-        assessment["amplitude_damping_probability"] = probability
         for probe_id, rho in _selected_probes(probe_ids).items():
             after = reduced_exchange_dynamics(rho, coupling=coupling, time=t)
             sample = CausalAgentSampleRecord(
@@ -189,6 +190,7 @@ def generate_exchange_relaxation_samples(
                     "rate_value_rad_s": coupling,
                     "rate_parameter": "coupling",
                     "representation_origin": "joint_unitary_partial_trace",
+                    "effective_amplitude_damping_probability": probability,
                 },
             )
             validate_sample_record(sample, model)

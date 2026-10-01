@@ -49,3 +49,18 @@ class ScaledDatasetConfig:
     def config_hash(self) -> str:
         encoded = json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":")).encode()
         return hashlib.sha256(encoded).hexdigest()
+
+
+def load_scaled_dataset_config(path: str) -> ScaledDatasetConfig:
+    with open(path, "r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+    return ScaledDatasetConfig(
+        dataset_id=payload["dataset_id"],
+        schema_version=payload.get("schema_version", "1.0"),
+        rate_values_rad_s=tuple(float(v) for v in payload["rate_values_rad_s"]),
+        time_min_s=float(payload["time_min_s"]),
+        time_max_s=float(payload["time_max_s"]),
+        time_points=int(payload["time_points"]),
+        probe_ids=tuple(payload["probe_ids"]),
+        identifiability_atol=float(payload.get("identifiability_atol", 1e-10)),
+    )

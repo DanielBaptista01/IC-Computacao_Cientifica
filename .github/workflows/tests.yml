@@ -26,3 +26,10 @@ jobs:
         with:
           name: interdepth-latent-results
           path: ci-results/
+      - name: Generate scaled causal dataset
+        run: ic-scaled-dataset --config experiments/configs/fase2_dataset_001.json --output-dir ci-dataset
+      - name: Upload scaled causal dataset
+        uses: actions/upload-artifact@v4
+        with:
+          name: fase2-dataset-001
+          path: ci-dataset/
