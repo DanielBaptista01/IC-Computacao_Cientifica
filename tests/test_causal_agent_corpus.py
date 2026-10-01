@@ -162,6 +162,9 @@ def test_sample_is_an_instantiation_and_observable_payload_excludes_causal_label
     assert "agent_model_id" not in payload
     assert "sample_id" not in payload
     assert "metadata" not in payload
+    assert "parameter_values" not in payload
+    with_parameters = sample.observable_feature_payload(include_control_parameters=True)
+    assert with_parameters["parameter_values"] == {"delta_omega": 1.0}
 
 
 def test_sample_requires_all_model_parameters():
