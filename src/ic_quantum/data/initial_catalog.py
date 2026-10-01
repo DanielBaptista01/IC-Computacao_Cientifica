@@ -82,7 +82,7 @@ def coherent_detuning_model() -> CausalAgentModelRecord:
             "closed/effectively coherent reduced dynamics",
         ),
         dynamic_regime=DynamicRegime.COHERENT_UNITARY,
-        memory_regime=MemoryRegime.MARKOVIAN,
+        memory_regime=MemoryRegime.NOT_APPLICABLE,
         temporal_description="U(t)=exp[-i H_int t/hbar]",
         unitary_transform=MathematicalField(
             status=FieldStatus.VALUE,

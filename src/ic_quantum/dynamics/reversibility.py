@@ -225,6 +225,8 @@ def max_unitary_recovery_fidelity_to_pure_target(
     target_rho = np.asarray(target_rho, dtype=complex)
     validate_density_matrix(rho_after, atol=atol)
     validate_density_matrix(target_rho, atol=atol)
+    if rho_after.shape != target_rho.shape:
+        raise ValueError("rho_after and target_rho must have the same Hilbert-space dimension.")
 
     target_purity = float(np.real(np.trace(target_rho @ target_rho)))
     if not np.isclose(target_purity, 1.0, atol=atol, rtol=0.0):
