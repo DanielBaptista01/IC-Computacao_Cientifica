@@ -48,6 +48,7 @@ class MemoryRegime(str, Enum):
     MARKOVIAN = "markovian"
     NON_MARKOVIAN = "non_markovian"
     MIXED_OR_CROSSOVER = "mixed_or_crossover"
+    NOT_APPLICABLE = NOT_APPLICABLE
     UNRESOLVED = UNRESOLVED
 
 
