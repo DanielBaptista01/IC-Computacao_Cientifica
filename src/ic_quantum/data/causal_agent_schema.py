@@ -171,14 +171,25 @@ class CausalAgentSampleRecord:
     random_seed: int | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
-    def observable_feature_payload(self) -> dict[str, Any]:
-        """Return features without textual causal labels/IDs to reduce information leakage."""
-        return {
-            "parameter_values": _jsonable(self.parameter_values),
+    def observable_feature_payload(
+        self,
+        *,
+        include_control_parameters: bool = False,
+    ) -> dict[str, Any]:
+        """Return a leakage-resistant feature payload.
+
+        Causal IDs and metadata are always excluded. Simulator/control parameter values
+        are excluded by default because they may trivially encode the generating model.
+        They can be opted in only for a scientifically justified supervised task.
+        """
+        payload = {
             "time": self.time,
             "initial_system_state": self.initial_system_state,
             "signature": _jsonable(asdict(self.signature)),
         }
+        if include_control_parameters:
+            payload["parameter_values"] = _jsonable(self.parameter_values)
+        return payload
 
     def to_dict(self) -> dict[str, Any]:
         return _jsonable(asdict(self))
