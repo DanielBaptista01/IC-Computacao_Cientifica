@@ -53,6 +53,10 @@ class LatentCausalTransform:
     kind: LatentTransformKind
     dimension: int = 2
     agent_id: str | None = None
+    physical_source: str | None = None
+    coupling_mechanism: str | None = None
+    physical_parameters: dict[str, Any] = field(default_factory=dict)
+    provenance: tuple[str, ...] = ()
     parameters: dict[str, Any] = field(default_factory=dict)
     unitary: np.ndarray | None = None
     kraus_operators: tuple[np.ndarray, ...] | None = None
