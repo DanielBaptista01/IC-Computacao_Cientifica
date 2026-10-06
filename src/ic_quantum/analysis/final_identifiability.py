@@ -217,7 +217,18 @@ def analyze_intra_agent_variation(
             }
         )
 
-    conditions = pd.DataFrame(condition_rows)
+    condition_columns = [
+        "agent_model_id",
+        "probe_id",
+        "time_s",
+        "parameter_pair_comparisons",
+        "collision_pair_count",
+        "collision_pair_fraction",
+        "mean_trace_distance",
+        "min_trace_distance",
+        "max_trace_distance",
+    ]
+    conditions = pd.DataFrame(condition_rows, columns=condition_columns)
     summary_rows = []
     for agent, frame in conditions.groupby("agent_model_id"):
         summary_rows.append(
@@ -242,7 +253,17 @@ def analyze_intra_agent_variation(
                 ),
             }
         )
-    summary = pd.DataFrame(summary_rows)
+    summary = pd.DataFrame(
+        summary_rows,
+        columns=[
+            "agent_model_id",
+            "probe_time_conditions",
+            "parameter_pair_comparisons",
+            "collision_pair_fraction",
+            "mean_trace_distance",
+            "mean_condition_min_trace_distance",
+        ],
+    )
 
     temporal_groups: dict[
         tuple[str, str, str], list[CausalAgentSampleRecord]
@@ -274,14 +295,33 @@ def analyze_intra_agent_variation(
                     "max_adjacent_trace_distance": float(np.max(distances)),
                 }
             )
-    adjacent = pd.DataFrame(adjacent_rows)
-    adjacent_summary = (
-        adjacent.groupby("agent_model_id", as_index=False)
-        .agg(
-            mean_adjacent_trace_distance=("mean_adjacent_trace_distance", "mean"),
-            max_adjacent_trace_distance=("max_adjacent_trace_distance", "max"),
-        )
+    adjacent = pd.DataFrame(
+        adjacent_rows,
+        columns=[
+            "agent_model_id",
+            "probe_id",
+            "parameter_point_id",
+            "adjacent_time_comparisons",
+            "mean_adjacent_trace_distance",
+            "max_adjacent_trace_distance",
+        ],
     )
+    if adjacent.empty:
+        adjacent_summary = pd.DataFrame(
+            columns=[
+                "agent_model_id",
+                "mean_adjacent_trace_distance",
+                "max_adjacent_trace_distance",
+            ]
+        )
+    else:
+        adjacent_summary = (
+            adjacent.groupby("agent_model_id", as_index=False)
+            .agg(
+                mean_adjacent_trace_distance=("mean_adjacent_trace_distance", "mean"),
+                max_adjacent_trace_distance=("max_adjacent_trace_distance", "max"),
+            )
+        )
 
     return {
         "intra_condition": conditions,
