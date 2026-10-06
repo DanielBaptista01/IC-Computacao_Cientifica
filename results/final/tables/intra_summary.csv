@@ -1,0 +1,5 @@
+agent_model_id,probe_time_conditions,parameter_pair_comparisons,collision_pair_fraction,mean_trace_distance,mean_condition_min_trace_distance
+coherent-longitudinal-detuning,1134,11340,0.16084656084656085,0.4757042266145979,0.1677156970894548
+finite-mode-spin-boson-dephasing,1134,136080,0.45749559082892416,0.01626293415715137,4.3402126411864175e-06
+finite-two-level-exchange-relaxation,1134,11340,0.10564373897707231,0.41010437569660185,0.09597333221615306
+markovian-photon-reservoir-decay,1134,11340,0.08289241622574955,0.23520328384761413,0.04607030085075546

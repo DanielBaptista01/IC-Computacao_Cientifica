@@ -1,0 +1,10 @@
+agent_model_id,reversibility_class,condition_count,fraction_within_agent
+coherent-longitudinal-detuning,class_I_direct_unitary_reversible,405,1.0
+finite-mode-spin-boson-dephasing,class_II_analytically_invertible_numerically_effectively_singular_without_CPTP_inverse,682,0.5262345679012346
+finite-mode-spin-boson-dephasing,class_II_linearly_invertible_without_CPTP_inverse,590,0.45524691358024694
+finite-mode-spin-boson-dephasing,class_I_direct_unitary_reversible,24,0.018518518518518517
+finite-two-level-exchange-relaxation,class_II_linearly_invertible_without_CPTP_inverse,380,0.9382716049382716
+finite-two-level-exchange-relaxation,class_II_reduced_nonunitary_noninvertible,10,0.024691358024691357
+finite-two-level-exchange-relaxation,class_I_direct_unitary_reversible,15,0.037037037037037035
+markovian-photon-reservoir-decay,class_II_linearly_invertible_without_CPTP_inverse,400,0.9876543209876543
+markovian-photon-reservoir-decay,class_I_direct_unitary_reversible,5,0.012345679012345678

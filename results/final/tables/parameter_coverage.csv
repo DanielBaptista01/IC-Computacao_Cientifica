@@ -1,0 +1,5 @@
+agent_model_id,parameter_point_count
+coherent-longitudinal-detuning,5
+finite-mode-spin-boson-dephasing,16
+finite-two-level-exchange-relaxation,5
+markovian-photon-reservoir-decay,5

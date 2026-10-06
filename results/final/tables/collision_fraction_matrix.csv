@@ -1,0 +1,5 @@
+,coherent-longitudinal-detuning,finite-mode-spin-boson-dephasing,finite-two-level-exchange-relaxation,markovian-photon-reservoir-decay
+coherent-longitudinal-detuning,0.0,0.1746031746031746,0.12874779541446207,0.08289241622574955
+finite-mode-spin-boson-dephasing,0.1746031746031746,0.0,0.10758377425044091,0.08289241622574955
+finite-two-level-exchange-relaxation,0.12874779541446207,0.10758377425044091,0.0,0.08289241622574955
+markovian-photon-reservoir-decay,0.08289241622574955,0.08289241622574955,0.08289241622574955,0.0

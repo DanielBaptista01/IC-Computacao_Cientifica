@@ -1,0 +1,5 @@
+agent_model_id,mean_adjacent_trace_distance,max_adjacent_trace_distance
+coherent-longitudinal-detuning,0.047207431666983234,0.11753739745784011
+finite-mode-spin-boson-dephasing,0.007640208919099876,0.18496031371061877
+finite-two-level-exchange-relaxation,0.05437032444727337,0.23272572970759164
+markovian-photon-reservoir-decay,0.006547142723756345,0.1453640008467666

@@ -1,0 +1,1156 @@
+{
+  "coherent-longitudinal-detuning": {
+    "agent_hamiltonian": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "agent_id": "coherent-longitudinal-detuning",
+    "assumptions": [
+      "time-independent perturbation over the interaction window",
+      "closed/effectively coherent reduced dynamics"
+    ],
+    "choi_matrix": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "coupling_mechanism": "effective longitudinal sigma_z Hamiltonian",
+    "derivation_method": "unitary evolution from a constant Hamiltonian",
+    "dynamic_regime": "coherent_unitary",
+    "effective_dynamics": {
+      "expression": "E_t(rho)=U(t) rho U(t)^dagger",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "Controlled coherent baseline interpreted as a longitudinal frequency offset.",
+          "publication": null,
+          "year": null
+        }
+      ],
+      "status": "value"
+    },
+    "information_metrics": [
+      "von_neumann_entropy",
+      "purity",
+      "l1_coherence",
+      "fidelity",
+      "bloch_vector"
+    ],
+    "initial_agent_state": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "interaction_hamiltonian": {
+      "expression": "H_int = (hbar * delta_omega / 2) sigma_z",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "Controlled coherent baseline interpreted as a longitudinal frequency offset.",
+          "publication": null,
+          "year": null
+        }
+      ],
+      "status": "value"
+    },
+    "kraus_operators": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "master_equation": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "maturity_level": "LEVEL_3",
+    "memory_regime": "not_applicable",
+    "notes": [
+      "Positive-control baseline for reversibility."
+    ],
+    "observables": [
+      "X",
+      "Y",
+      "Z"
+    ],
+    "parameters": [
+      {
+        "description": "Angular-frequency detuning.",
+        "name": "delta_omega",
+        "physical_range": "real; bounded by the chosen experiment",
+        "provenance": [
+          {
+            "assumptions": [],
+            "authors": [],
+            "ic_interpretation": null,
+            "kind": "AUTHOR_DERIVED",
+            "locator": null,
+            "note": "Controlled coherent baseline interpreted as a longitudinal frequency offset.",
+            "publication": null,
+            "year": null
+          }
+        ],
+        "symbol": "delta_omega",
+        "unit": "rad s^-1"
+      },
+      {
+        "description": "Duration of the perturbation.",
+        "name": "interaction_time",
+        "physical_range": "t >= 0",
+        "provenance": [
+          {
+            "assumptions": [],
+            "authors": [],
+            "ic_interpretation": null,
+            "kind": "AUTHOR_DERIVED",
+            "locator": null,
+            "note": "Controlled coherent baseline interpreted as a longitudinal frequency offset.",
+            "publication": null,
+            "year": null
+          }
+        ],
+        "symbol": "t",
+        "unit": "s"
+      }
+    ],
+    "physical_category": "coherent_control_or_frequency_offset",
+    "physical_description": "A systematic longitudinal frequency offset acting on a single qubit during a finite interaction window.",
+    "provisional_name": "Coherent longitudinal detuning",
+    "references": [
+      {
+        "assumptions": [],
+        "authors": [],
+        "ic_interpretation": null,
+        "kind": "AUTHOR_DERIVED",
+        "locator": null,
+        "note": "Controlled coherent baseline interpreted as a longitudinal frequency offset.",
+        "publication": null,
+        "year": null
+      }
+    ],
+    "relevant_degrees_of_freedom": [
+      "qubit",
+      "frequency offset"
+    ],
+    "reversibility_class": "direct_unitary_inverse",
+    "superoperator": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "system_hamiltonian": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "target_system": "single qubit",
+    "temporal_description": "U(t)=exp[-i H_int t/hbar]",
+    "unitary_transform": {
+      "expression": "U(t)=exp[-i H_int t/hbar]",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "Controlled coherent baseline interpreted as a longitudinal frequency offset.",
+          "publication": null,
+          "year": null
+        }
+      ],
+      "status": "value"
+    },
+    "validation_method": [
+      "verify H=H^dagger",
+      "verify U^dagger U=I",
+      "recover probe states with U^dagger"
+    ],
+    "validity_domain": [
+      "single-qubit coherent regime"
+    ]
+  },
+  "finite-mode-spin-boson-dephasing": {
+    "agent_hamiltonian": {
+      "expression": "H_A = sum_k hbar*Omega_k b_k^dagger b_k",
+      "provenance": [
+        {
+          "assumptions": [
+            "initial system-bath product state",
+            "thermal bosonic bath",
+            "natural units hbar = k_B = 1 in the implemented parameterization",
+            "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+          ],
+          "authors": [
+            "Gabriel T. Landi"
+          ],
+          "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+          "note": null,
+          "publication": "Quantum Information and Quantum Noise",
+          "year": 2019
+        }
+      ],
+      "status": "value"
+    },
+    "agent_id": "finite-mode-spin-boson-dephasing",
+    "assumptions": [
+      "initial product state",
+      "thermal finite bosonic bath",
+      "longitudinal coupling commuting with H_S",
+      "natural units hbar=k_B=1 for the finite-mode parameter formulas"
+    ],
+    "choi_matrix": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "coupling_mechanism": "longitudinal sigma_z displacement of bosonic modes",
+    "derivation_method": "exact finite-mode spin-boson coherence exponent followed by its equivalent one-qubit dephasing Kraus representation",
+    "dynamic_regime": "incoherent_cptp",
+    "effective_dynamics": {
+      "expression": "rho_00(t)=rho_00(0), rho_11(t)=rho_11(0), rho_01(t)=exp[-Lambda(t)] rho_01(0)",
+      "provenance": [
+        {
+          "assumptions": [
+            "initial system-bath product state",
+            "thermal bosonic bath",
+            "natural units hbar = k_B = 1 in the implemented parameterization",
+            "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+          ],
+          "authors": [
+            "Gabriel T. Landi"
+          ],
+          "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+          "note": null,
+          "publication": "Quantum Information and Quantum Noise",
+          "year": 2019
+        }
+      ],
+      "status": "value"
+    },
+    "information_metrics": [
+      "von_neumann_entropy",
+      "purity",
+      "l1_coherence",
+      "fidelity",
+      "trace_distance",
+      "bloch_vector",
+      "coherence_factor",
+      "choi_rank"
+    ],
+    "initial_agent_state": {
+      "expression": "rho_A(0) = exp(-H_A/T) / Z_A",
+      "provenance": [
+        {
+          "assumptions": [
+            "initial system-bath product state",
+            "thermal bosonic bath",
+            "natural units hbar = k_B = 1 in the implemented parameterization",
+            "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+          ],
+          "authors": [
+            "Gabriel T. Landi"
+          ],
+          "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+          "note": null,
+          "publication": "Quantum Information and Quantum Noise",
+          "year": 2019
+        }
+      ],
+      "status": "value"
+    },
+    "interaction_hamiltonian": {
+      "expression": "H_int = sum_k hbar*lambda_k sigma_z (b_k + b_k^dagger)",
+      "provenance": [
+        {
+          "assumptions": [
+            "initial system-bath product state",
+            "thermal bosonic bath",
+            "natural units hbar = k_B = 1 in the implemented parameterization",
+            "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+          ],
+          "authors": [
+            "Gabriel T. Landi"
+          ],
+          "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+          "note": null,
+          "publication": "Quantum Information and Quantum Noise",
+          "year": 2019
+        }
+      ],
+      "status": "value"
+    },
+    "kraus_operators": {
+      "expression": "K0=sqrt((1+q(t))/2) I; K1=sqrt((1-q(t))/2) sigma_z; q(t)=exp[-Lambda(t)]",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "The Kraus pair with q(t)=exp[-Lambda(t)] is used as an equivalent one-qubit representation of the exact coherence attenuation in the cited model.",
+          "publication": null,
+          "year": null
+        },
+        {
+          "assumptions": [
+            "initial system-bath product state",
+            "thermal bosonic bath",
+            "natural units hbar = k_B = 1 in the implemented parameterization",
+            "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+          ],
+          "authors": [
+            "Gabriel T. Landi"
+          ],
+          "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+          "note": null,
+          "publication": "Quantum Information and Quantum Noise",
+          "year": 2019
+        }
+      ],
+      "status": "value"
+    },
+    "master_equation": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "maturity_level": "LEVEL_3",
+    "memory_regime": "mixed_or_crossover",
+    "notes": [
+      "Finite-mode revivals are treated as model-specific memory evidence, not as a universal statement about every dephasing source."
+    ],
+    "observables": [
+      "X",
+      "Y",
+      "Z"
+    ],
+    "parameters": [
+      {
+        "description": "Number of explicitly retained bosonic bath modes.",
+        "name": "mode_count",
+        "physical_range": "positive integer; final dataset uses a documented finite grid",
+        "provenance": [
+          {
+            "assumptions": [
+              "initial system-bath product state",
+              "thermal bosonic bath",
+              "natural units hbar = k_B = 1 in the implemented parameterization",
+              "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+            ],
+            "authors": [
+              "Gabriel T. Landi"
+            ],
+            "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+            "kind": "LITERATURE_DERIVED",
+            "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+            "note": null,
+            "publication": "Quantum Information and Quantum Noise",
+            "year": 2019
+          }
+        ],
+        "symbol": "N",
+        "unit": "1"
+      },
+      {
+        "description": "Upper angular-frequency cutoff of the finite mode grid.",
+        "name": "cutoff_angular_frequency",
+        "physical_range": "Omega_c > 0",
+        "provenance": [
+          {
+            "assumptions": [
+              "initial system-bath product state",
+              "thermal bosonic bath",
+              "natural units hbar = k_B = 1 in the implemented parameterization",
+              "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+            ],
+            "authors": [
+              "Gabriel T. Landi"
+            ],
+            "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+            "kind": "LITERATURE_DERIVED",
+            "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+            "note": null,
+            "publication": "Quantum Information and Quantum Noise",
+            "year": 2019
+          }
+        ],
+        "symbol": "Omega_c",
+        "unit": "rad s^-1"
+      },
+      {
+        "description": "Thermal energy expressed as an angular-frequency scale.",
+        "name": "temperature_angular_frequency",
+        "physical_range": "T >= 0 in natural units k_B=hbar=1",
+        "provenance": [
+          {
+            "assumptions": [
+              "initial system-bath product state",
+              "thermal bosonic bath",
+              "natural units hbar = k_B = 1 in the implemented parameterization",
+              "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+            ],
+            "authors": [
+              "Gabriel T. Landi"
+            ],
+            "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+            "kind": "LITERATURE_DERIVED",
+            "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+            "note": null,
+            "publication": "Quantum Information and Quantum Noise",
+            "year": 2019
+          }
+        ],
+        "symbol": "T",
+        "unit": "rad s^-1"
+      },
+      {
+        "description": "System-bath interaction time.",
+        "name": "interaction_time",
+        "physical_range": "t >= 0",
+        "provenance": [
+          {
+            "assumptions": [
+              "initial system-bath product state",
+              "thermal bosonic bath",
+              "natural units hbar = k_B = 1 in the implemented parameterization",
+              "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+            ],
+            "authors": [
+              "Gabriel T. Landi"
+            ],
+            "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+            "kind": "LITERATURE_DERIVED",
+            "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+            "note": null,
+            "publication": "Quantum Information and Quantum Noise",
+            "year": 2019
+          }
+        ],
+        "symbol": "t",
+        "unit": "s"
+      }
+    ],
+    "physical_category": "bosonic_bath_longitudinal_dephasing",
+    "physical_description": "A qubit couples longitudinally through sigma_z to a finite thermal set of bosonic modes. The interaction changes coherences without changing computational-basis populations and may exhibit finite-bath revivals.",
+    "provisional_name": "Finite-mode longitudinal spin-boson dephasing",
+    "references": [
+      {
+        "assumptions": [
+          "initial system-bath product state",
+          "thermal bosonic bath",
+          "natural units hbar = k_B = 1 in the implemented parameterization",
+          "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+        ],
+        "authors": [
+          "Gabriel T. Landi"
+        ],
+        "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+        "kind": "LITERATURE_DERIVED",
+        "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+        "note": null,
+        "publication": "Quantum Information and Quantum Noise",
+        "year": 2019
+      },
+      {
+        "assumptions": [],
+        "authors": [],
+        "ic_interpretation": null,
+        "kind": "AUTHOR_DERIVED",
+        "locator": null,
+        "note": "The Kraus pair with q(t)=exp[-Lambda(t)] is used as an equivalent one-qubit representation of the exact coherence attenuation in the cited model.",
+        "publication": null,
+        "year": null
+      }
+    ],
+    "relevant_degrees_of_freedom": [
+      "system spin/qubit",
+      "finite bosonic bath modes"
+    ],
+    "reversibility_class": "parameter_and_time_dependent_reduced_dephasing",
+    "superoperator": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "system_hamiltonian": {
+      "expression": "H_S = (hbar*omega/2) sigma_z",
+      "provenance": [
+        {
+          "assumptions": [
+            "initial system-bath product state",
+            "thermal bosonic bath",
+            "natural units hbar = k_B = 1 in the implemented parameterization",
+            "finite-mode discretization Omega_k=k*Omega_c/N and lambda_k=sqrt(Omega_k/N)"
+          ],
+          "authors": [
+            "Gabriel T. Landi"
+          ],
+          "ic_interpretation": "Used as an explicit physical dephasing family. Finite mode count is retained so coherence revivals and memory can occur; the effective dephasing channel is treated as an output of the source model, not its causal identity.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 6.8, Eqs. (6.156), (6.160), (6.169)-(6.172), (6.177): longitudinal spin-boson pure dephasing",
+          "note": null,
+          "publication": "Quantum Information and Quantum Noise",
+          "year": 2019
+        }
+      ],
+      "status": "value"
+    },
+    "target_system": "single qubit",
+    "temporal_description": "rho_01(t)=rho_01(0) exp[-Lambda(t)], with exact finite-mode Lambda(t); finite N may produce coherence revivals",
+    "unitary_transform": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "validation_method": [
+      "verify Lambda(0)=0 and identity at t=0",
+      "verify computational-basis populations are invariant",
+      "verify Kraus completeness for every sampled parameter point",
+      "compare Kraus evolution against the analytical matrix-element map",
+      "verify exact finite-mode recurrence for commensurate mode frequencies"
+    ],
+    "validity_domain": [
+      "single qubit",
+      "finite thermal bosonic mode model of Sec. 6.8",
+      "longitudinal pure-dephasing coupling"
+    ]
+  },
+  "finite-two-level-exchange-relaxation": {
+    "agent_hamiltonian": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "agent_id": "finite-two-level-exchange-relaxation",
+    "assumptions": [
+      "initial product state rho_S tensor |0><0|_A",
+      "finite two-level agent",
+      "joint closed evolution during the modeled interval"
+    ],
+    "choi_matrix": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "coupling_mechanism": "single-excitation exchange",
+    "derivation_method": "joint unitary evolution followed by partial trace; reduced Kraus form derived from the finite exchange unitary",
+    "dynamic_regime": "incoherent_cptp",
+    "effective_dynamics": {
+      "expression": "E_t(rho)=Tr_A[U_SA(t)(rho tensor |0><0|)U_SA(t)^dagger]",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "Finite two-level exchange model introduced as a controlled microscopic instantiation; p(t)=sin^2(g t) is derived from its joint unitary.",
+          "publication": null,
+          "year": null
+        },
+        {
+          "assumptions": [
+            "system plus environment treated as a closed system",
+            "initial system-environment product state in the didactic derivation"
+          ],
+          "authors": [
+            "Jonas Maziero"
+          ],
+          "ic_interpretation": "Used for the microscopic-to-reduced modeling principle. The finite two-level exchange model below is an IC controlled instantiation, not claimed to be the article's exact electromagnetic-vacuum model.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. II: joint unitary evolution and partial trace",
+          "note": null,
+          "publication": "A representação de Kraus para a dinâmica de sistemas quânticos abertos",
+          "year": 2016
+        }
+      ],
+      "status": "value"
+    },
+    "information_metrics": [
+      "von_neumann_entropy",
+      "purity",
+      "l1_coherence",
+      "fidelity",
+      "bloch_vector",
+      "choi_rank"
+    ],
+    "initial_agent_state": {
+      "expression": "rho_A(0)=|0><0|",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "Finite two-level exchange model introduced as a controlled microscopic instantiation; p(t)=sin^2(g t) is derived from its joint unitary.",
+          "publication": null,
+          "year": null
+        },
+        {
+          "assumptions": [
+            "system plus environment treated as a closed system",
+            "initial system-environment product state in the didactic derivation"
+          ],
+          "authors": [
+            "Jonas Maziero"
+          ],
+          "ic_interpretation": "Used for the microscopic-to-reduced modeling principle. The finite two-level exchange model below is an IC controlled instantiation, not claimed to be the article's exact electromagnetic-vacuum model.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. II: joint unitary evolution and partial trace",
+          "note": null,
+          "publication": "A representação de Kraus para a dinâmica de sistemas quânticos abertos",
+          "year": 2016
+        }
+      ],
+      "status": "value"
+    },
+    "interaction_hamiltonian": {
+      "expression": "H_int = i*hbar*g(|01><10| - |10><01|)",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "Finite two-level exchange model introduced as a controlled microscopic instantiation; p(t)=sin^2(g t) is derived from its joint unitary.",
+          "publication": null,
+          "year": null
+        }
+      ],
+      "status": "value"
+    },
+    "kraus_operators": {
+      "expression": "K0=diag(1,cos(g t)); K1=[[0,sin(g t)],[0,0]]; p(t)=sin^2(g t)",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "Finite two-level exchange model introduced as a controlled microscopic instantiation; p(t)=sin^2(g t) is derived from its joint unitary.",
+          "publication": null,
+          "year": null
+        }
+      ],
+      "status": "value"
+    },
+    "master_equation": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "maturity_level": "LEVEL_3",
+    "memory_regime": "mixed_or_crossover",
+    "notes": [
+      "Do not relabel this finite controlled model as electromagnetic-vacuum spontaneous emission without a source-specific derivation."
+    ],
+    "observables": [
+      "X",
+      "Y",
+      "Z"
+    ],
+    "parameters": [
+      {
+        "description": "System-agent excitation-exchange coupling rate.",
+        "name": "coupling",
+        "physical_range": "g >= 0 for the canonical parameterization",
+        "provenance": [
+          {
+            "assumptions": [],
+            "authors": [],
+            "ic_interpretation": null,
+            "kind": "AUTHOR_DERIVED",
+            "locator": null,
+            "note": "Finite two-level exchange model introduced as a controlled microscopic instantiation; p(t)=sin^2(g t) is derived from its joint unitary.",
+            "publication": null,
+            "year": null
+          }
+        ],
+        "symbol": "g",
+        "unit": "rad s^-1"
+      },
+      {
+        "description": "Interaction duration.",
+        "name": "interaction_time",
+        "physical_range": "t >= 0",
+        "provenance": [
+          {
+            "assumptions": [],
+            "authors": [],
+            "ic_interpretation": null,
+            "kind": "AUTHOR_DERIVED",
+            "locator": null,
+            "note": "Finite two-level exchange model introduced as a controlled microscopic instantiation; p(t)=sin^2(g t) is derived from its joint unitary.",
+            "publication": null,
+            "year": null
+          }
+        ],
+        "symbol": "t",
+        "unit": "s"
+      }
+    ],
+    "physical_category": "finite_quantum_environment_relaxation",
+    "physical_description": "A two-level external degree of freedom starts in |0> and exchanges one excitation coherently with the system. Discarding it produces reduced relaxation.",
+    "provisional_name": "Finite two-level exchange relaxation agent",
+    "references": [
+      {
+        "assumptions": [],
+        "authors": [],
+        "ic_interpretation": null,
+        "kind": "AUTHOR_DERIVED",
+        "locator": null,
+        "note": "Finite two-level exchange model introduced as a controlled microscopic instantiation; p(t)=sin^2(g t) is derived from its joint unitary.",
+        "publication": null,
+        "year": null
+      },
+      {
+        "assumptions": [
+          "system plus environment treated as a closed system",
+          "initial system-environment product state in the didactic derivation"
+        ],
+        "authors": [
+          "Jonas Maziero"
+        ],
+        "ic_interpretation": "Used for the microscopic-to-reduced modeling principle. The finite two-level exchange model below is an IC controlled instantiation, not claimed to be the article's exact electromagnetic-vacuum model.",
+        "kind": "LITERATURE_DERIVED",
+        "locator": "Sec. II: joint unitary evolution and partial trace",
+        "note": null,
+        "publication": "A representação de Kraus para a dinâmica de sistemas quânticos abertos",
+        "year": 2016
+      }
+    ],
+    "relevant_degrees_of_freedom": [
+      "system qubit",
+      "two-level causal agent"
+    ],
+    "reversibility_class": "reduced_nonunitary_model_dependent_recovery",
+    "superoperator": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "system_hamiltonian": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "target_system": "single qubit",
+    "temporal_description": "U_SA(t)=exp[-i H_int t/hbar], rho_S(t)=Tr_A[U_SA rho_SA U_SA^dagger]",
+    "unitary_transform": {
+      "expression": "U_SA(t)=exp[-i H_int t/hbar]",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "Finite two-level exchange model introduced as a controlled microscopic instantiation; p(t)=sin^2(g t) is derived from its joint unitary.",
+          "publication": null,
+          "year": null
+        },
+        {
+          "assumptions": [
+            "system plus environment treated as a closed system",
+            "initial system-environment product state in the didactic derivation"
+          ],
+          "authors": [
+            "Jonas Maziero"
+          ],
+          "ic_interpretation": "Used for the microscopic-to-reduced modeling principle. The finite two-level exchange model below is an IC controlled instantiation, not claimed to be the article's exact electromagnetic-vacuum model.",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. II: joint unitary evolution and partial trace",
+          "note": null,
+          "publication": "A representação de Kraus para a dinâmica de sistemas quânticos abertos",
+          "year": 2016
+        }
+      ],
+      "status": "value"
+    },
+    "validation_method": [
+      "verify H=H^dagger",
+      "verify U^dagger U=I",
+      "verify Kraus completeness",
+      "compare reduced joint dynamics against amplitude-damping Kraus dynamics for all six standardized probe states"
+    ],
+    "validity_domain": [
+      "finite two-level agent initialized in |0>",
+      "single system qubit"
+    ]
+  },
+  "markovian-photon-reservoir-decay": {
+    "agent_hamiltonian": {
+      "expression": "H_A = sum_k hbar*omega_k a_k^dagger a_k",
+      "provenance": [
+        {
+          "assumptions": [
+            "rotating-wave light-matter interaction for the microscopic interpretation",
+            "Markovian reduced dynamics",
+            "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+            "weak-coupling reservoir approximation for the reduced semigroup"
+          ],
+          "authors": [
+            "Ariel Norambuena",
+            "Diego Tancara",
+            "Raul Coto"
+          ],
+          "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+          "note": null,
+          "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+          "year": 2020
+        }
+      ],
+      "status": "value"
+    },
+    "agent_id": "markovian-photon-reservoir-decay",
+    "assumptions": [
+      "zero-temperature photon occupation Nph=0",
+      "undriven limit Omega=0",
+      "weak-coupling Markovian reservoir reduction",
+      "rotating-wave excitation-exchange interpretation"
+    ],
+    "choi_matrix": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "coupling_mechanism": "rotating-wave excitation exchange with photon modes",
+    "derivation_method": "literature Markovian photon-reservoir master equation specialized to Nph=0 and Omega=0; analytical semigroup mapped to Kraus form",
+    "dynamic_regime": "incoherent_cptp",
+    "effective_dynamics": {
+      "expression": "E_t = amplitude_damping[p(t)=1-exp(-gamma t)]",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "For the zero-temperature undriven Markovian specialization, the excited population e^{-gamma t} is represented by amplitude damping with p(t)=1-e^{-gamma t}.",
+          "publication": null,
+          "year": null
+        },
+        {
+          "assumptions": [
+            "rotating-wave light-matter interaction for the microscopic interpretation",
+            "Markovian reduced dynamics",
+            "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+            "weak-coupling reservoir approximation for the reduced semigroup"
+          ],
+          "authors": [
+            "Ariel Norambuena",
+            "Diego Tancara",
+            "Raul Coto"
+          ],
+          "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+          "note": null,
+          "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+          "year": 2020
+        }
+      ],
+      "status": "value"
+    },
+    "information_metrics": [
+      "von_neumann_entropy",
+      "purity",
+      "l1_coherence",
+      "fidelity",
+      "trace_distance",
+      "bloch_vector",
+      "choi_rank"
+    ],
+    "initial_agent_state": {
+      "expression": "rho_A(0)=|vacuum><vacuum| (N_ph=0 specialization)",
+      "provenance": [
+        {
+          "assumptions": [
+            "rotating-wave light-matter interaction for the microscopic interpretation",
+            "Markovian reduced dynamics",
+            "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+            "weak-coupling reservoir approximation for the reduced semigroup"
+          ],
+          "authors": [
+            "Ariel Norambuena",
+            "Diego Tancara",
+            "Raul Coto"
+          ],
+          "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+          "note": null,
+          "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+          "year": 2020
+        }
+      ],
+      "status": "value"
+    },
+    "interaction_hamiltonian": {
+      "expression": "H_int = hbar sum_k g_k (sigma_+ a_k + sigma_- a_k^dagger)",
+      "provenance": [
+        {
+          "assumptions": [
+            "rotating-wave light-matter interaction for the microscopic interpretation",
+            "Markovian reduced dynamics",
+            "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+            "weak-coupling reservoir approximation for the reduced semigroup"
+          ],
+          "authors": [
+            "Ariel Norambuena",
+            "Diego Tancara",
+            "Raul Coto"
+          ],
+          "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+          "note": null,
+          "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+          "year": 2020
+        }
+      ],
+      "status": "value"
+    },
+    "kraus_operators": {
+      "expression": "K0=diag(1,exp(-gamma t/2)); K1=[[0,sqrt(1-exp(-gamma t))],[0,0]]",
+      "provenance": [
+        {
+          "assumptions": [],
+          "authors": [],
+          "ic_interpretation": null,
+          "kind": "AUTHOR_DERIVED",
+          "locator": null,
+          "note": "For the zero-temperature undriven Markovian specialization, the excited population e^{-gamma t} is represented by amplitude damping with p(t)=1-e^{-gamma t}.",
+          "publication": null,
+          "year": null
+        },
+        {
+          "assumptions": [
+            "rotating-wave light-matter interaction for the microscopic interpretation",
+            "Markovian reduced dynamics",
+            "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+            "weak-coupling reservoir approximation for the reduced semigroup"
+          ],
+          "authors": [
+            "Ariel Norambuena",
+            "Diego Tancara",
+            "Raul Coto"
+          ],
+          "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+          "note": null,
+          "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+          "year": 2020
+        }
+      ],
+      "status": "value"
+    },
+    "master_equation": {
+      "expression": "d rho/dt = gamma [sigma_- rho sigma_+ - 1/2 {sigma_+ sigma_-, rho}]",
+      "provenance": [
+        {
+          "assumptions": [
+            "rotating-wave light-matter interaction for the microscopic interpretation",
+            "Markovian reduced dynamics",
+            "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+            "weak-coupling reservoir approximation for the reduced semigroup"
+          ],
+          "authors": [
+            "Ariel Norambuena",
+            "Diego Tancara",
+            "Raul Coto"
+          ],
+          "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+          "note": null,
+          "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+          "year": 2020
+        }
+      ],
+      "status": "value"
+    },
+    "maturity_level": "LEVEL_3",
+    "memory_regime": "markovian",
+    "notes": [
+      "This family can share the same effective amplitude-damping channel as the finite two-level exchange model at matched p, despite distinct source models."
+    ],
+    "observables": [
+      "X",
+      "Y",
+      "Z"
+    ],
+    "parameters": [
+      {
+        "description": "Effective Markovian radiative decay rate.",
+        "name": "decay_rate",
+        "physical_range": "gamma >= 0",
+        "provenance": [
+          {
+            "assumptions": [
+              "rotating-wave light-matter interaction for the microscopic interpretation",
+              "Markovian reduced dynamics",
+              "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+              "weak-coupling reservoir approximation for the reduced semigroup"
+            ],
+            "authors": [
+              "Ariel Norambuena",
+              "Diego Tancara",
+              "Raul Coto"
+            ],
+            "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+            "kind": "LITERATURE_DERIVED",
+            "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+            "note": null,
+            "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+            "year": 2020
+          }
+        ],
+        "symbol": "gamma",
+        "unit": "s^-1"
+      },
+      {
+        "description": "Elapsed reduced-dynamics time.",
+        "name": "interaction_time",
+        "physical_range": "t >= 0",
+        "provenance": [
+          {
+            "assumptions": [
+              "rotating-wave light-matter interaction for the microscopic interpretation",
+              "Markovian reduced dynamics",
+              "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+              "weak-coupling reservoir approximation for the reduced semigroup"
+            ],
+            "authors": [
+              "Ariel Norambuena",
+              "Diego Tancara",
+              "Raul Coto"
+            ],
+            "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+            "kind": "LITERATURE_DERIVED",
+            "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+            "note": null,
+            "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+            "year": 2020
+          }
+        ],
+        "symbol": "t",
+        "unit": "s"
+      }
+    ],
+    "physical_category": "radiative_markovian_relaxation",
+    "physical_description": "A two-level system exchanges excitations with electromagnetic/photon reservoir modes; after the Markovian weak-coupling reduction at zero temperature the excited population decays exponentially.",
+    "provisional_name": "Markovian radiative decay into a photon reservoir",
+    "references": [
+      {
+        "assumptions": [
+          "rotating-wave light-matter interaction for the microscopic interpretation",
+          "Markovian reduced dynamics",
+          "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+          "weak-coupling reservoir approximation for the reduced semigroup"
+        ],
+        "authors": [
+          "Ariel Norambuena",
+          "Diego Tancara",
+          "Raul Coto"
+        ],
+        "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+        "kind": "LITERATURE_DERIVED",
+        "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+        "note": null,
+        "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+        "year": 2020
+      },
+      {
+        "assumptions": [],
+        "authors": [],
+        "ic_interpretation": null,
+        "kind": "AUTHOR_DERIVED",
+        "locator": null,
+        "note": "For the zero-temperature undriven Markovian specialization, the excited population e^{-gamma t} is represented by amplitude damping with p(t)=1-e^{-gamma t}.",
+        "publication": null,
+        "year": null
+      }
+    ],
+    "relevant_degrees_of_freedom": [
+      "two-level system",
+      "photon reservoir modes"
+    ],
+    "reversibility_class": "parameter_and_time_dependent_reduced_relaxation",
+    "superoperator": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "system_hamiltonian": {
+      "expression": "H_S = hbar*omega_0 sigma_+ sigma_-",
+      "provenance": [
+        {
+          "assumptions": [
+            "rotating-wave light-matter interaction for the microscopic interpretation",
+            "Markovian reduced dynamics",
+            "zero-temperature Nph=0 and undriven Omega=0 specialization in this IC family",
+            "weak-coupling reservoir approximation for the reduced semigroup"
+          ],
+          "authors": [
+            "Ariel Norambuena",
+            "Diego Tancara",
+            "Raul Coto"
+          ],
+          "ic_interpretation": "The IC specializes Eq. (21) to the undriven zero-temperature radiative decay semigroup. The multimode interaction expression is the standard reservoir extension of the Jaynes-Cummings exchange in Eq. (10).",
+          "kind": "LITERATURE_DERIVED",
+          "locator": "Sec. 2, Eq. (10): Jaynes-Cummings light-matter interaction; Sec. 3.2, Eq. (21): Markovian two-level system coupled to a photon reservoir",
+          "note": null,
+          "publication": "Coding closed and open quantum systems in MATLAB: applications in quantum optics and condensed matter",
+          "year": 2020
+        }
+      ],
+      "status": "value"
+    },
+    "target_system": "single qubit/two-level system",
+    "temporal_description": "rho_11(t)=exp(-gamma t) rho_11(0); effective amplitude-damping p(t)=1-exp(-gamma t)",
+    "unitary_transform": {
+      "expression": null,
+      "provenance": [],
+      "status": "unresolved"
+    },
+    "validation_method": [
+      "verify p(0)=0 and identity at zero time/rate",
+      "verify excited population follows exp(-gamma t)",
+      "verify Kraus completeness and CPTP output",
+      "compare against direct analytical population/coherence solution"
+    ],
+    "validity_domain": [
+      "single two-level system",
+      "zero-temperature undriven specialization",
+      "Markovian weak-coupling regime"
+    ]
+  }
+}
