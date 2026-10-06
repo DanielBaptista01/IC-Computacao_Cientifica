@@ -1,0 +1,10 @@
+{
+  "dataset_id": "fase2_dataset_001",
+  "schema_version": "1.0",
+  "rate_values_rad_s": [0.5, 1.0, 2.0],
+  "time_min_s": 0.0,
+  "time_max_s": 6.283185307179586,
+  "time_points": 25,
+  "probe_ids": ["0", "1", "+", "-", "+i", "-i"],
+  "identifiability_atol": 1e-10
+}

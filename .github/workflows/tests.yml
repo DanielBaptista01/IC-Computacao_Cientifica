@@ -1,0 +1,86 @@
+name: scientific-tests
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+      - name: Run scientific tests
+        run: pytest
+      - name: Run inter-depth experiment
+        run: ic-interdepth-experiment --output-dir ci-results
+      - name: Upload inter-depth results
+        uses: actions/upload-artifact@v4
+        with:
+          name: interdepth-latent-results
+          path: ci-results/
+      - name: Generate scaled causal dataset
+        run: ic-scaled-dataset --config experiments/configs/fase2_dataset_001.json --output-dir ci-dataset
+      - name: Upload scaled causal dataset
+        uses: actions/upload-artifact@v4
+        with:
+          name: fase2-dataset-001
+          path: ci-dataset/
+      - name: Generate final IC dataset and evidence
+        run: ic-finalize --config experiments/configs/ic_causal_agents_final_v1.json --output-dir results/final
+      - name: Report final scientific summaries
+        run: |
+          echo "=== PAIRWISE IDENTIFIABILITY ==="
+          cat results/final/tables/pair_summary.csv
+          echo "=== TRIAD ==="
+          cat results/final/tables/agent_noise_entropy_summary.csv
+          echo "=== REVERSIBILITY ==="
+          cat results/final/tables/reversibility_summary.csv
+          echo "=== SAMPLE COUNTS ==="
+          cat results/final/tables/sample_counts.csv
+          echo "=== PARAMETER COVERAGE ==="
+          cat results/final/tables/parameter_coverage.csv
+          echo "=== FINAL FILE SIZES ==="
+          du -ah results/final | sort -h | tail -40
+          echo "=== ENVIRONMENT FREEZE ==="
+          cat results/final/environment/requirements-freeze.txt
+      - name: Persist frozen final package on finalization branch
+        if: github.ref == 'refs/heads/feat/fase2-finalizacao-ic' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config http.postBuffer 524288000
+          git add -f results/final/
+          if git diff --cached --quiet; then
+            echo "No generated final-package changes to persist."
+          else
+            git commit -m "data: freeze final IC dataset and evidence [skip ci]"
+            git push origin HEAD:feat/fase2-finalizacao-ic
+          fi
+      - name: Upload final IC evidence package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ic-causal-agents-final-v1
+          path: results/final/
+          retention-days: 90
+      - name: Publish final tagged release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view ic-2026-final >/dev/null 2>&1; then
+            echo "Release ic-2026-final already exists; leaving it unchanged."
+          else
+            zip -q -r ic-causal-agents-final-v1.zip results/final/
+            gh release create ic-2026-final               ic-causal-agents-final-v1.zip               results/final/FINAL_DATASET_MANIFEST.json               results/final/FINAL_SUMMARY.json               --target "$GITHUB_SHA"               --title "IC 2026 — Dataset e Evidências Finais"               --notes "Versão computacional congelada da IC. Dataset: ic_causal_agents_final_v1. Nenhum ML/QML treinado."
+          fi

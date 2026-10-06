@@ -1,0 +1,25 @@
+{
+  "N_A": 4,
+  "N_S": 35154,
+  "agent_sample_counts": {
+    "coherent-longitudinal-detuning": 5670,
+    "finite-mode-spin-boson-dephasing": 18144,
+    "finite-two-level-exchange-relaxation": 5670,
+    "markovian-photon-reservoir-decay": 5670
+  },
+  "collision_regions": 748,
+  "config_sha256": "76d79a7eb22ff1d8a3873e6eb678eade27c859253a955b2261ee4d18cc1f3186",
+  "dataset_id": "ic_causal_agents_final_v1",
+  "epistemic_guard": "Conditional operational distinguishability only; no universal causal uniqueness.",
+  "git_commit_sha": "62502b7da297adf8c9bc10296ac662543019931f",
+  "machine_learning_trained": false,
+  "pairwise_agent_pairs": 6,
+  "parameter_point_counts": {
+    "coherent-longitudinal-detuning": 5,
+    "finite-mode-spin-boson-dephasing": 16,
+    "finite-two-level-exchange-relaxation": 5,
+    "markovian-photon-reservoir-decay": 5
+  },
+  "rejected_samples": 0,
+  "source_channel_collision_max_trace_distance": 2.220446049250313e-16
+}

@@ -1,0 +1,211 @@
+{
+  "config_sha256": "76d79a7eb22ff1d8a3873e6eb678eade27c859253a955b2261ee4d18cc1f3186",
+  "dataset_id": "ic_causal_agents_final_v1",
+  "files": {
+    "FINAL_SUMMARY.json": {
+      "sha256": "643e2ce6fa1f5d8f567dca8c5740dbf9a3837ff9c033d5a9e1ed5a92a8d96b15",
+      "size_bytes": 949
+    },
+    "config/effective_config.json": {
+      "sha256": "37b7a0b7b9ef08e85d8c6ccaf31a9744483e868a5abbea0bc9501b0be352efce",
+      "size_bytes": 3383
+    },
+    "dataset/causal_labels.csv": {
+      "sha256": "61062938db629b397e49b44cc0c9a637bd2f81cf5676c0f334560c0a9cf0747b",
+      "size_bytes": 3527250
+    },
+    "dataset/causal_labels.parquet": {
+      "sha256": "f38e2543371a564efa6206872e91c2a1639e5165526e8506dedb0f0a63351b1e",
+      "size_bytes": 453021
+    },
+    "dataset/metadata.json": {
+      "sha256": "2f98dfc5a1b658da88434f1a7d928a17c9ab3682febe94c8c8c1980f513f2d25",
+      "size_bytes": 4986
+    },
+    "dataset/observable_features.csv": {
+      "sha256": "6a770f63c7bcf3706d23c7780d7034c1e53e3b3791ab50d2ba940ed91bdf180a",
+      "size_bytes": 15477582
+    },
+    "dataset/observable_features.parquet": {
+      "sha256": "b4a746d57ce347743e99b3222ca1b939eae45c5133a21fb8a754e11fb1e41556",
+      "size_bytes": 864337
+    },
+    "dataset/provenance.json": {
+      "sha256": "b6129e585f031fa9601f9b676079841211a63bf99f8bf144b52601abcbf6a86d",
+      "size_bytes": 47489
+    },
+    "dataset/scientific_records.csv": {
+      "sha256": "2e17902c89548f67eee156b99e4bb5b49e15704669fdc36fa1e748b3ad769082",
+      "size_bytes": 64102691
+    },
+    "dataset/scientific_records.parquet": {
+      "sha256": "1e1f3beec21c56531756bddc12bd3b49b569933a982e4c6680a9c427ee91d7be",
+      "size_bytes": 1909725
+    },
+    "environment/requirements-freeze.txt": {
+      "sha256": "2590cc72184df5cf013eee83f724d8e7e1ca3d95553db3c8ef78f29db18b337a",
+      "size_bytes": 419
+    },
+    "evidence/FINAL_DATASET_MANIFEST.md": {
+      "sha256": "05c8d006c691a2ca50ff3f693af8aba94f006e1ea581bca0f8cb42c0396dfdcf",
+      "size_bytes": 797
+    },
+    "evidence/FINAL_DATASET_RESULTS.md": {
+      "sha256": "0460582c39586fb537e132f25eeb4b3fbbfa83b262fe0a1394467cfcaa51d393",
+      "size_bytes": 487
+    },
+    "evidence/FINAL_IDENTIFIABILITY_ANALYSIS.md": {
+      "sha256": "d5f807ba9c19bacd8d1170156d06feb789119be748a68e2a77c10fac5447d3dc",
+      "size_bytes": 1640
+    },
+    "evidence/FINAL_LIMITATIONS.md": {
+      "sha256": "5b794ab5314f0dd11de47adb333f9aac9e6e9c4dead52463de26e8ffb105ab56",
+      "size_bytes": 775
+    },
+    "evidence/FINAL_REPRODUCIBILITY.md": {
+      "sha256": "5815de385b92bcfd6c14ad5a02b9128da0247f4a99af40a8730b89ead94644fb",
+      "size_bytes": 578
+    },
+    "evidence/FINAL_REVERSIBILITY_ANALYSIS.md": {
+      "sha256": "b2af3886eab62ec58d529533a26896339afa09ae3066cb2ede8602e81992aa5a",
+      "size_bytes": 1731
+    },
+    "evidence/FINAL_SCIENTIFIC_RESULTS.md": {
+      "sha256": "ce591f7604bc144dbf05c088c6c0c7fd5e80fc652df91a3b4ea61367c2733de1",
+      "size_bytes": 1646
+    },
+    "evidence/FINAL_SCIENTIFIC_VALIDATION.md": {
+      "sha256": "7e5696d4ba70f3b105e2b13bad77bbe020a909449531244a17dc8a64890e17f3",
+      "size_bytes": 547
+    },
+    "figures/coherence_temporal.png": {
+      "sha256": "2481a304332d196689989acfde7f782f831ca7f42390697de08efd8e79e1cdce",
+      "size_bytes": 103098
+    },
+    "figures/entropy_temporal.png": {
+      "sha256": "156350a2795e4b01ee5c9005f406321885f71bfc02b580aa8da289849a6759a3",
+      "size_bytes": 97216
+    },
+    "figures/fidelity_temporal.png": {
+      "sha256": "698c18caf1a41f5c0e42d757056d6d127449134326b4273cca5b745c3a1f6b77",
+      "size_bytes": 87996
+    },
+    "figures/identifiability_collision_fraction_matrix.png": {
+      "sha256": "219cfa87a4467e12e084c9c1420d9b59548bc3e71aef5124cb29bf76962b8b54",
+      "size_bytes": 97855
+    },
+    "figures/identifiability_mean_min_distance_matrix.png": {
+      "sha256": "0b3fe7d3bb550c3b50ccd801a0e2b69e5b189215550842592d3e338f38edc3e5",
+      "size_bytes": 96193
+    },
+    "figures/intra_vs_inter_trace_distance.png": {
+      "sha256": "1790cd5004788a7b39a15767797adcba11b065991c193399be67d85cee68615e",
+      "size_bytes": 85251
+    },
+    "figures/probe_identifiability.png": {
+      "sha256": "e93b10b9a7bd84c7ef15badef03ff6543d0181f3bad08ee52cd155e151d513ac",
+      "size_bytes": 55587
+    },
+    "figures/purity_temporal.png": {
+      "sha256": "399e7a83135a5af03fbeb062c3fa924a37beb3a40a9a056a8ebce385a68522c2",
+      "size_bytes": 88878
+    },
+    "figures/reversibility_distribution.png": {
+      "sha256": "b38259687264515c241848d3b4995c126ad33ba180217993fed1f72ddf392207",
+      "size_bytes": 110815
+    },
+    "figures/sample_counts_by_agent.png": {
+      "sha256": "8a92bdbeb2bde37a259b8205855bc5cd4d850c6961b619eeb93235ed8f39f1e5",
+      "size_bytes": 81617
+    },
+    "figures/trace_distance_temporal.png": {
+      "sha256": "b3347ad3bc5a8e774afcb735f6f88a6e783140db15d17fef9fcbb54908d5a5b7",
+      "size_bytes": 104680
+    },
+    "tables/adjacent_temporal.csv": {
+      "sha256": "f409dcf3d40e019982019345c0602f9fa47f46cb9bd0bfe0e9c51afd26e9927d",
+      "size_bytes": 42763
+    },
+    "tables/adjacent_temporal_summary.csv": {
+      "sha256": "7a35eb7f4eb95b6e7ed6652af213ffa2eecacb1eae7757d40bfeae723e96fe2b",
+      "size_bytes": 368
+    },
+    "tables/agent_noise_entropy_summary.csv": {
+      "sha256": "5dc64b4aabe83286a1fbc420339263e1521bd9287fb6531b81f4e668aaee24f2",
+      "size_bytes": 804
+    },
+    "tables/collision_fraction_matrix.csv": {
+      "sha256": "863585f1617814a869cafdc3acc8cb66e66f6bcaa018abfea05298285bf91b0e",
+      "size_bytes": 523
+    },
+    "tables/collision_regions.csv": {
+      "sha256": "6759e80b77b9fbb5102b0ac0087a309e9746da991fcd493d1dc58125e9ae5556",
+      "size_bytes": 260919
+    },
+    "tables/collision_regions.parquet": {
+      "sha256": "36e04b21ae7322e0345e828d41292ac22de6e58848cade48e2fe920d6c61c1e0",
+      "size_bytes": 22200
+    },
+    "tables/condition_pairwise.csv": {
+      "sha256": "6da184a4cac84c1529d97d6790cacf6a0d05d1ab06c95f22bba5a672b8e2f2e5",
+      "size_bytes": 1407369
+    },
+    "tables/condition_pairwise.parquet": {
+      "sha256": "3ae684649230a22f10838c15f7e0a8dac1c19577b16f18c10aa78f5a31368f02",
+      "size_bytes": 100763
+    },
+    "tables/intra_condition.csv": {
+      "sha256": "37ff12e02733ebae02a8309f5427088a71ec8f44e713b6fb2733485fff71eff5",
+      "size_bytes": 552469
+    },
+    "tables/intra_summary.csv": {
+      "sha256": "62601d1009c0cb48cf3fab4d749b1f6e6d41f230d0bd306e27a1dfeb1e7e65ee",
+      "size_bytes": 562
+    },
+    "tables/mean_min_distance_matrix.csv": {
+      "sha256": "8a65243f3c8aade3b8ed33e85d2845de2162b24fda61de56281a67a228fc72b6",
+      "size_bytes": 519
+    },
+    "tables/pair_summary.csv": {
+      "sha256": "5ca3d33b566c28289f5052b3e0ba7ccdc71e1c61499e2af22fae3d6e60ffdbd4",
+      "size_bytes": 1503
+    },
+    "tables/parameter_coverage.csv": {
+      "sha256": "d911691321a87a26956d4900af7541ebcca710b5a6d56ed85c526ce6b47f81a1",
+      "size_bytes": 180
+    },
+    "tables/probe_summary.csv": {
+      "sha256": "ea8768061bf5ca2d02f2b000775b961a21e46a4a7122f9852f4fe60d2f0d6c99",
+      "size_bytes": 11222
+    },
+    "tables/representative_temporal_metrics.csv": {
+      "sha256": "2a82fc877bd9016a5766a5201108ddbdffa323cde6c7bd8ed8d370d016a6756b",
+      "size_bytes": 71836
+    },
+    "tables/reversibility_by_condition.csv": {
+      "sha256": "24a45fc80ec06c30a8cad232fe7ac652e1eadcc4a2ff9f02e497df8ffa8d1792",
+      "size_bytes": 411303
+    },
+    "tables/reversibility_by_condition.parquet": {
+      "sha256": "b35a37dbec9f59fb8175b03f88a0196effa88a1d4912594d2c9f2f964aaf2e74",
+      "size_bytes": 18342
+    },
+    "tables/reversibility_summary.csv": {
+      "sha256": "a3f360f7d268c254842ffddab5c14a8153fb4346a858e65fa8addeb1b70ea70c",
+      "size_bytes": 991
+    },
+    "tables/sample_counts.csv": {
+      "sha256": "1e506eb863df48cabeb9c20a8102db807a58c5c56b4818ebb61ce2f38e42b9e4",
+      "size_bytes": 183
+    },
+    "tables/source_channel_collision.csv": {
+      "sha256": "e4c6c570388ad95cbdc8e661d29c425e7f70663e8327f651b7b1887bff9525b9",
+      "size_bytes": 619
+    },
+    "tables/temporal_summary.csv": {
+      "sha256": "7a28de3bfc44b47ee0946a3c8f7d553e6afaf6e87df814026e2a1c0f24867d0b",
+      "size_bytes": 60520
+    }
+  },
+  "git_commit_sha": "62502b7da297adf8c9bc10296ac662543019931f"
+}
