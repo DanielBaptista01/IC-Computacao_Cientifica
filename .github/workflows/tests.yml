@@ -51,6 +51,23 @@ jobs:
           name: ic-causal-agents-physical-v2
           path: results/physical_v2/
           retention-days: 90
+      - name: Publish physical-source v2 tagged release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view ic-2026-physical-v2 >/dev/null 2>&1; then
+            echo "Release ic-2026-physical-v2 already exists; leaving it unchanged."
+          else
+            zip -q -r ic-causal-agents-physical-v2.zip results/physical_v2/
+            gh release create ic-2026-physical-v2 \
+              ic-causal-agents-physical-v2.zip \
+              results/physical_v2/PHYSICAL_V2_MANIFEST.json \
+              results/physical_v2/PHYSICAL_V2_SUMMARY.json \
+              --target "$GITHUB_SHA" \
+              --title "IC 2026 — Expansão Físico-Causal v2" \
+              --notes "Expansão físico-causal da IC. Dataset: ic_causal_agents_physical_v2. O baseline ic-2026-final permanece congelado. Nenhum ML/QML treinado."
+          fi
       - name: Report final scientific summaries
         run: |
           echo "=== PAIRWISE IDENTIFIABILITY ==="
