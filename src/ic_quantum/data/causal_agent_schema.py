@@ -127,6 +127,8 @@ class CausalAgentModelRecord:
     physical_category: str
     physical_description: str
     target_system: str
+    physical_source: str = UNRESOLVED
+    causal_mechanism: str = UNRESOLVED
 
     relevant_degrees_of_freedom: tuple[str, ...] = ()
     coupling_mechanism: str = UNRESOLVED
