@@ -28,6 +28,7 @@ from ic_quantum.dynamics.microscopic import (
 from ic_quantum.dynamics.spin_boson import (
     apply_finite_mode_spin_boson_dephasing,
     finite_mode_coherence_factor,
+    finite_mode_dephasing_exponent,
     spin_boson_dephasing_kraus,
 )
 
@@ -187,6 +188,12 @@ def generate_final_dataset_samples(config: FinalDatasetConfig) -> list[CausalAge
         temperature = temperature_ratio * cutoff
         parameter_point_id = f"spin_boson_{p_index:02d}"
         for t in config.time_values_s:
+            exponent = finite_mode_dephasing_exponent(
+                time=t,
+                mode_count=mode_count,
+                cutoff_angular_frequency=cutoff,
+                temperature_angular_frequency=temperature,
+            )
             q = finite_mode_coherence_factor(
                 time=t,
                 mode_count=mode_count,
@@ -195,6 +202,21 @@ def generate_final_dataset_samples(config: FinalDatasetConfig) -> list[CausalAge
             )
             kraus = spin_boson_dephasing_kraus(q)
             channel_desc, choi_desc = describe_kraus_channel(kraus)
+            channel_desc["analytical_linear_invertible"] = True
+            channel_desc["numerical_linear_invertible_at_tolerance"] = bool(
+                channel_desc["linear_invertible"]
+            )
+            channel_desc["coherence_factor"] = q
+            channel_desc["dephasing_exponent"] = exponent
+            if (
+                not channel_desc["direct_unitary_inverse"]
+                and not channel_desc["linear_invertible"]
+            ):
+                channel_desc["reversibility_class"] = (
+                    "class_II_analytically_invertible_"
+                    "numerically_effectively_singular_without_CPTP_inverse"
+                )
+                channel_desc["analytical_inverse_cptp"] = False
             for probe_id, rho in probes.items():
                 after = apply_finite_mode_spin_boson_dephasing(
                     rho,

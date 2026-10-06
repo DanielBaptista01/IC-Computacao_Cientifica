@@ -41,6 +41,25 @@ def _bloch(rho: np.ndarray) -> tuple[float, float, float]:
     )
 
 
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, (np.floating, float)):
+        numeric = float(value)
+        return numeric if np.isfinite(numeric) else None
+    if isinstance(value, (np.integer,)):
+        return int(value)
+    if isinstance(value, (np.bool_,)):
+        return bool(value)
+    return value
+
+
+def _strict_json(value: Any) -> str:
+    return json.dumps(_json_safe(value), sort_keys=True, allow_nan=False)
+
+
 def _feature_row(row_id: int, sample: CausalAgentSampleRecord) -> dict[str, Any]:
     probe_rho = final_probe_densities()[sample.initial_system_state]
     ix, iy, iz = _bloch(probe_rho)
@@ -110,9 +129,9 @@ def _scientific_row(
         "initial_system_state": sample.initial_system_state,
         "time_s": float(sample.time),
         "parameter_point_id": sample.metadata["parameter_point_id"],
-        "parameter_values_json": json.dumps(sample.parameter_values, sort_keys=True),
-        "density_matrix_json": json.dumps(
-            sample.signature.extra["simulated_density_matrix"], sort_keys=True
+        "parameter_values_json": _strict_json(sample.parameter_values),
+        "density_matrix_json": _strict_json(
+            sample.signature.extra["simulated_density_matrix"]
         ),
         "output_bloch_x": float(obs["X"]),
         "output_bloch_y": float(obs["Y"]),
@@ -125,19 +144,19 @@ def _scientific_row(
         "delta_coherence_l1": float(metrics["delta_coherence_l1"]),
         "fidelity_to_input": float(metrics["fidelity_to_input"]),
         "trace_distance_to_input": float(metrics["trace_distance_to_input"]),
-        "state_spectrum_json": json.dumps(sample.signature.spectrum),
-        "channel_descriptors_json": json.dumps(
-            sample.signature.channel_descriptors, sort_keys=True
+        "state_spectrum_json": _strict_json(sample.signature.spectrum),
+        "channel_descriptors_json": _strict_json(
+            sample.signature.channel_descriptors
         ),
-        "choi_superoperator_descriptors_json": json.dumps(
-            sample.signature.choi_descriptors, sort_keys=True
+        "choi_superoperator_descriptors_json": _strict_json(
+            sample.signature.choi_descriptors
         ),
         "reversibility_class": sample.signature.channel_descriptors[
             "reversibility_class"
         ],
         "representation_origin": sample.metadata["representation_origin"],
         "random_seed": sample.random_seed,
-        "metadata_json": json.dumps(sample.metadata, sort_keys=True),
+        "metadata_json": _strict_json(sample.metadata),
     }
 
 

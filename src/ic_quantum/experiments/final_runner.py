@@ -26,12 +26,17 @@ from ic_quantum.data.final_generator import generate_final_dataset_samples
 from ic_quantum.data.final_protocol import load_final_dataset_config
 
 
-def _write_frame(frame: pd.DataFrame, path: Path, parquet: bool = False) -> None:
+def _write_frame(
+    frame: pd.DataFrame,
+    path: Path,
+    parquet: bool = False,
+    preserve_index: bool = False,
+) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    include_index = not isinstance(frame.index, pd.RangeIndex)
-    frame.to_csv(path, index=include_index)
+    frame.to_csv(path, index=preserve_index)
     if parquet:
-        frame.reset_index().to_parquet(path.with_suffix(".parquet"), index=False)
+        exported = frame.reset_index() if preserve_index else frame
+        exported.to_parquet(path.with_suffix(".parquet"), index=False)
 
 
 def _sha256(path: Path) -> str:
@@ -82,6 +87,10 @@ def run_final_pipeline(output_dir: Path, config) -> dict:
             frame,
             tables / f"{name}.csv",
             parquet=name in {"condition_pairwise", "collision_regions"},
+            preserve_index=name in {
+                "mean_min_distance_matrix",
+                "collision_fraction_matrix",
+            },
         )
     for name, frame in intra.items():
         _write_frame(frame, tables / f"{name}.csv")
@@ -97,6 +106,7 @@ def run_final_pipeline(output_dir: Path, config) -> dict:
         .rename_axis("agent_model_id")
         .reset_index(name="sample_count")
         .sort_values("agent_model_id")
+        .reset_index(drop=True)
     )
     _write_frame(sample_counts, tables / "sample_counts.csv")
 

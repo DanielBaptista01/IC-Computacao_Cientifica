@@ -25,6 +25,13 @@ def analyze_reversibility(
                 "time_s": float(sample.time),
                 "reversibility_class": channel["reversibility_class"],
                 "linear_invertible": channel["linear_invertible"],
+                "analytical_linear_invertible": channel.get(
+                    "analytical_linear_invertible", channel["linear_invertible"]
+                ),
+                "numerical_linear_invertible_at_tolerance": channel.get(
+                    "numerical_linear_invertible_at_tolerance",
+                    channel["linear_invertible"],
+                ),
                 "inverse_cptp": channel["inverse_cptp"],
                 "direct_unitary_inverse": channel["direct_unitary_inverse"],
                 "choi_rank": channel["choi_rank"],
