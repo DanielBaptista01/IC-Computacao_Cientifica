@@ -175,3 +175,129 @@ Se `lambda_max(rho_prime) < 1`, nenhuma porta unitária isolada sobre o sistema 
 No experimento mínimo, `G1 = H` prepara `|+>`, e o dephasing com `p = 0.35` produz autovalores `0.825` e `0.175`. Logo, o limite de recuperação por qualquer unitária é `0.825 < 1`.
 
 Essa conclusão é deliberadamente limitada a unitárias no sistema reduzido. Ela não implica impossibilidade de recuperação com acesso ao ambiente, informação lateral, redundância, condicionamento ou correção de erros.
+
+
+---
+
+# Extensão final do corpus científico
+
+## Dephasing spin-boson finito
+
+A família finite-mode-spin-boson-dephasing implementa
+
+\[
+H_S=\frac{\hbar\omega}{2}\sigma_z,\quad
+H_A=\sum_k\hbar\Omega_k b_k^\dagger b_k,
+\]
+\[
+H_{\mathrm{int}}=
+\sum_k\hbar\lambda_k\sigma_z(b_k+b_k^\dagger).
+\]
+
+Na discretização térmica finita:
+
+\[
+\Lambda(t)=
+\sum_k \frac{4\lambda_k^2}{\Omega_k^2}
+[1-\cos(\Omega_k t)]
+\coth\left(\frac{\Omega_k}{2T}\right),
+\]
+
+e
+
+\[
+\rho_{01}(t)=e^{-\Lambda(t)}\rho_{01}(0).
+\]
+
+A representação de Kraus equivalente é usada para validar a dinâmica reduzida.
+Recorrências para frequências comensuráveis são tratadas como propriedade do
+reservatório discreto implementado, não como afirmação universal sobre toda
+dinâmica não-Markoviana.
+
+## Reservatório fotônico Markoviano
+
+A família markovian-photon-reservoir-decay modela um sistema de dois níveis
+acoplado por troca de excitação a modos fotônicos. No limite Markoviano,
+não dirigido e a temperatura zero:
+
+\[
+\dot\rho=
+\gamma\left[
+\sigma_-\rho\sigma_+
+-\frac12\{\sigma_+\sigma_-,\rho\}
+\right],
+\]
+
+com
+
+\[
+p(t)=1-e^{-\gamma t}.
+\]
+
+Amplitude damping é consequência da redução e não a identidade causal.
+
+## Contraexemplo fonte versus canal
+
+As famílias de troca finita e reservatório fotônico podem satisfazer
+
+\[
+\sin^2(gt)=1-e^{-\gamma t}=p,
+\]
+
+produzindo o mesmo canal reduzido. A infraestrutura testa essa igualdade em
+todos os estados de prova. Portanto, channel_name não define Agente Causal.
+
+## Assinatura final
+
+\[
+\Sigma =
+\{
+t,
+\langle X\rangle,\langle Y\rangle,\langle Z\rangle,
+S,P,C_{l_1},F,D,
+\lambda(\rho),
+\text{Choi},
+\text{superoperador},
+R
+\}.
+\]
+
+Parâmetros físicos e identidade causal ficam no registro científico/metadata,
+não em observable_features.
+
+## Identificabilidade N-agentes
+
+Para cada par A_i,A_j, estado e instante, todos os pontos paramétricos são
+comparados por
+
+\[
+D(\rho_i,\rho_j)=\frac12\|\rho_i-\rho_j\|_1.
+\]
+
+São preservados mínimos, médias, medianas, máximos, regiões de colisão,
+dependência de estado/tempo e variação intra-agente.
+
+## Rigor numérico da reversibilidade
+
+A análise genérica reporta a invertibilidade numérica sob tolerância explícita.
+Para o spin-boson finito,
+
+\[
+q(t)=e^{-\Lambda(t)}>0
+\]
+
+para Lambda finito. Assim, quando q cai abaixo da tolerância do teste de posto,
+o regime é registrado como analiticamente invertível porém numericamente
+efetivamente singular, evitando transformar condicionamento numérico em
+não-invertibilidade matemática exata.
+
+## Escopo epistemológico
+
+Os resultados podem sustentar que os modelos estudados representam
+fontes/mecanismos individualizáveis e que suas assinaturas são distinguíveis em
+determinadas regiões. Também existem regiões de não-identificabilidade.
+
+Não é demonstrado que toda fonte tenha assinatura única, que o sistema reduzido
+sempre contenha informação causal suficiente, que o ambiente agregado seja um
+formalismo inadequado, que exista recuperação universal ou que simulação
+equivalha a validação em hardware.

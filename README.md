@@ -1,169 +1,223 @@
 # IC — Modelagem e Quantificação do Agente Causal
 
-Base computacional da **segunda etapa da Iniciação Científica (2026)**. O objetivo desta fase é transformar o formalismo de Agente Causal, sistemas quânticos abertos, canais quânticos e métricas informacionais em experimentos reproduzíveis antes de qualquer treinamento de IA.
+Repositório computacional da Iniciação Científica de 2026 sobre modelagem e
+quantificação de Agentes Causais em sistemas quânticos.
 
-## Escopo científico desta versão
+A formulação final preserva a teoria usual de sistemas abertos:
 
-A cadeia implementada é:
+\[
+\text{Ambiente} \supset \{A_1,A_2,\ldots,A_N\},
+\]
 
-`Agente Causal -> Interação -> Transformação Quântica -> rho' -> Métricas -> Classificação inicial da dinâmica`
+e investiga se fontes ou mecanismos específicos presentes nessa descrição
+agregada podem ser modelados individualmente pela cadeia
 
-Esta primeira versão **não prova a hipótese principal da IC**. Ela valida a infraestrutura matemática com modelos canônicos controlados: uma perturbação unitária em um qubit, dephasing, amplitude damping e depolarizing; além de uma dilatação unitária sistema+ambiente equivalente ao canal de amplitude damping.
+\[
+\text{Fonte física}
+\rightarrow A_k
+\rightarrow H_{\mathrm{int}}^{(k)}
+\rightarrow \mathcal E_k(t)
+\rightarrow \rho_k(t)
+\rightarrow \Sigma_k
+\rightarrow R_k.
+\]
 
-## Estrutura
+O projeto não afirma unicidade universal da assinatura causal e não implementa
+Machine Learning ou Quantum Machine Learning.
 
-```text
-src/ic_quantum/
-├── core/          # estados, operadores e validação numérica
-├── agents/        # abstração do Agente Causal e baselines canônicos
-├── channels/      # canais unitários e representações de Kraus
-├── metrics/       # entropia, pureza, fidelidade e coerência l1
-├── dynamics/      # dinâmica fechada, aberta, traço parcial e reversibilidade
-├── experiments/   # experimentos reproduzíveis
-└── data/          # schema dos registros experimentais
-tests/             # testes científicos automatizados
-docs/              # correspondência matemática -> código
-results/           # saídas reproduzíveis do experimento inicial
-```
+## Versão científica final
 
-A lógica científica executável permanece dentro do pacote `src/ic_quantum`. Notebooks não são usados como fonte primária de verdade nesta etapa; quando forem adicionados, deverão consumir a API do pacote em vez de duplicar o formalismo.
+Identificador do dataset: ic_causal_agents_final_v1
 
-## Instalação
+Configuração:
+experiments/configs/ic_causal_agents_final_v1.json
 
-```bash
-git clone https://github.com/DanielBaptista01/IC-Computacao_Cientifica.git
-cd IC-Computacao_Cientifica
-git switch feat/fase2-base-modelagem
-python -m venv .venv
-```
+Comando de geração: ic-finalize
 
-Linux/macOS:
+O Dataset 001 permanece preservado como experimento preliminar e não é o
+dataset final.
 
-```bash
-source .venv/bin/activate
-```
+O catálogo final contém quatro famílias:
 
-Windows PowerShell:
+1. coherent-longitudinal-detuning — perturbação longitudinal coerente e unitária;
+2. finite-two-level-exchange-relaxation — grau de liberdade quântico finito com
+   troca de excitação e relaxação reduzida;
+3. finite-mode-spin-boson-dephasing — qubit longitudinalmente acoplado a banho
+   bosônico térmico finito;
+4. markovian-photon-reservoir-decay — relaxação radiativa Markoviana em
+   reservatório fotônico.
 
-```powershell
-.venv\Scripts\Activate.ps1
-```
+Nomes de canais, como dephasing e amplitude_damping, são descrições de dinâmica
+efetiva e não identidades causais.
 
-Instale o pacote e as dependências de desenvolvimento:
+## Dataset final
 
-```bash
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-```
+A configuração utiliza 4 famílias, 14 estados de prova, 81 pontos temporais,
+5 pontos paramétricos para o agente coerente, 5 para a troca finita, 5 para o
+reservatório fotônico e 16 para o spin-boson finito.
 
-## Testes
+A geração produz 35.154 amostras válidas. Qualquer amostra que falhe no gate
+matemático aborta a geração; não há descarte silencioso.
 
-```bash
-pytest
-```
+Estrutura:
 
-Os testes verificam, entre outros pontos:
+    results/final/
+    ├── dataset/
+    │   ├── scientific_records.csv
+    │   ├── scientific_records.parquet
+    │   ├── observable_features.csv
+    │   ├── observable_features.parquet
+    │   ├── causal_labels.csv
+    │   ├── causal_labels.parquet
+    │   ├── metadata.json
+    │   └── provenance.json
+    ├── tables/
+    ├── figures/
+    ├── evidence/
+    ├── environment/
+    ├── config/
+    ├── FINAL_DATASET_MANIFEST.json
+    └── FINAL_SUMMARY.json
 
-- estados densidade válidos;
-- unitariedade;
-- completude de Kraus;
-- preservação da entropia por evolução unitária;
-- reversão por `U^dagger`;
-- redução de coerência por dephasing;
-- equivalência entre uma dilatação global unitária e o canal reduzido de amplitude damping;
-- diferença entre invertibilidade linear do superoperador e existência de inversa CPTP;
-- classificação do caso unitário como reversível diretamente no sistema;
-- não invertibilidade linear dos canais canônicos no limite de ruído máximo.
+observable_features exclui IDs causais, nomes de fonte/canal e parâmetros
+específicos do simulador capazes de revelar diretamente o rótulo. O registro
+científico completo preserva parâmetros, proveniência e a matriz densidade
+exata como ground truth de simulação.
 
-O workflow `scientific-tests` executa automaticamente a suíte em pushes para `main` e `feat/**`, e em pull requests para `main`.
+## Instalação reproduzível
 
-## Primeiro experimento
+    git clone https://github.com/DanielBaptista01/IC-Computacao_Cientifica.git
+    cd IC-Computacao_Cientifica
+    python -m venv .venv
 
-```bash
-ic-first-experiment --output-dir results
-```
+Ative o ambiente virtual e execute:
 
-ou
+    python -m pip install --upgrade pip
+    python -m pip install -r requirements-lock.txt
+    python -m pip install -e . --no-deps
 
-```bash
-python -m ic_quantum.experiments.runner --output-dir results
-```
+## Validação
 
-Parâmetros padrão:
+    pytest
 
-- `omega = 1.0`
-- `time = 0.7`
-- `p_dephasing = 0.35`
-- `p_amplitude = 0.25`
-- `seed = 20260916`
+A suíte cobre estados densidade, Hermiticidade, unitariedade, Kraus, dinâmica
+global/reduzida, reversibilidade, Choi/superoperadores, Transformação Causal
+Latente, corpus/proveniência, quatro modelos finais, exportação e
+identificabilidade.
 
-Saídas:
+## Reprodução integral
 
-- `results/first_experiment.csv`
-- `results/global_reduced_validation.json`
+    ic-finalize --config experiments/configs/ic_causal_agents_final_v1.json --output-dir results/final
 
-O experimento registra entropia de von Neumann, pureza, coerência `l1`, fidelidade ao estado ideal e fidelidade após recuperação unitária quando aplicável.
+O pipeline gera dataset, tabelas, figuras, análise de identificabilidade,
+reversibilidade, tríade Agente–Ruído–Entropia, metadata, proveniência, captura
+do ambiente e hashes SHA-256.
 
-## Diagnóstico de reversibilidade
+O experimento inter-depth permanece reproduzível:
 
-A implementação não usa `"não unitário" = "irreversível"` como regra.
+    ic-interdepth-experiment --output-dir results/interdepth
 
-O módulo `dynamics/reversibility.py` constrói a representação de Liouville do canal e separa numericamente:
+## Identificabilidade
 
-1. **invertibilidade linear do superoperador**;
-2. **existência de inversa CPTP**;
-3. **reversibilidade direta por uma unitária sobre o sistema observado**.
+A análise testa
 
-Assim, um canal pode possuir inversa como transformação linear e ainda assim sua inversa não ser um canal físico CPTP. Recuperação condicionada, acesso ao ambiente e mitigação aproximada permanecem explicitamente fora dessa classificação automática e exigem modelos adicionais.
+\[
+A_i\neq A_j \quad\Longrightarrow?\quad \Sigma_i\neq\Sigma_j.
+\]
 
-## Reprodutibilidade
+Todos os seis pares entre as quatro famílias são avaliados por estado, tempo e
+combinações paramétricas. Regiões de colisão são preservadas como
+não-identificabilidade.
 
-Os parâmetros experimentais são configuráveis pela linha de comando. Registros experimentais contêm o identificador do experimento, estado inicial, parâmetros do agente/canal e campo de seed. O primeiro experimento é determinístico; o campo de seed é mantido no schema para padronizar a infraestrutura que será usada quando processos estocásticos forem introduzidos.
+Há ainda um experimento controlado em que a troca finita e o reservatório
+fotônico Markoviano são parametrizados para gerar o mesmo canal reduzido de
+amplitude damping. Portanto,
 
-Resultados não são inseridos manualmente no código de simulação. Eles são produzidos a partir dos modelos e métricas implementados.
+\[
+\text{identidade do canal reduzido}
+\not\Rightarrow
+\text{identidade da fonte física}.
+\]
 
-## Princípio de rigor
+## Agente Causal, ruído e entropia
 
-Toda funcionalidade deve seguir:
+A implementação mantém a distinção:
 
-`definição matemática -> implementação -> teste analítico -> teste numérico -> experimento -> resultado`
+    Agente Causal = fonte/mecanismo modelado
+    Ruído = efeito da interação em relação à computação/estado pretendido
+    Entropia = grandeza informacional do estado
 
-Modelos autorais permanecem hipóteses até que sejam formalmente testados e comparados contra baselines.
+O controle coerente fornece perturbações observáveis com entropia preservada:
 
-Consulte `docs/MATHEMATICAL_MAPPING.md` para as definições matemáticas implementadas.
+\[
+\Delta S=0
+\not\Rightarrow
+\text{ausência de perturbação}.
+\]
 
-## Experimento inter-depth: Operador Causal Latente
+São analisadas entropia, pureza, coerência l1, fidelidade, distância de traço,
+vetor de Bloch, espectro e descritores de Choi/superoperador.
 
-A infraestrutura representa explicitamente uma transformação física não programada entre duas profundidades do circuito:
+## Reversibilidade
 
-```text
-|0> -- H -- C_A -- H
-```
+A classificação é feita por condição dinâmica (theta,t), não como rótulo
+permanente da família. São distinguidas reversão unitária direta,
+invertibilidade linear, inversa CPTP, não-invertibilidade reduzida e necessidade
+de recuperação/mitigação estruturada.
 
-A abstração `LatentCausalTransform`, em `dynamics/causal_latent.py`, não assume que `C_A` seja uma porta lógica. Cada instância é classificada por sua representação matemática atual:
+No spin-boson finito, q(t)=exp[-Lambda(t)] é analiticamente positivo para
+Lambda finito. Quando q fica abaixo da tolerância do teste numérico de posto, o
+dataset registra separadamente a invertibilidade analítica e a singularidade
+numérica efetiva.
 
-- `identity`: controle ideal;
-- `unitary`: perturbação coerente `rho -> U rho U^dagger`;
-- `kraus_cptp`: canal quântico `rho -> sum_i K_i rho K_i^dagger`;
-- `custom`: ponto de extensão para modelos estruturados futuros, sem classificação automática de reversibilidade.
+## Transformação Causal Latente
 
-Execute:
+A transformação física não programada continua representada por
 
-```bash
-ic-interdepth-experiment --output-dir results
-```
+\[
+G_d \rightarrow \mathcal C_{k,d} \rightarrow G_{d+1}.
+\]
 
-ou:
+Ela pode ser identidade, unitária, CPTP por Kraus ou extensão estruturada; não
+é assumida como porta unitária em geral.
 
-```bash
-python -m ic_quantum.experiments.interdepth_runner --output-dir results
-```
+## Evidências para o Relatório Final
 
-O experimento compara `C_A = I`, uma rotação unitária em Z e um canal de dephasing. No caso unitário, `U_A^dagger` é aplicado e a recuperação é testada diretamente. No caso de dephasing, a implementação calcula o limite máximo de fidelidade que qualquer unitária atuando somente no sistema pode atingir para um alvo puro.
+Usar como fontes primárias:
 
-Se o estado reduzido tornou-se genuinamente misto, esse limite é o maior autovalor do estado e é estritamente menor que 1. Isso demonstra somente a impossibilidade de recuperação perfeita por uma única unitária em `S`; não exclui recuperação condicionada, acesso ao ambiente, correção de erros ou outros recursos.
+    results/final/evidence/FINAL_DATASET_MANIFEST.md
+    results/final/evidence/FINAL_SCIENTIFIC_RESULTS.md
+    results/final/evidence/FINAL_SCIENTIFIC_VALIDATION.md
+    results/final/evidence/FINAL_IDENTIFIABILITY_ANALYSIS.md
+    results/final/evidence/FINAL_REVERSIBILITY_ANALYSIS.md
+    results/final/evidence/FINAL_REPRODUCIBILITY.md
+    results/final/evidence/FINAL_LIMITATIONS.md
+    results/final/FINAL_DATASET_MANIFEST.json
+    results/final/FINAL_SUMMARY.json
 
-Saídas reproduzíveis:
+Os números do Relatório Final devem ser extraídos desses arquivos e tabelas,
+não recalculados manualmente.
 
-- `results/interdepth_latent_experiment.csv`;
-- `results/interdepth_latent_experiment_metadata.json`.
+## Limitações
+
+A versão final é uma investigação computacional de um qubit e quatro famílias.
+Não há hardware real, shots, erro de leitura ou tomografia experimental. Os
+intervalos paramétricos são grades teóricas normalizadas, não calibrações de
+hardware. A coerência l1 depende da base. A identificabilidade é condicional ao
+protocolo. Nenhum ML/QML foi treinado.
+
+A Utunnel e o potencial estocástico pertencem à trajetória histórica da IC e
+não são apresentados como resultados finais demonstrados.
+
+## Princípio científico
+
+    problema científico
+    -> hipótese
+    -> modelo matemático
+    -> implementação
+    -> validação
+    -> experimento
+    -> dados
+    -> análise
+
+Consulte docs/MATHEMATICAL_MAPPING.md e results/final/evidence/.
