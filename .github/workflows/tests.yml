@@ -73,6 +73,25 @@ jobs:
           name: ic-causal-agents-final-v1
           path: results/final/
           retention-days: 90
+      - name: Generate physical-source expansion v2
+        run: ic-physical-v2 --config experiments/configs/ic_causal_agents_physical_v2.json --output-dir results/physical_v2
+      - name: Upload physical-source expansion v2
+        uses: actions/upload-artifact@v4
+        with:
+          name: ic-causal-agents-physical-v2
+          path: results/physical_v2/
+          retention-days: 90
+      - name: Publish physical-source v2 release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view ic-2026-physical-v2 >/dev/null 2>&1; then
+            echo "Release ic-2026-physical-v2 already exists; leaving it unchanged."
+          else
+            zip -q -r ic-causal-agents-physical-v2.zip results/physical_v2/
+            gh release create ic-2026-physical-v2               ic-causal-agents-physical-v2.zip               results/physical_v2/PHYSICAL_V2_MANIFEST.json               results/physical_v2/PHYSICAL_V2_SUMMARY.json               --target "$GITHUB_SHA"               --title "IC 2026 — Expansão Físico-Causal v2"               --notes "Expansão físico-causal: EM, campo magnético, reservatório térmico e modo mecânico/fonônico. Sem ML/QML."
+          fi
       - name: Publish final tagged release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:

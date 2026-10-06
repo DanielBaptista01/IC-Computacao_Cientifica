@@ -25,6 +25,23 @@ agregada podem ser modelados individualmente pela cadeia
 O projeto não afirma unicidade universal da assinatura causal e não implementa
 Machine Learning ou Quantum Machine Learning.
 
+## Expansão físico-causal v2
+
+O dataset `ic_causal_agents_final_v1` permanece congelado como baseline mecanístico.
+A expansão `ic_causal_agents_physical_v2` adiciona quatro famílias físicas
+LEVEL_3: campo eletromagnético coerente, campo magnético Zeeman, reservatório
+fotônico térmico e modo mecânico/fonônico de dephasing.
+
+Comando:
+
+    ic-physical-v2 --config experiments/configs/ic_causal_agents_physical_v2.json --output-dir results/physical_v2
+
+Raios cósmicos/radiação ionizante, ruído de carga, defeitos TLS e geração de
+quasipartículas permanecem explicitamente fora do corpus validado nesta versão:
+as fontes disponíveis no projeto não fecharam ainda uma cadeia quantitativa
+plataforma-específica até um mapa reduzido validado. Consulte
+`docs/PHYSICAL_CAUSAL_SOURCE_AUDIT.md`.
+
 ## Versão científica final
 
 Identificador do dataset: ic_causal_agents_final_v1

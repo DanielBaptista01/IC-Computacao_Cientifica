@@ -24,6 +24,7 @@ ic-first-experiment = "ic_quantum.experiments.runner:main"
 ic-interdepth-experiment = "ic_quantum.experiments.interdepth_runner:main"
 ic-scaled-dataset = "ic_quantum.experiments.scaled_dataset_runner:main"
 ic-finalize = "ic_quantum.experiments.final_runner:main"
+ic-physical-v2 = "ic_quantum.experiments.physical_v2_runner:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
