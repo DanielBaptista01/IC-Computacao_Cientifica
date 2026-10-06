@@ -45,6 +45,7 @@ def export_physical_v2_dataset(
                     sample.signature.physical_parameters
                 ),
                 "physical_regime": sample.metadata["physical_regime"],
+                "signature_extra_json": _strict_json(sample.signature.extra),
             }
         )
         scientific_rows.append(scientific)

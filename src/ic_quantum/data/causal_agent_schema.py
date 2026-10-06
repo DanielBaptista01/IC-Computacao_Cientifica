@@ -185,10 +185,15 @@ class CausalAgentSampleRecord:
         are excluded by default because they may trivially encode the generating model.
         They can be opted in only for a scientifically justified supervised task.
         """
+        signature_payload = asdict(self.signature)
+        # Physical simulator parameters and exact simulator-only extras are scientific
+        # ground truth/metadata, not default observable features for future learning.
+        signature_payload.pop("physical_parameters", None)
+        signature_payload.pop("extra", None)
         payload = {
             "time": self.time,
             "initial_system_state": self.initial_system_state,
-            "signature": _jsonable(asdict(self.signature)),
+            "signature": _jsonable(signature_payload),
         }
         if include_control_parameters:
             payload["parameter_values"] = _jsonable(self.parameter_values)

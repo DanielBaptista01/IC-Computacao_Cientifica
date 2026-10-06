@@ -138,3 +138,23 @@ def test_external_field_has_coherent_and_ensemble_dephasing_regimes():
         )
         < 1e-9
     )
+
+
+def test_observable_feature_payload_removes_physical_parameters_and_simulator_extras():
+    config = small_config()
+    sample = generate_physical_v2_samples(config)[0]
+    payload = sample.observable_feature_payload()
+    assert "physical_parameters" not in payload["signature"]
+    assert "extra" not in payload["signature"]
+
+
+def test_scientific_export_preserves_source_specific_signature_descriptors(tmp_path):
+    config = small_config()
+    samples = generate_physical_v2_samples(config)
+    paths = export_physical_v2_dataset(samples, config, tmp_path)
+    scientific = pd.read_csv(paths["scientific_records_csv"])
+    assert "signature_extra_json" in scientific.columns
+    charge = scientific[
+        scientific["agent_model_id"] == "bistable-charge-fluctuator-rtn"
+    ]
+    assert charge["signature_extra_json"].str.contains("rtn_psd_at_2nu").any()

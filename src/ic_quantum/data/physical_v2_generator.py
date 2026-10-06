@@ -254,6 +254,18 @@ def generate_physical_v2_samples(
             kraus = spin_boson_dephasing_kraus(q)
             channel, choi = describe_kraus_channel(kraus)
             channel["analytical_linear_invertible"] = True
+            channel["numerical_linear_invertible_at_tolerance"] = bool(
+                channel["linear_invertible"]
+            )
+            if (
+                not channel["direct_unitary_inverse"]
+                and not channel["linear_invertible"]
+            ):
+                channel["reversibility_class"] = (
+                    "class_II_analytically_invertible_"
+                    "numerically_effectively_singular_without_CPTP_inverse"
+                )
+                channel["analytical_inverse_cptp"] = False
             for probe_id, rho in probes.items():
                 samples.append(
                     _sample(
