@@ -37,8 +37,11 @@ def random_telegraph_coherence_factor(
         value = np.exp(-nu * t) * (1.0 + nu * t)
     elif nu > v:
         delta = np.sqrt(nu * nu - v * v)
-        value = np.exp(-nu * t) * (
-            np.cosh(delta * t) + (nu / delta) * np.sinh(delta * t)
+        # Algebraically equivalent stable form; avoids cosh overflow when nu*t is large.
+        ratio = nu / delta
+        value = 0.5 * (
+            (1.0 + ratio) * np.exp(-(nu - delta) * t)
+            + (1.0 - ratio) * np.exp(-(nu + delta) * t)
         )
     else:
         mu = np.sqrt(v * v - nu * nu)
