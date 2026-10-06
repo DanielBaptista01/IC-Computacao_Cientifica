@@ -62,6 +62,7 @@ def build_signature(
     *,
     time: float,
     channel_descriptors: dict[str, object] | None = None,
+    choi_descriptors: dict[str, object] | None = None,
 ) -> CausalSignature:
     """Construct an observable/inferable signature and preserve exact simulator state."""
     entropy_before = von_neumann_entropy(rho_before)
@@ -76,6 +77,7 @@ def build_signature(
 
     return CausalSignature(
         channel_descriptors=dict(channel_descriptors or {}),
+        choi_descriptors=dict(choi_descriptors or {}),
         temporal_response={"time": float(time)},
         informational_metrics={
             "entropy_before": entropy_before,
