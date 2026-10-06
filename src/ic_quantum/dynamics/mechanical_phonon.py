@@ -52,6 +52,21 @@ def thermal_mean_occupation(
     return float(1.0 / np.expm1(exponent))
 
 
+def thermal_truncation_tail_probability(
+    mode_angular_frequency: float,
+    temperature_kelvin: float,
+    dimension: int,
+) -> float:
+    """Probability mass omitted above the finite Fock cutoff for a thermal mode."""
+    if dimension < 1:
+        raise ValueError("dimension must be positive.")
+    nbar = thermal_mean_occupation(mode_angular_frequency, temperature_kelvin)
+    if nbar == 0.0:
+        return 0.0
+    ratio = nbar / (nbar + 1.0)
+    return float(ratio ** dimension)
+
+
 def truncated_thermal_state(
     mode_angular_frequency: float,
     temperature_kelvin: float,

@@ -17,6 +17,10 @@ from ic_quantum.analysis.physical_v2_identifiability import (
     dephasing_source_trajectory_comparison,
 )
 from ic_quantum.analysis.triad import analyze_agent_noise_entropy
+from ic_quantum.analysis.physical_v2_response import (
+    summarize_dephasing_trajectory_shapes,
+    summarize_thermal_characteristic_times,
+)
 from ic_quantum.data.physical_catalog import build_physical_source_registry
 from ic_quantum.data.physical_v2_export import export_physical_v2_dataset
 from ic_quantum.data.physical_v2_generator import generate_physical_v2_samples
@@ -127,6 +131,8 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
         samples, atol=config.identifiability_atol
     )
     dephasing = dephasing_source_trajectory_comparison(samples)
+    dephasing_shapes = summarize_dephasing_trajectory_shapes(dephasing)
+    thermal_response = summarize_thermal_characteristic_times(samples)
     rev_conditions, rev_summary = analyze_reversibility(samples)
     _, triad_summary = analyze_agent_noise_entropy(
         samples, atol=config.identifiability_atol
@@ -140,6 +146,8 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
             preserve_index=name.endswith("_matrix"),
         )
     _write(dephasing, tables / "dephasing_source_trajectories.csv")
+    _write(dephasing_shapes, tables / "dephasing_source_shape_summary.csv")
+    _write(thermal_response, tables / "thermal_characteristic_times.csv")
     _write(
         rev_conditions,
         tables / "physical_reversibility_by_condition.csv",
@@ -282,7 +290,12 @@ minimum is also reported. This is a signature-overlap analysis, not proof that a
 single reduced-state snapshot uniquely determines microscopic cause.
 
 See the physical_pair_summary, physical_probe_overlap,
-physical_mean_nearest_distance_matrix and dephasing_source_trajectories tables.
+physical_mean_nearest_distance_matrix, dephasing_source_trajectories and
+dephasing_source_shape_summary tables.
+
+For thermal sources, thermal_characteristic_times.csv reports first-passage
+1/e scales T1* and T2*. They are descriptors of the sampled trajectory, not
+assumed exponential constants; recurrent models may cross and later revive.
 """,
         encoding="utf-8",
     )

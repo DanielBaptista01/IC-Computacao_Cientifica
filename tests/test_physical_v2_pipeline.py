@@ -11,6 +11,10 @@ from ic_quantum.data.physical_v2_export import export_physical_v2_dataset
 from ic_quantum.data.physical_v2_generator import generate_physical_v2_samples
 from ic_quantum.data.physical_v2_protocol import PhysicalV2Config
 from ic_quantum.data.state_encoding import decode_complex_matrix
+from ic_quantum.analysis.physical_v2_response import (
+    summarize_thermal_characteristic_times,
+)
+from ic_quantum.dynamics.mechanical_phonon import thermal_truncation_tail_probability
 
 
 def small_config():
@@ -158,3 +162,30 @@ def test_scientific_export_preserves_source_specific_signature_descriptors(tmp_p
         scientific["agent_model_id"] == "bistable-charge-fluctuator-rtn"
     ]
     assert charge["signature_extra_json"].str.contains("rtn_psd_at_2nu").any()
+
+
+def test_default_mechanical_fock_truncation_omits_less_than_one_per_mille():
+    config = PhysicalV2Config()
+    tails = []
+    for frequency_hz in config.mechanical_frequencies_hz:
+        for temperature in config.mechanical_temperatures_k:
+            tails.append(
+                thermal_truncation_tail_probability(
+                    2.0 * np.pi * frequency_hz,
+                    temperature,
+                    config.mechanical_mode_dimension,
+                )
+            )
+    assert max(tails) < 1e-3
+
+
+def test_spin_boson_thermal_model_has_no_t1_decay_in_its_validity_domain():
+    config = small_config()
+    samples = generate_physical_v2_samples(config)
+    summary = summarize_thermal_characteristic_times(samples)
+    spin = summary[
+        summary["agent_model_id"] == "finite-mode-spin-boson-dephasing"
+    ]
+    assert len(spin) == 1
+    assert spin["t1_first_1_over_e_crossing_s"].isna().all()
+    assert np.allclose(spin["minimum_excited_population"], 1.0, atol=1e-9)
