@@ -132,6 +132,11 @@ de inversa CPTP e nao-invertibilidade reduzida.
 
 Recuperacao condicionada, acesso ao ambiente e mitigacao nao sao inferidos
 automaticamente a partir do superoperador reduzido.
+
+No spin-boson finito, q(t)=exp[-Lambda(t)] permanece analiticamente positivo
+para expoente finito. Regimes abaixo da tolerancia numerica de posto sao
+registrados como analiticamente invertiveis e numericamente efetivamente
+singulares, em vez de serem apresentados como singularidades matematicas exatas.
 """,
         encoding="utf-8",
     )
@@ -185,6 +190,27 @@ canal reduzido nao implica identidade da fonte causal.
 Fontes/mecanismos especificos podem ser modelados individualmente e podem
 produzir assinaturas distinguiveis em determinadas regioes. Tambem existem
 regioes de nao-identificabilidade; nao se conclui unicidade universal.
+""",
+        encoding="utf-8",
+    )
+
+    dataset_results_md = evidence_dir / "FINAL_DATASET_RESULTS.md"
+    dataset_results_md.write_text(
+        f"""# FINAL_DATASET_RESULTS
+
+Dataset: {config.dataset_id}
+Familias causais: {n_a}
+Amostras validas: {n_s}
+Amostras rejeitadas: {metadata['rejected_samples']}
+Estados de prova: {len(config.probe_ids)}
+Pontos temporais: {config.time_points}
+Pares causais analisados: {len(pair_summary)}
+Regioes de colisao de assinatura: {len(collision_regions)}
+
+Este documento e um indice numerico compacto. As interpretacoes cientificas
+estao em FINAL_SCIENTIFIC_RESULTS.md, FINAL_IDENTIFIABILITY_ANALYSIS.md e
+FINAL_REVERSIBILITY_ANALYSIS.md. Os valores sao produzidos pelo pipeline, nao
+inseridos manualmente.
 """,
         encoding="utf-8",
     )
@@ -252,6 +278,7 @@ requirements-lock.txt.
         ident_md,
         reversibility_md,
         scientific_md,
+        dataset_results_md,
         validation_md,
         reproducibility_md,
         limitations_md,
