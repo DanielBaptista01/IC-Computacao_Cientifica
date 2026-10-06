@@ -38,6 +38,19 @@ jobs:
           path: ci-dataset/
       - name: Generate final IC dataset and evidence
         run: ic-finalize --config experiments/configs/ic_causal_agents_final_v1.json --output-dir results/final
+      - name: Generate physical-source causal dataset v2
+        run: ic-physical-v2 --config experiments/configs/ic_causal_agents_physical_v2.json --output-dir results/physical_v2
+      - name: Report physical-source v2 summary
+        run: |
+          cat results/physical_v2/PHYSICAL_V2_SUMMARY.json
+          cat results/physical_v2/tables/physical_pair_summary.csv
+          cat results/physical_v2/tables/physical_reversibility_summary.csv
+      - name: Upload physical-source v2 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ic-causal-agents-physical-v2
+          path: results/physical_v2/
+          retention-days: 90
       - name: Report final scientific summaries
         run: |
           echo "=== PAIRWISE IDENTIFIABILITY ==="

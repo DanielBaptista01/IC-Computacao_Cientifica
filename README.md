@@ -221,3 +221,56 @@ não são apresentados como resultados finais demonstrados.
     -> análise
 
 Consulte docs/MATHEMATICAL_MAPPING.md e results/final/evidence/.
+
+
+## Expansão físico-causal v2
+
+A tag ic-2026-final e o dataset ic_causal_agents_final_v1 permanecem
+congelados como baseline mecanístico. A expansão posterior aproxima o Agente
+Causal das fontes físicas que motivaram a pesquisa e utiliza o identificador:
+
+    ic_causal_agents_physical_v2
+
+Famílias físico-causais validadas no v2:
+
+1. external-magnetic-field-wave — componente magnética de campo/onda
+   eletromagnética externa; inclui regime Zeeman coerente e ensemble
+   longitudinal quasistático Gaussiano;
+2. finite-mode-spin-boson-dephasing — reservatório bosônico térmico finito;
+3. markovian-photon-reservoir-decay — reservatório eletromagnético de fótons;
+4. mechanical-phonon-mode — modo mecânico/acústico quantizado acoplado ao
+   qubit;
+5. ionizing-radiation-quasiparticle-burst — radiação ionizante
+   (raio cósmico/gama) condicionada à população de quasipartículas pós-impacto;
+6. bistable-charge-fluctuator-rtn — armadilha/defeito de carga biestável com
+   ruído telegráfico.
+
+A família de radiação é explicitamente fenomenológica na ponte entre energia
+depositada/geometria do evento e a condição inicial de quasipartículas. O código
+não inventa um Hamiltoniano microscópico para esse trecho.
+
+A geração v2 usa escalas temporais específicas de cada fonte. Por isso a análise
+pairwise principal mede sobreposição de variedades de assinatura por
+nearest-neighbour em distância de traço, em vez de equiparar artificialmente
+tempos de microssegundos, milissegundos e unidades naturais.
+
+Comando:
+
+    ic-physical-v2 --config experiments/configs/ic_causal_agents_physical_v2.json --output-dir results/physical_v2
+
+A saída separa novamente scientific_records, observable_features, causal_labels,
+metadata e provenance. observable_features não inclui physical_source,
+causal_mechanism, agent_model_id, regime físico ou parâmetros específicos do
+simulador.
+
+### Escopo físico ainda não fechado
+
+Não foram promovidos a famílias validadas separadas:
+
+- acoplamento elétrico de dipolo -d.E como família independente;
+- transporte completo de partículas ionizantes e geometria de deposição;
+- propagação espacial correlacionada em múltiplos qubits;
+- ensemble completo de defeitos capaz de gerar um espectro 1/f;
+- vibração macroscópica arbitrária de encapsulamento/chassi.
+
+Esses casos permanecem extensões ou hipóteses, não resultados simulados.
