@@ -1,0 +1,108 @@
+{
+  "dataset_id": "ic_causal_agents_physical_v2",
+  "schema_version": "2.0",
+  "probe_ids": [
+    "0",
+    "1",
+    "+",
+    "-",
+    "+i",
+    "-i",
+    "cube_mmm",
+    "cube_mmp",
+    "cube_mpm",
+    "cube_mpp",
+    "cube_pmm",
+    "cube_pmp",
+    "cube_ppm",
+    "cube_ppp"
+  ],
+  "identifiability_atol": 1e-10,
+  "em_gyromagnetic_ratio": 176085962784,
+  "em_field_amplitudes_t": [
+    1e-8,
+    1e-7,
+    0.000001
+  ],
+  "em_drive_frequencies_hz": [
+    0,
+    100000,
+    1000000
+  ],
+  "em_orientations": [
+    "x",
+    "z"
+  ],
+  "em_gaussian_sigma_b_t": [
+    1e-8,
+    1e-7,
+    0.000001
+  ],
+  "em_time_max_s": 0.00001,
+  "em_time_points": 41,
+  "thermal_mode_counts": [
+    4,
+    16
+  ],
+  "thermal_cutoffs_rad_s": [
+    1,
+    2
+  ],
+  "thermal_temperature_ratios": [
+    0.1,
+    1
+  ],
+  "thermal_time_max_s": 6.283185307179586,
+  "thermal_time_points": 41,
+  "photon_decay_rates_s": [
+    10000,
+    20000,
+    100000
+  ],
+  "photon_time_max_s": 0.0002,
+  "photon_time_points": 41,
+  "mechanical_frequencies_hz": [
+    1000000000,
+    3000000000
+  ],
+  "mechanical_couplings_hz": [
+    1000000,
+    5000000
+  ],
+  "mechanical_temperatures_k": [
+    0,
+    0.05
+  ],
+  "mechanical_mode_dimension": 10,
+  "mechanical_time_max_s": 0.000001,
+  "mechanical_time_points": 41,
+  "radiation_initial_xqp": [
+    0.000001,
+    0.00001,
+    0.0001
+  ],
+  "radiation_trapping_rates_s": [
+    1000,
+    10000
+  ],
+  "radiation_recombination_rate_s": 5882352.941176471,
+  "radiation_generation_rate_s": 0,
+  "radiation_qubit_frequency_hz": 5000000000,
+  "radiation_background_relaxation_rate_s": 10000,
+  "radiation_time_min_positive_s": 1e-8,
+  "radiation_time_max_s": 0.01,
+  "radiation_time_points": 41,
+  "charge_couplings_hz": [
+    1000,
+    10000,
+    100000
+  ],
+  "charge_switching_rates_s": [
+    1000,
+    10000,
+    100000
+  ],
+  "charge_time_min_positive_s": 1e-7,
+  "charge_time_max_s": 0.01,
+  "charge_time_points": 41
+}
