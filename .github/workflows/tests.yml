@@ -35,6 +35,22 @@ jobs:
           path: ci-dataset/
       - name: Generate final IC dataset and evidence
         run: ic-finalize --config experiments/configs/ic_causal_agents_final_v1.json --output-dir results/final
+      - name: Report final scientific summaries
+        run: |
+          echo "=== PAIRWISE IDENTIFIABILITY ==="
+          cat results/final/tables/pair_summary.csv
+          echo "=== TRIAD ==="
+          cat results/final/tables/agent_noise_entropy_summary.csv
+          echo "=== REVERSIBILITY ==="
+          cat results/final/tables/reversibility_summary.csv
+          echo "=== SAMPLE COUNTS ==="
+          cat results/final/tables/sample_counts.csv
+          echo "=== PARAMETER COVERAGE ==="
+          cat results/final/tables/parameter_coverage.csv
+          echo "=== FINAL FILE SIZES ==="
+          du -ah results/final | sort -h | tail -40
+          echo "=== ENVIRONMENT FREEZE ==="
+          cat results/final/environment/requirements-freeze.txt
       - name: Upload final IC evidence package
         uses: actions/upload-artifact@v4
         with:
