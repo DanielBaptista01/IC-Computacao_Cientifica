@@ -19,7 +19,7 @@ from ic_quantum.dynamics.mechanical_phonon import thermal_truncation_tail_probab
 
 def small_config():
     return PhysicalV2Config(
-        probe_ids=("0", "+"),
+        probe_ids=("0", "1", "+"),
         em_field_amplitudes_t=(1e-7,),
         em_drive_frequencies_hz=(0.0,),
         em_orientations=("z",),
