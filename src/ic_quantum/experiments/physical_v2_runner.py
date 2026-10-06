@@ -97,6 +97,9 @@ def run_physical_v2(output_dir: Path, config) -> dict:
         "parameter_points":int(parameter_counts.parameter_point_count.sum()),
         "pairwise_agent_pairs":int(len(pair)),
         "collision_regions":int(len(ident["collision_regions"])),
+        "pairwise_summary":ident["pair_summary"].to_dict(orient="records"),
+        "reversibility_summary":rev_summary.to_dict(orient="records"),
+        "agent_noise_entropy_summary":triad_summary.to_dict(orient="records"),
         "new_validated_physical_agents":[
             "external-electromagnetic-rabi-drive",
             "external-magnetic-zeeman-field",
@@ -115,6 +118,7 @@ def run_physical_v2(output_dir: Path, config) -> dict:
         f"Amostras validas: {summary['N_S']}\n\n"
         f"Pares causais analisados: {summary['pairwise_agent_pairs']}\n\n"
         f"Regioes de colisao de assinatura: {summary['collision_regions']}\n\n"
+        "Os resumos quantitativos completos de identificabilidade, reversibilidade e triade Agente-Ruido-Entropia tambem sao serializados em PHYSICAL_V2_SUMMARY.json e nas tabelas CSV.\n\n"
         "A v2 adiciona quatro fontes fisicas explicitamente modeladas: campo eletromagnetico coerente, campo magnetico Zeeman, reservatorio fotonico termico e modo mecanico/fononico. "
         "Raios cosmicos, ruido de carga, TLS materiais e quasiparticulas permanecem fora do corpus validado por falta de uma cadeia quantitativa completa no material cientifico disponivel.\n",
         encoding="utf-8",
