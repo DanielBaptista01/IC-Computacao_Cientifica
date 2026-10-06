@@ -96,3 +96,49 @@ def apply_external_magnetic_field(
     **kwargs: float,
 ) -> np.ndarray:
     return apply_unitary(rho, external_magnetic_field_unitary(**kwargs))
+
+
+def gaussian_quasistatic_field_coherence_factor(
+    *,
+    gyromagnetic_ratio: float,
+    field_standard_deviation: float,
+    time: float,
+) -> float:
+    """Ensemble coherence for a zero-mean quasistatic Gaussian longitudinal field.
+
+    If delta B is Gaussian with standard deviation sigma_B and the qubit frequency
+    shift is gamma*delta B, averaging exp[-i gamma deltaB t] gives
+    W(t)=exp[-(gamma sigma_B t)^2/2].
+    """
+    gamma = float(gyromagnetic_ratio)
+    sigma_b = float(field_standard_deviation)
+    t = float(time)
+    if gamma < 0 or sigma_b < 0 or t < 0:
+        raise ValueError(
+            "gyromagnetic_ratio, field_standard_deviation and time must be non-negative."
+        )
+    return float(np.exp(-0.5 * (gamma * sigma_b * t) ** 2))
+
+
+def gaussian_quasistatic_field_kraus(
+    *,
+    gyromagnetic_ratio: float,
+    field_standard_deviation: float,
+    time: float,
+) -> list[np.ndarray]:
+    """Equivalent dephasing Kraus representation of the Gaussian field ensemble."""
+    q = gaussian_quasistatic_field_coherence_factor(
+        gyromagnetic_ratio=gyromagnetic_ratio,
+        field_standard_deviation=field_standard_deviation,
+        time=time,
+    )
+    return [
+        np.sqrt((1.0 + q) / 2.0) * I2,
+        np.sqrt((1.0 - q) / 2.0) * SIGMA_Z,
+    ]
+
+
+def apply_gaussian_quasistatic_field(rho: np.ndarray, **kwargs: float) -> np.ndarray:
+    from ic_quantum.dynamics.open_system import apply_kraus
+
+    return apply_kraus(rho, gaussian_quasistatic_field_kraus(**kwargs))
