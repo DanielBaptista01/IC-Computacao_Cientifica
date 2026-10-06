@@ -20,6 +20,10 @@ class CausalAgent:
     name: str
     physical_model: str
     dynamic_regime: str
+    model_role: str = "causal_model"
+    physical_source: str | None = None
+    causal_mechanism: str | None = None
+    provenance: tuple[str, ...] = ()
     parameters: dict[str, Any] = field(default_factory=dict)
     temporal_parameters: dict[str, Any] = field(default_factory=dict)
     interaction_hamiltonian: np.ndarray | None = None
