@@ -21,7 +21,7 @@ automaticamente a não-invertibilidade matemática.
 Os pontos usados no fechamento possuem testes automatizados: quatro famílias,
 limites nulos, soluções analíticas, Kraus/CPTP, recorrência spin-boson,
 equivalência microscópica/reduzida, separação features/labels, strict JSON,
-identificabilidade N-agentes e dinâmica unitária com Delta S numericamente nulo.
+identificabilidade N-agentes e dinâmica unitária com $\Delta S$ numericamente nulo.
 
 ### Há número do relatório não reproduzível?
 

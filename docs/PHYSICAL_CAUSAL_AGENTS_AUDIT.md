@@ -4,8 +4,9 @@
 
 Uma família só entra no corpus validado quando existe, no domínio declarado:
 
-fenômeno -> mecanismo -> equação -> parâmetros -> implementação -> teste ->
-simulação -> assinatura.
+$$
+\text{fenômeno}\to\text{mecanismo}\to\text{equação}\to\text{parâmetros}\to\text{implementação}\to\text{teste}\to\text{simulação}\to\text{assinatura}.
+$$
 
 Nomes de canais não são usados como identidade física. Modelos que ainda não
 fecham essa cadeia permanecem explicitamente fenomenológicos, não resolvidos ou
@@ -18,16 +19,16 @@ fora de escopo.
 | Separar fonte, agente, mecanismo, canal, ruído e métricas | DONE | schema e exporter preservam campos distintos |
 | Transformação Causal Latente com contexto físico | DONE | source, mechanism, physical_parameters e provenance |
 | Campo magnético/EM externo | DONE | Zeeman coerente + ensemble quasistático |
-| Onda EM coerente próxima à ressonância | DONE | Rabi/RWA com Omega efetivo |
+| Onda EM coerente próxima à ressonância | DONE | Rabi/RWA com $\Omega$ efetivo |
 | Banho bosônico térmico | DONE | spin-boson finito |
-| Reservatório fotônico T=0 | DONE | relaxação Markoviana |
-| Reservatório fotônico a T>0 | DONE | generalized amplitude damping derivado da equação térmica |
+| Reservatório fotônico $T=0$ | DONE | relaxação Markoviana |
+| Reservatório fotônico a $T>0$ | DONE | generalized amplitude damping derivado da equação térmica |
 | Vibração/fônon por troca de excitação | DONE | modo acústico quantizado + unitária global + traço parcial |
 | Vibração/fônon longitudinal | DONE | modo bosônico único, dephasing e recorrência |
 | Ruído de carga/TLS | DONE | flutuador biestável RTN + PSD |
-| Radiação ionizante/quasipartículas | DONE/PARTIAL | dinâmica pós-impacto quantificada; ponte deposição -> x_qp(0) permanece fenomenológica |
+| Radiação ionizante/quasipartículas | DONE/PARTIAL | dinâmica pós-impacto quantificada; ponte deposição $\to x_{\mathrm{qp}}(0)$ permanece fenomenológica |
 | Reversibilidade por condição | DONE | unitária direta, inversa linear/CPTP e singularidade reduzida distinguidas |
-| Tríade Agente–Ruído–Entropia | DONE | métricas e controles coerentes preservam DeltaS=0 com perturbação |
+| Tríade Agente–Ruído–Entropia | DONE | métricas e controles coerentes preservam $\Delta S=0$ com perturbação |
 | Identificabilidade por estado | DONE | overlap de variedades parâmetro-tempo |
 | Identificabilidade de processo | DONE | embedding multi-probe operacional; não é diamond norm |
 | Não-identificabilidade controlada | DONE | duas causas físicas podem compartilhar o mesmo canal de dephasing em um snapshot |
@@ -37,7 +38,7 @@ fora de escopo.
 | Transporte microscópico completo de radiação | BLOCKED | fundamento/escopo insuficientes para uma transformação quantitativa geral |
 | Vibração arbitrária de chassi/pacote | BLOCKED | requer plataforma e função de transferência mecânica |
 | Ensemble universal 1/f de defeitos | BLOCKED | um RTN físico foi validado; extrapolação universal não é assumida |
-| E0/polarização -> Omega universal | BLOCKED | requer matriz de dipolo e geometria específicas da plataforma |
+| $E_0$/polarização $\to\Omega$ universal | BLOCKED | requer matriz de dipolo e geometria específicas da plataforma |
 
 ## Oito famílias físico-causais não redundantes
 
@@ -53,7 +54,7 @@ O catálogo autoritativo contém mecanismos distintos, não duplicações por no
 8. bistable-charge-fluctuator-rtn.
 
 O markovian-photon-reservoir-decay permanece no v1 como baseline histórico,
-mas não é contado novamente no v2: T=0 é tratado como limite da mesma família
+mas não é contado novamente no v2: $T=0$ é tratado como limite da mesma família
 thermal-photon-reservoir.
 
 O helper estático de campo magnético incorporado da implementação paralela foi
@@ -82,29 +83,29 @@ snapshot, e não tratado como falha do modelo.
 
 ## Reversibilidade
 
-A classificação continua sendo feita por condição (theta,t), nunca como rótulo
+A classificação continua sendo feita por condição $(\boldsymbol{\theta},t)$, nunca como rótulo
 absoluto da fonte. Uma mesma família EM possui regiões unitárias diretamente
 invertíveis e regiões de ensemble não unitárias. Mapas reduzidos não unitários
 podem continuar linearmente invertíveis sem que sua inversa seja CPTP.
 
 ## Quantificação térmica e mecânica
 
-T1* e T2* são reportados como primeiros cruzamentos amostrados de 1/e. Eles não
+$T_1^*$ e $T_2^*$ são reportados como primeiros cruzamentos amostrados de 1/e. Eles não
 são chamados de constantes de decaimento quando a dinâmica apresenta recorrência
 ou não é exponencial.
 
 Para vibração longitudinal, o teste de frequência mantém a mesma razão
-dimensionless g/omega e a mesma ocupação térmica em duas linhas espectrais. A
+razão adimensional $g/\omega$ e a mesma ocupação térmica em duas linhas espectrais. A
 comparação usa o mesmo tempo físico, permitindo testar se frequência distinta
 gera assinatura temporal distinta mesmo sob intensidade adimensional
 operacionalmente casada.
 
 ## Maturidade
 
-LEVEL_3 significa implementação numérica validada no domínio teórico declarado.
+`LEVEL_3` significa implementação numérica validada no domínio teórico declarado.
 Não significa comparação com hardware nem validação experimental. A família de
-radiação é LEVEL_3 apenas para a dinâmica fenomenológica pós-impacto a partir de
-x_qp(0).
+radiação é `LEVEL_3` apenas para a dinâmica fenomenológica pós-impacto a partir de
+$x_{\mathrm{qp}}(0)$.
 
 Os níveis superiores continuam reservados para comparação quantitativa com
 referência independente/experimento e validação experimental, quando aplicável.

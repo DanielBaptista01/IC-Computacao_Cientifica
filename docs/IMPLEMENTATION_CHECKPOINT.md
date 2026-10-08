@@ -18,7 +18,7 @@
 
 Oito famílias/mecanismos físico-causais não redundantes:
 campo magnético/EM coerente e quasistático; drive EM Rabi; spin-boson térmico;
-reservatório fotônico térmico incluindo T=0 como limite; modo
+reservatório fotônico térmico incluindo $T=0$ como limite; modo
 mecânico-fonônico de troca; modo mecânico longitudinal; radiação
 ionizante/quasipartículas (ponte fenomenológica); flutuador de carga RTN.
 

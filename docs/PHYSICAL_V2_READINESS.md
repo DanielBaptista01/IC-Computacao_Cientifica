@@ -1,7 +1,7 @@
 # Prontidão científico-computacional — expansão físico-causal v2
 
 Checkpoint auditado: `eb30e10f07e0cff0dbe4a6c259c00e15649fd529`.
-PR de consolidação: #6 (`feat/agentes-fisicos-v2` -> `main`).
+PR de consolidação: #6 (`feat/agentes-fisicos-v2` $\to$ `main`).
 
 ## Matriz de requisitos
 
@@ -13,7 +13,7 @@ PR de consolidação: #6 (`feat/agentes-fisicos-v2` -> `main`).
 | Banho térmico e fótons | DONE | Spin-boson finito e reservatório térmico |
 | Vibrações/fônons | DONE | Modos quantizados transverso e longitudinal |
 | Carga e defeito TLS | DONE | RTN de flutuador biestável |
-| Radiação ionizante | PARTIAL | Dinâmica pós-impacto validada numericamente; deposição -> quasipartículas é PHENOMENOLOGICAL |
+| Radiação ionizante | PARTIAL | Dinâmica pós-impacto validada numericamente; deposição $\to$ quasipartículas é PHENOMENOLOGICAL |
 | Reversibilidade por condição | DONE | Mapas reduzidos, CPTP, limites unitários |
 | Tríade agente–ruído–entropia | DONE | Tabelas e controle coerente |
 | Identificabilidade e colisões | DONE | 28 pares, múltiplos probes e snapshot casado |
@@ -22,7 +22,7 @@ PR de consolidação: #6 (`feat/agentes-fisicos-v2` -> `main`).
 | Testes automatizados | DONE | 104 passed no run 37817701075 |
 | Validação experimental em hardware | BLOCKED | Sem medições de dispositivo |
 | Transporte microscópico completo de radiação | BLOCKED | Não há modelo/plataforma suficientes |
-| Calibração universal E0/polarização -> Rabi | BLOCKED | Exige geometria e elementos de matriz |
+| Calibração universal $E_0$/polarização $\to$ Rabi | BLOCKED | Exige geometria e elementos de matriz |
 | Vibração arbitrária de chassi e ensemble 1/f universal | BLOCKED | Não extrapolar modos selecionados |
 | ML/QML | DONE | Não treinado, fora do escopo |
 | Integração em main e release estável | PARTIAL | PR #6 permanece draft; integração requer decisão de merge |
@@ -34,14 +34,14 @@ O GitHub Actions da branch, no commit auditado, concluiu com sucesso a suíte de
 10,5 MB), além de regenerar o baseline v1. O resumo de CI reportou:
 
 - Dataset: `ic_causal_agents_physical_v2`;
-- N_A = 8 famílias não redundantes;
-- N_S = 45.920 amostras;
+- $N_A=8$ famílias não redundantes;
+- $N_S=45\,920$ amostras;
 - 28 pares entre fontes e 28 pares de assinatura multi-probe;
 - distância de traço no snapshot EM/térmico casado = 0;
 - diferença máxima das trajetórias normalizadas no exemplo casado ≈ 0,0002540933;
-- diferença máxima de coerência mecânica no mesmo tempo sob comparação g/omega casada ≈ 0,2133721389;
-- radiation_source_channel_bridge = PHENOMENOLOGICAL;
-- machine_learning_trained = false.
+- diferença máxima de coerência mecânica no mesmo tempo sob comparação com $g/\omega$ casado ≈ 0,2133721389;
+- `radiation_source_channel_bridge = PHENOMENOLOGICAL`;
+- `machine_learning_trained = false`.
 
 Estes números são resultados de simulação do protocolo configurado, não medidas
 de hardware, nem demonstração de identificabilidade universal. A diferença
