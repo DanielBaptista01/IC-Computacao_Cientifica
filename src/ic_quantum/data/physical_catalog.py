@@ -58,6 +58,37 @@ def _altafini_ticozzi() -> ProvenanceRecord:
     )
 
 
+
+
+def _norambuena_tancara_coto() -> ProvenanceRecord:
+    return ProvenanceRecord(
+        kind=ProvenanceKind.LITERATURE_DERIVED,
+        publication=(
+            "Coding closed and open quantum systems in MATLAB: applications in "
+            "quantum optics and condensed matter, Eur. J. Phys. 41, 045404 "
+            "(2020), DOI 10.1088/1361-6404/ab8360"
+        ),
+        authors=("Ariel Norambuena", "Diego Tancara", "Raul Coto"),
+        year=2020,
+        locator=(
+            "Sec. 3.2: driven two-level system coupled to a thermal photon "
+            "reservoir; Sec. 3.4: microscopic pure-dephasing spin-boson model"
+        ),
+        assumptions=(
+            "effective two-level system",
+            "rotating-wave/semiclassical drive in the coherent reduction",
+            "Markovian thermal photon reservoir for the Lindblad model",
+            "bosonic environment for pure-dephasing specialization",
+        ),
+        ic_interpretation=(
+            "Grounds the additional coherent electromagnetic Rabi family and the "
+            "finite-temperature photon-reservoir family. The same bosonic formalism "
+            "also supports a one-mode longitudinal phonon specialization, which is "
+            "kept distinct from the excitation-exchange acoustic model."
+        ),
+    )
+
+
 def _charge_noise_reference() -> ProvenanceRecord:
     return ProvenanceRecord(
         kind=ProvenanceKind.LITERATURE_DERIVED,
@@ -635,12 +666,347 @@ def bistable_charge_fluctuator_model() -> CausalAgentModelRecord:
     )
 
 
+
+def external_electromagnetic_rabi_model() -> CausalAgentModelRecord:
+    literature = _norambuena_tancara_coto()
+    derived = _author(
+        "The platform-specific dipole-field transduction is not invented. "
+        "It is represented by the effective Rabi rate Omega; detuning and phase "
+        "remain explicit physical-control parameters of the incident coherent wave."
+    )
+    return CausalAgentModelRecord(
+        agent_id="external-electromagnetic-rabi-drive",
+        provisional_name="External coherent electromagnetic Rabi drive",
+        physical_category="external_electromagnetic_coherent_drive",
+        physical_description=(
+            "A near-resonant coherent electromagnetic wave couples to an effective "
+            "two-level transition and produces deterministic rotations. The model "
+            "retains the effective coupling rate rather than fabricating a raw E-field "
+            "to qubit transduction for an unspecified hardware platform."
+        ),
+        target_system="single effective qubit/two-level transition",
+        physical_source="external coherent electromagnetic wave",
+        causal_mechanism=(
+            "near-resonant electric/magnetic dipole coupling reduced to an effective "
+            "rotating-frame Rabi Hamiltonian"
+        ),
+        relevant_degrees_of_freedom=("qubit", "classical coherent electromagnetic drive"),
+        system_hamiltonian=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="H_S=(hbar omega_0/2) sigma_z",
+            provenance=(literature,),
+        ),
+        interaction_hamiltonian=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression=(
+                "H_RWA/hbar=(1/2)[Delta sigma_z + "
+                "Omega(cos(phi)sigma_x+sin(phi)sigma_y)]"
+            ),
+            provenance=(literature, derived),
+        ),
+        parameters=(
+            ParameterSpec(
+                "rabi_rate", "Omega", "rad s^-1", "Omega >= 0",
+                "Effective field-qubit coupling rate; the platform-specific dipole "
+                "matrix element is absorbed into this parameter.",
+                (literature, derived),
+            ),
+            ParameterSpec(
+                "detuning", "Delta", "rad s^-1", "real",
+                "Drive-transition angular-frequency detuning.",
+                (literature, derived),
+            ),
+            ParameterSpec(
+                "phase", "phi", "rad", "real modulo 2*pi",
+                "Drive phase setting the transverse rotation axis.",
+                (derived,),
+            ),
+            ParameterSpec(
+                "interaction_time", "t", "s", "t >= 0",
+                "Exposure duration.",
+                (literature, derived),
+            ),
+        ),
+        assumptions=(
+            "semiclassical coherent external field",
+            "rotating-wave/near-resonant effective model",
+            "single two-level transition",
+            "raw electric-field amplitude is not inferred without a platform-specific dipole matrix element",
+            "no stochastic amplitude or phase noise in this family",
+        ),
+        dynamic_regime=DynamicRegime.COHERENT_UNITARY,
+        memory_regime=MemoryRegime.NOT_APPLICABLE,
+        temporal_description="U(t)=exp[-i H_RWA t/hbar]",
+        unitary_transform=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="U(t)=exp[-i H_RWA t/hbar]",
+            provenance=(literature, derived),
+        ),
+        effective_dynamics=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="E_t(rho)=U(t)rho U(t)^dagger",
+            provenance=(derived,),
+        ),
+        observables=("X", "Y", "Z"),
+        information_metrics=(
+            "von_neumann_entropy", "purity", "l1_coherence", "fidelity",
+            "trace_distance", "bloch_vector", "choi_rank"
+        ),
+        reversibility_class="direct_unitary_inverse_within_coherent_RWA_model",
+        validity_domain=(
+            "single effective two-level system",
+            "coherent near-resonant drive",
+            "RWA/rotating-frame regime",
+            "effective Rabi rate rather than calibrated raw field amplitude",
+        ),
+        references=(literature, derived),
+        derivation_method=(
+            "semiclassical light-matter coupling reduced to a time-independent "
+            "rotating-frame two-level Hamiltonian"
+        ),
+        validation_method=(
+            "Hamiltonian Hermiticity",
+            "unitarity",
+            "zero-time identity",
+            "resonant pi-pulse population inversion",
+            "adjoint direct inverse",
+        ),
+        maturity_level=ModelMaturityLevel.LEVEL_3,
+        notes=(
+            "The source-to-effective-coupling link is parameterized by Omega. "
+            "No unsupported conversion from E0 or polarization to Omega is claimed.",
+        ),
+    )
+
+
+def thermal_photon_reservoir_model() -> CausalAgentModelRecord:
+    literature = _norambuena_tancara_coto()
+    derived = _author(
+        "For the thermal Lindblad equation, gamma_down=gamma(nbar+1) and "
+        "gamma_up=gamma*nbar. The exact qubit semigroup is represented by "
+        "generalized amplitude damping with thermal fixed point."
+    )
+    return CausalAgentModelRecord(
+        agent_id="thermal-photon-reservoir",
+        provisional_name="Finite-temperature Markovian photon reservoir",
+        physical_category="thermal_electromagnetic_reservoir",
+        physical_description=(
+            "A thermally populated electromagnetic reservoir drives spontaneous/"
+            "stimulated emission and absorption of a two-level system. Temperature "
+            "enters through the Bose occupation at the qubit transition frequency."
+        ),
+        target_system="single two-level system",
+        physical_source="finite-temperature electromagnetic photon reservoir",
+        causal_mechanism="rotating-wave excitation exchange with thermally populated photon modes",
+        relevant_degrees_of_freedom=("two-level system", "thermal photon reservoir modes"),
+        interaction_hamiltonian=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="H_int=hbar sum_k g_k(sigma_+ a_k + sigma_- a_k^dagger)",
+            provenance=(literature,),
+        ),
+        parameters=(
+            ParameterSpec(
+                "decay_rate", "gamma", "s^-1", "gamma >= 0",
+                "Zero-temperature spontaneous-emission scale entering the thermal rates.",
+                (literature,),
+            ),
+            ParameterSpec(
+                "transition_angular_frequency", "omega_0", "rad s^-1", "omega_0 > 0",
+                "Two-level transition angular frequency.",
+                (literature,),
+            ),
+            ParameterSpec(
+                "temperature_kelvin", "T", "K", "T >= 0",
+                "Reservoir temperature.",
+                (literature, derived),
+            ),
+            ParameterSpec(
+                "interaction_time", "t", "s", "t >= 0",
+                "Elapsed reduced-dynamics time.",
+                (derived,),
+            ),
+        ),
+        initial_agent_state=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="thermal photon state with nbar=[exp(hbar omega_0/k_B T)-1]^-1",
+            provenance=(literature, derived),
+        ),
+        assumptions=(
+            "Markovian weak coupling",
+            "stationary thermal photon reservoir",
+            "two-level system",
+            "rotating-wave exchange",
+        ),
+        dynamic_regime=DynamicRegime.INCOHERENT_CPTP,
+        memory_regime=MemoryRegime.MARKOVIAN,
+        temporal_description=(
+            "gamma_down=gamma(nbar+1), gamma_up=gamma*nbar; exact generalized "
+            "amplitude-damping semigroup"
+        ),
+        master_equation=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression=(
+                "d rho/dt=gamma(nbar+1)D[sigma_-]rho + "
+                "gamma nbar D[sigma_+]rho"
+            ),
+            provenance=(literature, derived),
+        ),
+        kraus_operators=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression=(
+                "generalized amplitude-damping Kraus representation with "
+                "lambda=1-exp[-gamma(2nbar+1)t]"
+            ),
+            provenance=(derived,),
+        ),
+        effective_dynamics=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression=(
+                "thermal generalized amplitude damping with equilibrium "
+                "excited population nbar/(2nbar+1)"
+            ),
+            provenance=(derived, literature),
+        ),
+        observables=("X", "Y", "Z"),
+        information_metrics=(
+            "von_neumann_entropy", "purity", "l1_coherence", "fidelity",
+            "trace_distance", "bloch_vector", "thermal_occupation", "choi_rank"
+        ),
+        reversibility_class="parameter_and_time_dependent_thermal_relaxation",
+        validity_domain=(
+            "single two-level system",
+            "Markovian weak-coupling thermal photon reservoir",
+        ),
+        references=(literature, derived),
+        derivation_method="thermal Lindblad equation solved as generalized amplitude damping",
+        validation_method=(
+            "Kraus completeness",
+            "T=0 reduction to amplitude damping",
+            "thermal fixed-point population",
+            "CPTP output validation",
+        ),
+        maturity_level=ModelMaturityLevel.LEVEL_3,
+    )
+
+
+def mechanical_longitudinal_phonon_model() -> CausalAgentModelRecord:
+    literature = _norambuena_tancara_coto()
+    derived = _author(
+        "A single undamped bosonic mode is specialized as a mechanical/phonon-like "
+        "coordinate with longitudinal sigma_z displacement coupling. The exact thermal "
+        "coherence factor is retained, so recurrences are physical within this finite-mode model."
+    )
+    return CausalAgentModelRecord(
+        agent_id="single-mode-mechanical-phonon-dephasing",
+        provisional_name="Single-mode mechanical/phonon longitudinal coupling",
+        physical_category="mechanical_vibration_phonon_dephasing",
+        physical_description=(
+            "A selected quantized vibrational mode modulates the qubit splitting via "
+            "longitudinal displacement coupling. Unlike the excitation-exchange "
+            "mechanical family, this mechanism preserves computational-basis populations "
+            "and generates recurrent pure dephasing."
+        ),
+        target_system="single effective qubit",
+        physical_source="single quantized mechanical/phonon vibration mode",
+        causal_mechanism="longitudinal displacement coupling sigma_z(b+b^dagger)",
+        relevant_degrees_of_freedom=("qubit", "single harmonic vibrational mode"),
+        agent_hamiltonian=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="H_A=hbar omega_m b^dagger b",
+            provenance=(literature, derived),
+        ),
+        interaction_hamiltonian=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="H_int=hbar g_m sigma_z(b+b^dagger)",
+            provenance=(literature, derived),
+        ),
+        parameters=(
+            ParameterSpec(
+                "mode_angular_frequency", "omega_m", "rad s^-1", "omega_m > 0",
+                "Mechanical/phonon mode angular frequency.",
+                (literature, derived),
+            ),
+            ParameterSpec(
+                "coupling_rate", "g_m", "rad s^-1", "g_m >= 0",
+                "Effective longitudinal mode-qubit coupling.",
+                (literature, derived),
+            ),
+            ParameterSpec(
+                "thermal_occupation", "nbar", "1", "nbar >= 0",
+                "Mean thermal occupation of the selected mode.",
+                (literature, derived),
+            ),
+            ParameterSpec(
+                "interaction_time", "t", "s", "t >= 0",
+                "Interaction time.",
+                (derived,),
+            ),
+        ),
+        initial_agent_state=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="thermal oscillator state characterized by mean occupation nbar",
+            provenance=(literature, derived),
+        ),
+        assumptions=(
+            "single harmonic vibrational mode",
+            "longitudinal pure-dephasing coupling",
+            "initial product state",
+            "undamped oscillator during the modeled interval",
+            "effective coupling; no hardware-specific strain/displacement calibration is claimed",
+        ),
+        dynamic_regime=DynamicRegime.INCOHERENT_CPTP,
+        memory_regime=MemoryRegime.NON_MARKOVIAN,
+        temporal_description=(
+            "rho_01(t)=q(t)rho_01(0), "
+            "q=exp[-4(g_m/omega_m)^2(1-cos omega_m t)(2nbar+1)]"
+        ),
+        kraus_operators=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="K0=sqrt((1+q)/2)I; K1=sqrt((1-q)/2)sigma_z",
+            provenance=(derived,),
+        ),
+        effective_dynamics=MathematicalField(
+            status=FieldStatus.VALUE,
+            expression="single-mode dephasing map with exact recurrence q(2*pi/omega_m)=1",
+            provenance=(literature, derived),
+        ),
+        observables=("X", "Y", "Z"),
+        information_metrics=(
+            "von_neumann_entropy", "purity", "l1_coherence", "fidelity",
+            "trace_distance", "bloch_vector", "coherence_factor", "choi_rank"
+        ),
+        reversibility_class="parameter_and_time_dependent_reduced_dephasing",
+        validity_domain=(
+            "single qubit",
+            "single undamped harmonic vibrational mode",
+            "longitudinal displacement coupling",
+        ),
+        references=(literature, derived),
+        derivation_method="one-mode specialization of exact longitudinal bosonic dephasing",
+        validation_method=(
+            "q(0)=1",
+            "q(2*pi/omega_m)=1 recurrence",
+            "population preservation",
+            "Kraus completeness and CPTP validation",
+        ),
+        maturity_level=ModelMaturityLevel.LEVEL_3,
+        notes=(
+            "This family is included because the coupling mechanism is physically "
+            "different from the acoustic excitation-exchange family, not to inflate "
+            "the number of dataset classes.",
+        ),
+    )
+
+
 def build_physical_source_registry() -> CausalAgentRegistry:
     registry = CausalAgentRegistry()
     registry.add(external_magnetic_field_model())
+    registry.add(external_electromagnetic_rabi_model())
     registry.add(finite_mode_spin_boson_dephasing_model())
     registry.add(markovian_photon_reservoir_decay_model())
+    registry.add(thermal_photon_reservoir_model())
     registry.add(mechanical_phonon_mode_model())
+    registry.add(mechanical_longitudinal_phonon_model())
     registry.add(ionizing_radiation_quasiparticle_model())
     registry.add(bistable_charge_fluctuator_model())
     return registry
