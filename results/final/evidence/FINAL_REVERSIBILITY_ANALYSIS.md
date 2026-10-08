@@ -20,6 +20,6 @@ Recuperação condicionada, acesso ao ambiente e mitigação não sao inferidos
 automaticamente a partir do superoperador reduzido.
 
 No spin-boson finito, $q(t)=e^{-\Lambda(t)}$ permanece analiticamente positivo
-para $\Lambda(t)$ finito. Regimes abaixo da tolerancia numérica de posto sao
+para $\Lambda(t)$ finito. Regimes abaixo da tolerância numérica de posto são
 registrados como analiticamente invertíveis e numéricamente efetivamente
 singulares, em vez de serem apresentados como singularidades matemáticas exatas.
