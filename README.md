@@ -231,24 +231,22 @@ congelados como baseline mecanístico. A expansão físico-causal usa:
 
     ic_causal_agents_physical_v2
 
-O catálogo reconciliado contém nove famílias/mecanismos causalmente distintos:
+O catálogo reconciliado contém oito famílias/mecanismos causalmente distintos:
 
 1. `external-magnetic-field-wave` — campo magnético externo: evolução Zeeman
    coerente e ensemble longitudinal quasistático;
 2. `external-electromagnetic-rabi-drive` — onda EM coerente próxima à
    ressonância, com acoplamento efetivo de Rabi;
 3. `finite-mode-spin-boson-dephasing` — banho bosônico térmico finito;
-4. `markovian-photon-reservoir-decay` — reservatório fotônico Markoviano no
-   limite de temperatura nula;
-5. `thermal-photon-reservoir` — reservatório fotônico Markoviano a temperatura
-   finita, com emissão e absorção;
-6. `mechanical-phonon-mode` — modo acústico/mecânico quantizado com troca de
+4. `thermal-photon-reservoir` — reservatório fotônico Markoviano cobrindo
+   (T=0) e temperatura finita, com emissão e absorção;
+5. `mechanical-phonon-mode` — modo acústico/mecânico quantizado com troca de
    excitação;
-7. `single-mode-mechanical-phonon-dephasing` — modo vibracional quantizado com
+6. `single-mode-mechanical-phonon-dephasing` — modo vibracional quantizado com
    acoplamento longitudinal e dephasing recorrente;
-8. `ionizing-radiation-quasiparticle-burst` — evento ionizante condicionado à
+7. `ionizing-radiation-quasiparticle-burst` — evento ionizante condicionado à
    dinâmica pós-impacto de quasipartículas;
-9. `bistable-charge-fluctuator-rtn` — armadilha/defeito de carga biestável
+8. `bistable-charge-fluctuator-rtn` — armadilha/defeito de carga biestável
    modelado por random-telegraph noise.
 
 Essas famílias não são nove nomes de canais. O catálogo separa
@@ -305,3 +303,8 @@ Continuam fora do corpus validado:
 
 Esses pontos são limitações ou trabalhos futuros, não classes inventadas para
 aumentar o dataset. Nenhum ML/QML é treinado nesta IC.
+
+
+O modelo `markovian-photon-reservoir-decay` continua preservado no v1, mas
+não é duplicado como rótulo causal no v2: ele é o limite (T=0) da família
+`thermal-photon-reservoir`.
