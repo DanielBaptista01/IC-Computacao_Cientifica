@@ -10,7 +10,7 @@ from ic_quantum.dynamics.external_field import (
 from ic_quantum.core.validation import validate_kraus
 
 
-def test_physical_source_registry_has_nine_validated_source_families():
+def test_physical_source_registry_has_eight_nonredundant_source_families():
     registry = build_physical_source_registry()
     assert registry.list_ids() == (
         "bistable-charge-fluctuator-rtn",
@@ -18,7 +18,6 @@ def test_physical_source_registry_has_nine_validated_source_families():
         "external-magnetic-field-wave",
         "finite-mode-spin-boson-dephasing",
         "ionizing-radiation-quasiparticle-burst",
-        "markovian-photon-reservoir-decay",
         "mechanical-phonon-mode",
         "single-mode-mechanical-phonon-dephasing",
         "thermal-photon-reservoir",
@@ -67,3 +66,11 @@ def test_physical_catalog_keeps_channel_names_out_of_agent_identity():
     assert "dephasing" not in registry.get(
         "bistable-charge-fluctuator-rtn"
     ).agent_id
+
+
+
+def test_zero_temperature_photon_baseline_is_not_duplicated_as_v2_agent():
+    registry = build_physical_source_registry()
+    assert "markovian-photon-reservoir-decay" not in registry.list_ids()
+    thermal = registry.get("thermal-photon-reservoir")
+    assert "T=0" in " ".join(thermal.validity_domain)
