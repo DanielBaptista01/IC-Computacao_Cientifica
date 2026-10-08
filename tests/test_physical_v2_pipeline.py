@@ -25,17 +25,28 @@ def small_config():
         em_orientations=("z",),
         em_gaussian_sigma_b_t=(1e-7,),
         em_time_points=3,
+        rabi_rates_hz=(1e5,),
+        rabi_detunings_hz=(0.0,),
+        rabi_phases_rad=(0.0,),
+        rabi_time_points=3,
         thermal_mode_counts=(4,),
         thermal_cutoffs_rad_s=(1.0,),
         thermal_temperature_ratios=(0.5,),
         thermal_time_points=3,
         photon_decay_rates_s=(1e4,),
         photon_time_points=3,
+        thermal_photon_decay_rates_s=(1e4,),
+        thermal_photon_temperatures_k=(0.05,),
+        thermal_photon_time_points=3,
         mechanical_frequencies_hz=(1e9,),
         mechanical_couplings_hz=(1e6,),
         mechanical_temperatures_k=(0.0,),
         mechanical_mode_dimension=4,
         mechanical_time_points=3,
+        mechanical_longitudinal_frequencies_hz=(1e6,),
+        mechanical_longitudinal_couplings_hz=(1e5,),
+        mechanical_longitudinal_occupations=(1.0,),
+        mechanical_longitudinal_time_points=3,
         radiation_initial_xqp=(1e-5,),
         radiation_trapping_rates_s=(1e3,),
         radiation_time_points=3,
@@ -46,14 +57,14 @@ def small_config():
 
 
 def test_default_physical_v2_count_is_scientifically_scaled():
-    assert PhysicalV2Config().expected_sample_count == 31570
+    assert PhysicalV2Config().expected_sample_count == 46494
 
 
-def test_small_generator_covers_six_sources_with_valid_density_matrices():
+def test_small_generator_covers_nine_sources_with_valid_density_matrices():
     config = small_config()
     samples = generate_physical_v2_samples(config)
     assert len(samples) == config.expected_sample_count
-    assert len({s.agent_model_id for s in samples}) == 6
+    assert len({s.agent_model_id for s in samples}) == 9
     assert len({s.sample_id for s in samples}) == len(samples)
     for sample in samples:
         rho = decode_complex_matrix(
@@ -78,21 +89,21 @@ def test_export_separates_physical_source_labels_from_features(tmp_path):
     assert "causal_mechanism" in labels.columns
     assert "physical_source" in scientific.columns
     metadata = json.loads(paths["metadata"].read_text())
-    assert metadata["number_of_agent_families"] == 6
+    assert metadata["number_of_agent_families"] == 9
     assert (
         metadata["baseline_dataset"]["dataset_id"]
         == "ic_causal_agents_final_v1"
     )
 
 
-def test_n_source_overlap_analysis_returns_all_fifteen_pairs():
+def test_n_source_overlap_analysis_returns_all_thirty_six_pairs():
     config = small_config()
     samples = generate_physical_v2_samples(config)
     result = analyze_physical_signature_overlap(
         samples, atol=config.identifiability_atol
     )
-    assert len(result["physical_pair_summary"]) == 15
-    assert result["physical_mean_nearest_distance_matrix"].shape == (6, 6)
+    assert len(result["physical_pair_summary"]) == 36
+    assert result["physical_mean_nearest_distance_matrix"].shape == (9, 9)
 
 
 def test_all_physical_sources_collide_at_zero_time_for_same_probe():
@@ -112,7 +123,7 @@ def test_all_physical_sources_collide_at_zero_time_for_same_probe():
         )
         for sample in by_agent.values()
     ]
-    assert len(states) == 6
+    assert len(states) == 9
     for rho in states[1:]:
         assert np.allclose(rho, states[0], atol=1e-9, rtol=0.0)
 
