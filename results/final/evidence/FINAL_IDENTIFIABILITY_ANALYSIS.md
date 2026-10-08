@@ -2,9 +2,9 @@
 
 A análise testa
 
-$
+$$
 A_i\neq A_j \quad\Longrightarrow?\quad \Sigma_i\neq\Sigma_j,
-$
+$$
 
 sem assumir resposta positiva.
 Para cada par de famílias, estado de prova e tempo, todas as combinações dos
