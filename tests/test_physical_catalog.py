@@ -1,6 +1,10 @@
 import numpy as np
 
-from ic_quantum.data.causal_agent_schema import ModelMaturityLevel, ProvenanceKind
+from ic_quantum.data.causal_agent_schema import (
+    MATURITY_LEVEL_DESCRIPTIONS,
+    ModelMaturityLevel,
+    ProvenanceKind,
+)
 from ic_quantum.data.physical_catalog import build_physical_source_registry
 from ic_quantum.data.validator import validate_model_record
 from ic_quantum.dynamics.external_field import (
@@ -74,3 +78,13 @@ def test_zero_temperature_photon_baseline_is_not_duplicated_as_v2_agent():
     assert "markovian-photon-reservoir-decay" not in registry.list_ids()
     thermal = registry.get("thermal-photon-reservoir")
     assert "T=0" in " ".join(thermal.validity_domain)
+
+
+
+def test_maturity_hierarchy_has_explicit_scientific_semantics():
+    assert MATURITY_LEVEL_DESCRIPTIONS[ModelMaturityLevel.LEVEL_0] == "fonte_conhecida"
+    assert MATURITY_LEVEL_DESCRIPTIONS[ModelMaturityLevel.LEVEL_1] == "modelo_teorico_encontrado"
+    assert MATURITY_LEVEL_DESCRIPTIONS[ModelMaturityLevel.LEVEL_2] == "modelo_reproduzido"
+    assert MATURITY_LEVEL_DESCRIPTIONS[ModelMaturityLevel.LEVEL_3] == "implementacao_validada"
+    assert MATURITY_LEVEL_DESCRIPTIONS[ModelMaturityLevel.LEVEL_4] == "comparacao_com_referencia"
+    assert MATURITY_LEVEL_DESCRIPTIONS[ModelMaturityLevel.LEVEL_5] == "validacao_experimental"
