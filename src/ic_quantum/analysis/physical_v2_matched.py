@@ -40,8 +40,14 @@ def matched_em_thermal_dephasing_experiment(
     temperature_ratio = float(config.thermal_temperature_ratios[-1])
     temperature = temperature_ratio * cutoff
 
-    candidate_times = np.asarray(config.thermal_times_s, dtype=float)
-    candidate_q = np.asarray(
+    # Use a dense deterministic search rather than the dataset storage grid.
+    # The experiment asks whether two continuous physical models can coincide at
+    # a snapshot; it should not depend on whether the stored dataset sampled that
+    # exact time.
+    search_times = np.linspace(
+        0.0, float(config.thermal_time_max_s), 2001
+    )
+    search_q = np.asarray(
         [
             finite_mode_coherence_factor(
                 time=float(t),
@@ -49,26 +55,24 @@ def matched_em_thermal_dephasing_experiment(
                 cutoff_angular_frequency=cutoff,
                 temperature_angular_frequency=temperature,
             )
-            for t in candidate_times
+            for t in search_times
         ],
         dtype=float,
     )
-    # Avoid identity and near-singular endpoints; target a moderate dephasing point.
-    admissible = np.where((candidate_q < 0.90) & (candidate_q > 0.20))[0]
-    if len(admissible) == 0:
-        index = int(np.argmin(np.abs(candidate_q - 0.70)))
-    else:
-        index = int(
-            admissible[
-                np.argmin(np.abs(candidate_q[admissible] - 0.70))
-            ]
-        )
-    thermal_time = float(candidate_times[index])
-    q_target = float(candidate_q[index])
-    if not (0.0 < q_target <= 1.0) or thermal_time <= 0.0:
+    nontrivial = np.where(
+        (search_times > 0.0) & (search_q < 1.0 - 1e-10) & (search_q > 1e-12)
+    )[0]
+    if len(nontrivial) == 0:
         raise RuntimeError(
             "Could not select a nontrivial thermal dephasing snapshot."
         )
+    index = int(
+        nontrivial[
+            np.argmin(np.abs(search_q[nontrivial] - 0.70))
+        ]
+    )
+    thermal_time = float(search_times[index])
+    q_target = float(search_q[index])
 
     em_time = 0.8 * float(config.em_time_max_s)
     gamma = float(config.em_gyromagnetic_ratio)
