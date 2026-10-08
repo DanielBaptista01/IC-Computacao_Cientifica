@@ -25,7 +25,9 @@ def summarize_thermal_characteristic_times(samples) -> pd.DataFrame:
     """
     thermal_agents = {
         "finite-mode-spin-boson-dephasing",
+        "thermal-photon-reservoir",
         "mechanical-phonon-mode",
+        "single-mode-mechanical-phonon-dephasing",
     }
     rows = []
     for agent in sorted(thermal_agents):

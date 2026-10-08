@@ -14,7 +14,11 @@ import pandas as pd
 from ic_quantum.analysis.final_reversibility import analyze_reversibility
 from ic_quantum.analysis.physical_v2_identifiability import (
     analyze_physical_signature_overlap,
+    analyze_process_signature_overlap,
     dephasing_source_trajectory_comparison,
+)
+from ic_quantum.analysis.physical_v2_matched import (
+    matched_em_thermal_dephasing_experiment,
 )
 from ic_quantum.analysis.triad import analyze_agent_noise_entropy
 from ic_quantum.analysis.physical_v2_response import (
@@ -69,6 +73,27 @@ def _plots(
         output_dir / "physical_identifiability_matrix.png", dpi=160
     )
     plt.close(fig)
+
+    if "process_mean_nearest_distance_matrix" in overlap:
+        process_matrix = overlap["process_mean_nearest_distance_matrix"]
+        fig, ax = plt.subplots(figsize=(9, 7))
+        image = ax.imshow(process_matrix.to_numpy(dtype=float), aspect="auto")
+        ax.set_xticks(
+            range(len(process_matrix.columns)),
+            labels=process_matrix.columns,
+            rotation=90,
+        )
+        ax.set_yticks(
+            range(len(process_matrix.index)),
+            labels=process_matrix.index,
+        )
+        ax.set_title("Multi-probe process-signature nearest distance")
+        fig.colorbar(image, ax=ax)
+        fig.tight_layout()
+        fig.savefig(
+            output_dir / "process_identifiability_matrix.png", dpi=160
+        )
+        plt.close(fig)
 
     fig, ax = plt.subplots(figsize=(8, 5))
     for agent, group in dephasing.groupby("agent_model_id"):
@@ -130,6 +155,12 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
     overlap = analyze_physical_signature_overlap(
         samples, atol=config.identifiability_atol
     )
+    process_overlap = analyze_process_signature_overlap(
+        samples, atol=config.identifiability_atol
+    )
+    matched_summary, matched_trajectory = (
+        matched_em_thermal_dephasing_experiment(config)
+    )
     dephasing = dephasing_source_trajectory_comparison(samples)
     dephasing_shapes = summarize_dephasing_trajectory_shapes(dephasing)
     thermal_response = summarize_thermal_characteristic_times(samples)
@@ -145,6 +176,20 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
             tables / f"{name}.csv",
             preserve_index=name.endswith("_matrix"),
         )
+    for name, frame in process_overlap.items():
+        _write(
+            frame,
+            tables / f"{name}.csv",
+            preserve_index=name.endswith("_matrix"),
+        )
+    _write(
+        matched_summary,
+        tables / "matched_em_thermal_dephasing_summary.csv",
+    )
+    _write(
+        matched_trajectory,
+        tables / "matched_em_thermal_dephasing_trajectory.csv",
+    )
     _write(dephasing, tables / "dephasing_source_trajectories.csv")
     _write(dephasing_shapes, tables / "dephasing_source_shape_summary.csv")
     _write(thermal_response, tables / "thermal_characteristic_times.csv")
@@ -192,13 +237,36 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
         tables / "physical_parameter_coverage.csv",
     )
 
+    plot_overlap = {**overlap, **process_overlap}
     _plots(
         output_dir / "figures",
-        overlap,
+        plot_overlap,
         dephasing,
         rev_summary,
         sample_counts,
     )
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(
+        matched_trajectory["normalized_time"],
+        matched_trajectory["thermal_spin_boson_coherence"],
+        label="thermal spin-boson",
+    )
+    ax.plot(
+        matched_trajectory["normalized_time"],
+        matched_trajectory["em_gaussian_coherence"],
+        label="quasistatic EM field",
+    )
+    ax.set_xlabel("Normalized source-specific time")
+    ax.set_ylabel("Coherence factor")
+    ax.set_title("Matched endpoint, different physical dephasing trajectories")
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(
+        output_dir / "figures" / "matched_em_thermal_dephasing.png",
+        dpi=160,
+    )
+    plt.close(fig)
 
     registry = build_physical_source_registry()
     source_status = []
@@ -226,13 +294,14 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
 
 Dataset: {config.dataset_id}
 
-This expansion quantifies six explicit physical-source families while preserving
-the frozen mechanistic v1 baseline. No ML/QML is trained.
+This expansion quantifies nine explicit physical-source/mechanism families while
+preserving the frozen mechanistic v1 baseline. No ML/QML is trained.
 
 - Valid samples: {len(samples)}
-- Physical-source families: {len(registry.list_ids())}
+- Physical-source/mechanism families: {len(registry.list_ids())}
 - Pairwise source pairs: {len(pair_summary)}
-- All source records are LEVEL_3 numerically validated.
+- Multi-probe process pairs: {len(process_overlap["process_pair_summary"])}
+- All source records are LEVEL_3 numerically validated within their stated domains.
 - The ionizing-radiation family is explicitly phenomenological at the bridge
   from deposited radiation energy/geometry to the initial excess quasiparticle
   fraction.
@@ -241,8 +310,13 @@ the frozen mechanistic v1 baseline. No ML/QML is trained.
 
 The implementation supports the operational statement that particular physical
 sources can be represented by distinct mechanisms and quantitative trajectories.
-It does not establish universal source identifiability. Pairwise tables preserve
-nearest-signature collisions and non-identifiability.
+It does not establish universal source identifiability. Pairwise state-response
+and multi-probe process-response tables preserve collisions and non-identifiability.
+
+A controlled matched-source experiment explicitly constructs an electromagnetic
+quasistatic-field source and a thermal spin-boson source that have the same
+reduced pure-dephasing channel at one selected snapshot. Their normalized
+trajectories are then compared away from that endpoint.
 
 ## External-field entropy control
 
@@ -256,12 +330,15 @@ precision.
     (evidence / "PHYSICAL_V2_LIMITATIONS.md").write_text(
         """# PHYSICAL_V2_LIMITATIONS
 
-- The external-EM family models the magnetic component acting on an effective
-  spin; electric-dipole coupling -d.E is not a separately validated family.
+- The external-EM corpus contains a magnetic Zeeman family and a coherent
+  near-resonant Rabi family. The latter uses an effective Rabi rate; a raw
+  E-field/polarization/dipole-matrix-element calibration is not inferred for an
+  unspecified platform.
 - The thermal spin-boson grid uses the exact finite-mode model in natural units;
   it is not a calibration of a particular cryostat/device.
-- The mechanical source is one selected acoustic mode under a two-level/RWA
-  model, not arbitrary laboratory vibration of an entire package.
+- Mechanical effects are represented by two distinct selected-mode mechanisms:
+  excitation exchange and longitudinal displacement dephasing. Neither is a
+  model of arbitrary package/chassis vibration.
 - Ionizing radiation is event-conditioned. The simulation starts from an excess
   quasiparticle fraction and does not simulate particle transport,
   deposited-energy geometry, the full phonon cascade, or correlated multi-qubit
@@ -290,8 +367,13 @@ minimum is also reported. This is a signature-overlap analysis, not proof that a
 single reduced-state snapshot uniquely determines microscopic cause.
 
 See the physical_pair_summary, physical_probe_overlap,
-physical_mean_nearest_distance_matrix, dephasing_source_trajectories and
-dephasing_source_shape_summary tables.
+physical_mean_nearest_distance_matrix, process_pair_summary,
+process_mean_nearest_distance_matrix, matched_em_thermal_dephasing_summary,
+dephasing_source_trajectories and dephasing_source_shape_summary tables.
+
+The process-response metric concatenates four linearly independent qubit probes
+(0, 1, +, +i) and reports RMS trace distance across them. It is an operational
+multi-probe metric, not a diamond norm.
 
 For thermal sources, thermal_characteristic_times.csv reports first-passage
 1/e scales T1* and T2*. They are descriptors of the sampled trajectory, not
@@ -333,6 +415,19 @@ inverse. See physical_reversibility_summary.csv.
             )
         ),
         "pairwise_source_pairs": len(pair_summary),
+        "process_pairwise_source_pairs": len(
+            process_overlap["process_pair_summary"]
+        ),
+        "matched_dephasing_max_probe_trace_distance": float(
+            matched_summary.iloc[0][
+                "max_probe_trace_distance_at_matched_snapshot"
+            ]
+        ),
+        "matched_dephasing_max_trajectory_difference": float(
+            matched_summary.iloc[0][
+                "max_normalized_trajectory_coherence_difference"
+            ]
+        ),
         "machine_learning_trained": False,
         "radiation_source_channel_bridge": "PHENOMENOLOGICAL",
         "epistemic_guard": (

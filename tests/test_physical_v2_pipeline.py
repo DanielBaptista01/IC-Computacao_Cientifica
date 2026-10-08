@@ -5,6 +5,10 @@ import pandas as pd
 
 from ic_quantum.analysis.physical_v2_identifiability import (
     analyze_physical_signature_overlap,
+    analyze_process_signature_overlap,
+)
+from ic_quantum.analysis.physical_v2_matched import (
+    matched_em_thermal_dephasing_experiment,
 )
 from ic_quantum.core.validation import validate_density_matrix
 from ic_quantum.data.physical_v2_export import export_physical_v2_dataset
@@ -19,7 +23,7 @@ from ic_quantum.dynamics.mechanical_phonon import thermal_truncation_tail_probab
 
 def small_config():
     return PhysicalV2Config(
-        probe_ids=("0", "1", "+"),
+        probe_ids=("0", "1", "+", "-", "+i", "-i"),
         em_field_amplitudes_t=(1e-7,),
         em_drive_frequencies_hz=(0.0,),
         em_orientations=("z",),
@@ -200,3 +204,47 @@ def test_spin_boson_thermal_model_has_no_t1_decay_in_its_validity_domain():
     assert len(spin) == 1
     assert spin["t1_first_1_over_e_crossing_s"].isna().all()
     assert np.allclose(spin["minimum_excited_population"], 1.0, atol=1e-9)
+
+
+
+def test_process_level_identifiability_covers_all_nine_agent_pairs():
+    config = small_config()
+    samples = generate_physical_v2_samples(config)
+    result = analyze_process_signature_overlap(
+        samples, atol=config.identifiability_atol
+    )
+    assert len(result["process_pair_summary"]) == 36
+    assert result["process_mean_nearest_distance_matrix"].shape == (9, 9)
+
+
+def test_matched_em_thermal_snapshot_is_nonidentifiable_but_trajectory_differs():
+    config = small_config()
+    summary, trajectory = matched_em_thermal_dephasing_experiment(config)
+    row = summary.iloc[0]
+    assert row["max_probe_trace_distance_at_matched_snapshot"] < 1e-10
+    assert row["endpoint_coherence_difference"] < 1e-10
+    assert row["max_normalized_trajectory_coherence_difference"] > 1e-5
+    assert len(trajectory) == 101
+
+
+def test_thermal_response_includes_both_pure_dephasing_and_relaxation_mechanisms():
+    config = small_config()
+    samples = generate_physical_v2_samples(config)
+    summary = summarize_thermal_characteristic_times(samples)
+    agents = set(summary["agent_model_id"])
+    assert {
+        "finite-mode-spin-boson-dephasing",
+        "thermal-photon-reservoir",
+        "mechanical-phonon-mode",
+        "single-mode-mechanical-phonon-dephasing",
+    }.issubset(agents)
+    pure = summary[
+        summary["agent_model_id"].isin(
+            {
+                "finite-mode-spin-boson-dephasing",
+                "single-mode-mechanical-phonon-dephasing",
+            }
+        )
+    ]
+    assert pure["t1_first_1_over_e_crossing_s"].isna().all()
+    assert np.allclose(pure["minimum_excited_population"], 1.0, atol=1e-9)
