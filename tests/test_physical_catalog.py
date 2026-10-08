@@ -10,15 +10,18 @@ from ic_quantum.dynamics.external_field import (
 from ic_quantum.core.validation import validate_kraus
 
 
-def test_physical_source_registry_has_six_validated_source_families():
+def test_physical_source_registry_has_nine_validated_source_families():
     registry = build_physical_source_registry()
     assert registry.list_ids() == (
         "bistable-charge-fluctuator-rtn",
+        "external-electromagnetic-rabi-drive",
         "external-magnetic-field-wave",
         "finite-mode-spin-boson-dephasing",
         "ionizing-radiation-quasiparticle-burst",
         "markovian-photon-reservoir-decay",
         "mechanical-phonon-mode",
+        "single-mode-mechanical-phonon-dephasing",
+        "thermal-photon-reservoir",
     )
     for agent_id in registry.list_ids():
         model = registry.get(agent_id)
