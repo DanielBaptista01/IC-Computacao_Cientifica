@@ -122,14 +122,24 @@ jobs:
           name: ic-causal-agents-final-v1
           path: results/final/
           retention-days: 90
-      - name: Publish final tagged release
+      - name: Publish consolidated final IC release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view ic-2026-final >/dev/null 2>&1; then
-            echo "Release ic-2026-final already exists; leaving it unchanged."
-          else
-            zip -q -r ic-causal-agents-final-v1.zip results/final/
-            gh release create ic-2026-final               ic-causal-agents-final-v1.zip               results/final/FINAL_DATASET_MANIFEST.json               results/final/FINAL_SUMMARY.json               --target "$GITHUB_SHA"               --title "IC 2026 — Dataset e Evidências Finais"               --notes "Versão computacional congelada da IC. Dataset: ic_causal_agents_final_v1. Nenhum ML/QML treinado."
+          if gh release view ic-2026-final-v2 >/dev/null 2>&1; then
+            echo "Release ic-2026-final-v2 already exists; refusing to overwrite the scientific freeze."
+            exit 1
           fi
+          zip -q -r ic-causal-agents-final-v1.zip results/final/
+          zip -q -r ic-causal-agents-physical-v2.zip results/physical_v2/
+          gh release create ic-2026-final-v2 \
+            ic-causal-agents-final-v1.zip \
+            ic-causal-agents-physical-v2.zip \
+            results/final/FINAL_DATASET_MANIFEST.json \
+            results/final/FINAL_SUMMARY.json \
+            results/physical_v2/PHYSICAL_V2_MANIFEST.json \
+            results/physical_v2/PHYSICAL_V2_SUMMARY.json \
+            --target "$GITHUB_SHA" \
+            --title "IC 2026 — Versão Final Consolidada v2" \
+            --notes "Freeze computacional final da IC após integração da expansão físico-causal v2. Inclui baseline mecanístico v1 e dataset físico-causal v2. Nenhum ML/QML foi treinado."

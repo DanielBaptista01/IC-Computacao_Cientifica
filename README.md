@@ -306,3 +306,15 @@ aumentar o dataset. Nenhum ML/QML é treinado nesta IC.
 O modelo `markovian-photon-reservoir-decay` continua preservado no v1, mas
 não é duplicado como rótulo causal no v2: ele é o limite $T=0$ da família
 `thermal-photon-reservoir`.
+
+
+## Versão final consolidada
+
+O encerramento computacional oficial da IC é identificado pela tag
+`ic-2026-final-v2`. Essa tag é criada automaticamente apenas após um workflow
+completo e bem-sucedido na `main`, e preserva os dois pacotes científicos:
+`ic_causal_agents_final_v1` e `ic_causal_agents_physical_v2`.
+
+Para números, hashes e resultados usados no Relatório Final, utilizar os
+manifests e summaries anexados à release da tag, e não valores copiados
+manualmente de execuções anteriores.

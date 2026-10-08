@@ -1,67 +1,65 @@
-# Prontidão científico-computacional — expansão físico-causal v2
+# Prontidão científico-computacional — versão final consolidada
 
-Checkpoint auditado: `eb30e10f07e0cff0dbe4a6c259c00e15649fd529`.
-PR de consolidação: #6 (`feat/agentes-fisicos-v2` $\to$ `main`).
+A versão oficial de encerramento desta Iniciação Científica é definida pela tag
+`ic-2026-final-v2`. O workflow só cria essa tag/release em um `push` para
+`main` depois de concluir a instalação, a suíte científica de testes, o
+experimento inter-depth, o Dataset 001, o dataset mecanístico
+`ic_causal_agents_final_v1` e o dataset físico-causal
+`ic_causal_agents_physical_v2`.
 
-## Matriz de requisitos
+Assim, a presença da tag `ic-2026-final-v2` é o critério computacional de
+freeze: o SHA apontado pela tag é o commit oficial que deve ser citado no
+Relatório Final. Releases anteriores (`ic-2026-final` e
+`ic-2026-physical-v2`) permanecem como checkpoints históricos e não substituem
+a versão consolidada.
 
-| Requisito | Status | Evidência ou limitação |
-|---|---|---|
-| Fonte física distinta de canal | DONE | Catálogo, schema e separação features/labels |
-| Transformação causal latente com contexto físico | DONE | Testes e metadata |
-| EM magnético e drive Rabi | DONE | Duas famílias com domínios explícitos |
-| Banho térmico e fótons | DONE | Spin-boson finito e reservatório térmico |
-| Vibrações/fônons | DONE | Modos quantizados transverso e longitudinal |
-| Carga e defeito TLS | DONE | RTN de flutuador biestável |
-| Radiação ionizante | PARTIAL | Dinâmica pós-impacto validada numericamente; deposição $\to$ quasipartículas é PHENOMENOLOGICAL |
-| Reversibilidade por condição | DONE | Mapas reduzidos, CPTP, limites unitários |
-| Tríade agente–ruído–entropia | DONE | Tabelas e controle coerente |
-| Identificabilidade e colisões | DONE | 28 pares, múltiplos probes e snapshot casado |
-| Dataset v2 versionado e segregado | DONE | CSV/Parquet, manifest e SHA256, CI artifacts |
-| Reprodutibilidade em CI | DONE | Execuções 37817701075 e 37817690978: success |
-| Testes automatizados | DONE | 104 passed no run 37817701075 |
-| Validação experimental em hardware | BLOCKED | Sem medições de dispositivo |
-| Transporte microscópico completo de radiação | BLOCKED | Não há modelo/plataforma suficientes |
-| Calibração universal $E_0$/polarização $\to$ Rabi | BLOCKED | Exige geometria e elementos de matriz |
-| Vibração arbitrária de chassi e ensemble 1/f universal | BLOCKED | Não extrapolar modos selecionados |
-| ML/QML | DONE | Não treinado, fora do escopo |
-| Integração em main e release estável | PARTIAL | PR #6 permanece draft; integração requer decisão de merge |
+## Estado científico congelado
 
-## Evidência reexecutada
+O corpus físico-causal final contém 8 famílias não redundantes, 80 pontos
+paramétricos, 14 estados de prova e 41 pontos temporais por ponto paramétrico,
+totalizando 45.920 amostras no dataset físico-causal v2. A análise cobre os 28
+pares possíveis entre as 8 famílias, além de uma assinatura operacional
+multi-probe de processo.
 
-O GitHub Actions da branch, no commit auditado, concluiu com sucesso a suíte de
-104 testes e produziu o artifact `ic-causal-agents-physical-v2` (aprox.
-10,5 MB), além de regenerar o baseline v1. O resumo de CI reportou:
+A suíte científica no estado pré-freeze possui 104 testes automatizados. O
+workflow de `main` deve repetir essa validação antes da criação da release
+final; qualquer falha impede o freeze.
 
-- Dataset: `ic_causal_agents_physical_v2`;
-- $N_A=8$ famílias não redundantes;
-- $N_S=45\,920$ amostras;
-- 28 pares entre fontes e 28 pares de assinatura multi-probe;
-- distância de traço no snapshot EM/térmico casado = 0;
-- diferença máxima das trajetórias normalizadas no exemplo casado ≈ 0,0002540933;
-- diferença máxima de coerência mecânica no mesmo tempo sob comparação com $g/\omega$ casado ≈ 0,2133721389;
-- `radiation_source_channel_bridge = PHENOMENOLOGICAL`;
-- `machine_learning_trained = false`.
+A radiação ionizante permanece explicitamente fenomenológica no elo entre
+energia/geometria depositada e a condição inicial de quasipartículas. A ausência
+de hardware, a restrição principal a um qubit, a ausência de shots/ruído de
+leitura e os limites de identificabilidade permanecem limitações declaradas, não
+resultados ocultados.
 
-Estes números são resultados de simulação do protocolo configurado, não medidas
-de hardware, nem demonstração de identificabilidade universal. A diferença
-temporal pequena no exemplo EM/térmico não deve ser apresentada como separação
-robusta sem análise de ruído amostral, tolerância e incerteza.
+Nenhum modelo de Machine Learning ou Quantum Machine Learning é treinado nesta
+IC.
 
-## Critério de prontidão para redação
+## Reprodutibilidade
 
-**PRONTO para redação científica com qualificações explícitas.** Usar o
-manifest, as tabelas e a evidência gerados pelo pipeline, e não transcrever
-valores de memória. O texto final deve separar literatura, proposta autoral,
-simulação e validação experimental ausente.
+Os pacotes finais são gerados automaticamente e preservados na release
+`ic-2026-final-v2`, incluindo:
 
-**Não declarar release integrada** enquanto o PR #6 não for efetivamente
-mesclado em `main`. O workflow de release condiciona sua publicação ao push
-em `main`. Este documento registra o checkpoint, inclusive em caso de
-interrupção posterior.
+`ic-causal-agents-final-v1.zip`,
+`ic-causal-agents-physical-v2.zip`,
+`FINAL_DATASET_MANIFEST.json`,
+`FINAL_SUMMARY.json`,
+`PHYSICAL_V2_MANIFEST.json` e
+`PHYSICAL_V2_SUMMARY.json`.
 
-## Próximo passo operacional
+O código-fonte completo é preservado pela própria tag. Os manifests registram os
+hashes dos arquivos gerados e as configurações utilizadas.
 
-Revisar PR #6, confirmar CI no novo HEAD após este commit e então decidir o
-merge. A integração em main e publicação de release não são pressupostos para
-validar numericamente a branch.
+Os comandos canônicos de reprodução são:
+
+```bash
+python -m pip install -e ".[dev]"
+pytest
+ic-finalize --config experiments/configs/ic_causal_agents_final_v1.json --output-dir results/final
+ic-physical-v2 --config experiments/configs/ic_causal_agents_physical_v2.json --output-dir results/physical_v2
+```
+
+## Critério de encerramento
+
+Quando a tag `ic-2026-final-v2` existir e apontar para o mesmo SHA da `main`
+que concluiu o workflow `scientific-tests` com sucesso, a fase computacional
+estará congelada e pronta para ser usada como fonte oficial do Relatório Final.
