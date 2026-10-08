@@ -49,6 +49,12 @@ class PhysicalV2Config:
     em_time_max_s: float = 10e-6
     em_time_points: int = 41
 
+    rabi_rates_hz: tuple[float, ...] = (2.5e5, 1.0e6)
+    rabi_detunings_hz: tuple[float, ...] = (0.0, 5.0e5)
+    rabi_phases_rad: tuple[float, ...] = (0.0, np.pi / 2.0)
+    rabi_time_max_s: float = 10e-6
+    rabi_time_points: int = 41
+
     thermal_mode_counts: tuple[int, ...] = (4, 16)
     thermal_cutoffs_rad_s: tuple[float, ...] = (1.0, 2.0)
     thermal_temperature_ratios: tuple[float, ...] = (0.1, 1.0)
@@ -59,12 +65,24 @@ class PhysicalV2Config:
     photon_time_max_s: float = 200e-6
     photon_time_points: int = 41
 
+    thermal_photon_decay_rates_s: tuple[float, ...] = (1e4, 1e5)
+    thermal_photon_temperatures_k: tuple[float, ...] = (0.02, 0.10, 0.50)
+    thermal_photon_transition_frequency_hz: float = 5e9
+    thermal_photon_time_max_s: float = 200e-6
+    thermal_photon_time_points: int = 41
+
     mechanical_frequencies_hz: tuple[float, ...] = (1e9, 3e9)
     mechanical_couplings_hz: tuple[float, ...] = (1e6, 5e6)
     mechanical_temperatures_k: tuple[float, ...] = (0.0, 0.05)
     mechanical_mode_dimension: int = 10
     mechanical_time_max_s: float = 1e-6
     mechanical_time_points: int = 41
+
+    mechanical_longitudinal_frequencies_hz: tuple[float, ...] = (0.5e6, 1.0e6)
+    mechanical_longitudinal_couplings_hz: tuple[float, ...] = (0.05e6, 0.10e6)
+    mechanical_longitudinal_occupations: tuple[float, ...] = (0.0, 1.0, 5.0)
+    mechanical_longitudinal_time_max_s: float = 10e-6
+    mechanical_longitudinal_time_points: int = 41
 
     radiation_initial_xqp: tuple[float, ...] = (1e-6, 1e-5, 1e-4)
     radiation_trapping_rates_s: tuple[float, ...] = (1e3, 1e4)
@@ -87,6 +105,10 @@ class PhysicalV2Config:
         return _linear(self.em_time_max_s, self.em_time_points)
 
     @property
+    def rabi_times_s(self) -> tuple[float, ...]:
+        return _linear(self.rabi_time_max_s, self.rabi_time_points)
+
+    @property
     def thermal_times_s(self) -> tuple[float, ...]:
         return _linear(self.thermal_time_max_s, self.thermal_time_points)
 
@@ -95,8 +117,22 @@ class PhysicalV2Config:
         return _linear(self.photon_time_max_s, self.photon_time_points)
 
     @property
+    def thermal_photon_times_s(self) -> tuple[float, ...]:
+        return _linear(
+            self.thermal_photon_time_max_s,
+            self.thermal_photon_time_points,
+        )
+
+    @property
     def mechanical_times_s(self) -> tuple[float, ...]:
         return _linear(self.mechanical_time_max_s, self.mechanical_time_points)
+
+    @property
+    def mechanical_longitudinal_times_s(self) -> tuple[float, ...]:
+        return _linear(
+            self.mechanical_longitudinal_time_max_s,
+            self.mechanical_longitudinal_time_points,
+        )
 
     @property
     def radiation_times_s(self) -> tuple[float, ...]:
@@ -124,6 +160,14 @@ class PhysicalV2Config:
         return coherent + len(self.em_gaussian_sigma_b_t)
 
     @property
+    def rabi_parameter_count(self) -> int:
+        return (
+            len(self.rabi_rates_hz)
+            * len(self.rabi_detunings_hz)
+            * len(self.rabi_phases_rad)
+        )
+
+    @property
     def thermal_parameter_count(self) -> int:
         return (
             len(self.thermal_mode_counts)
@@ -132,11 +176,26 @@ class PhysicalV2Config:
         )
 
     @property
+    def thermal_photon_parameter_count(self) -> int:
+        return (
+            len(self.thermal_photon_decay_rates_s)
+            * len(self.thermal_photon_temperatures_k)
+        )
+
+    @property
     def mechanical_parameter_count(self) -> int:
         return (
             len(self.mechanical_frequencies_hz)
             * len(self.mechanical_couplings_hz)
             * len(self.mechanical_temperatures_k)
+        )
+
+    @property
+    def mechanical_longitudinal_parameter_count(self) -> int:
+        return (
+            len(self.mechanical_longitudinal_frequencies_hz)
+            * len(self.mechanical_longitudinal_couplings_hz)
+            * len(self.mechanical_longitudinal_occupations)
         )
 
     @property
@@ -152,9 +211,13 @@ class PhysicalV2Config:
         probes = len(self.probe_ids)
         return probes * (
             self.em_parameter_count * self.em_time_points
+            + self.rabi_parameter_count * self.rabi_time_points
             + self.thermal_parameter_count * self.thermal_time_points
             + len(self.photon_decay_rates_s) * self.photon_time_points
+            + self.thermal_photon_parameter_count * self.thermal_photon_time_points
             + self.mechanical_parameter_count * self.mechanical_time_points
+            + self.mechanical_longitudinal_parameter_count
+            * self.mechanical_longitudinal_time_points
             + self.radiation_parameter_count * self.radiation_time_points
             + self.charge_parameter_count * self.charge_time_points
         )
@@ -171,29 +234,45 @@ class PhysicalV2Config:
         payload = asdict(self)
         payload["expected_sample_count"] = self.expected_sample_count
         payload["time_grids_s"] = {
-            "external_em": list(self.em_times_s),
+            "external_em_magnetic": list(self.em_times_s),
+            "external_em_rabi": list(self.rabi_times_s),
             "thermal_bosonic": list(self.thermal_times_s),
             "photon_reservoir": list(self.photon_times_s),
-            "mechanical": list(self.mechanical_times_s),
+            "thermal_photon_reservoir": list(self.thermal_photon_times_s),
+            "mechanical_exchange": list(self.mechanical_times_s),
+            "mechanical_longitudinal": list(self.mechanical_longitudinal_times_s),
             "ionizing_radiation": list(self.radiation_times_s),
             "charge_rtn": list(self.charge_times_s),
         }
         payload["coverage_rationale"] = {
-            "external_em": (
-                "Semiclassical spin-field model; amplitudes and frequencies are a "
+            "external_em_magnetic": (
+                "Semiclassical Zeeman model; amplitudes and frequencies are a "
                 "declared theoretical sensitivity grid, not hardware calibration."
+            ),
+            "external_em_rabi": (
+                "Near-resonant coherent drive. Omega is an effective coupling rate; "
+                "no unsupported raw E-field-to-qubit transduction is inferred."
             ),
             "thermal_bosonic": (
                 "Existing exact finite-mode spin-boson model in natural units; "
                 "temperature ratios and mode counts probe dephasing and revivals."
             ),
             "photon_reservoir": (
-                "T1-like rates from 10 to 100 microseconds as a theoretical "
-                "two-level-system relaxation grid."
+                "T1-like zero-temperature radiative rates from 10 to 100 microseconds "
+                "as a theoretical two-level-system relaxation grid."
             ),
-            "mechanical": (
+            "thermal_photon_reservoir": (
+                "Finite-temperature Markovian photon bath at 5 GHz. Temperatures span "
+                "20-500 mK to probe absorption and emission without claiming a calibrated cryostat."
+            ),
+            "mechanical_exchange": (
                 "GHz acoustic modes and MHz qubit-phonon couplings are representative "
                 "of circuit quantum acoustodynamics; 0 and 50 mK compare vacuum and thermal populations."
+            ),
+            "mechanical_longitudinal": (
+                "Single-mode longitudinal bosonic coupling. Frequencies, couplings and "
+                "occupations form a theoretical recurrence/dephasing grid distinct from "
+                "the excitation-exchange acoustic family."
             ),
             "ionizing_radiation": (
                 "Event-conditioned post-impact quasiparticle fractions and millisecond "
@@ -224,13 +303,21 @@ def load_physical_v2_config(path: str | Path) -> PhysicalV2Config:
         "em_drive_frequencies_hz",
         "em_orientations",
         "em_gaussian_sigma_b_t",
+        "rabi_rates_hz",
+        "rabi_detunings_hz",
+        "rabi_phases_rad",
         "thermal_mode_counts",
         "thermal_cutoffs_rad_s",
         "thermal_temperature_ratios",
         "photon_decay_rates_s",
+        "thermal_photon_decay_rates_s",
+        "thermal_photon_temperatures_k",
         "mechanical_frequencies_hz",
         "mechanical_couplings_hz",
         "mechanical_temperatures_k",
+        "mechanical_longitudinal_frequencies_hz",
+        "mechanical_longitudinal_couplings_hz",
+        "mechanical_longitudinal_occupations",
         "radiation_initial_xqp",
         "radiation_trapping_rates_s",
         "charge_couplings_hz",
