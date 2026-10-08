@@ -22,10 +22,7 @@ from ic_quantum.data.causal_agent_schema import (
     ProvenanceKind,
     ProvenanceRecord,
 )
-from ic_quantum.data.final_catalog import (
-    finite_mode_spin_boson_dephasing_model,
-    markovian_photon_reservoir_decay_model,
-)
+from ic_quantum.data.final_catalog import finite_mode_spin_boson_dephasing_model
 from ic_quantum.data.registry import CausalAgentRegistry
 
 
@@ -876,6 +873,7 @@ def thermal_photon_reservoir_model() -> CausalAgentModelRecord:
         validity_domain=(
             "single two-level system",
             "Markovian weak-coupling thermal photon reservoir",
+            "includes T=0 as the zero-temperature physical limit",
         ),
         references=(literature, derived),
         derivation_method="thermal Lindblad equation solved as generalized amplitude damping",
@@ -1003,7 +1001,6 @@ def build_physical_source_registry() -> CausalAgentRegistry:
     registry.add(external_magnetic_field_model())
     registry.add(external_electromagnetic_rabi_model())
     registry.add(finite_mode_spin_boson_dephasing_model())
-    registry.add(markovian_photon_reservoir_decay_model())
     registry.add(thermal_photon_reservoir_model())
     registry.add(mechanical_phonon_mode_model())
     registry.add(mechanical_longitudinal_phonon_model())
