@@ -22,6 +22,7 @@ from ic_quantum.analysis.physical_v2_matched import (
 )
 from ic_quantum.analysis.triad import analyze_agent_noise_entropy
 from ic_quantum.analysis.physical_v2_response import (
+    mechanical_equal_ratio_frequency_experiment,
     summarize_dephasing_trajectory_shapes,
     summarize_thermal_characteristic_times,
 )
@@ -164,6 +165,9 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
     dephasing = dephasing_source_trajectory_comparison(samples)
     dephasing_shapes = summarize_dephasing_trajectory_shapes(dephasing)
     thermal_response = summarize_thermal_characteristic_times(samples)
+    mechanical_equal_summary, mechanical_equal_trajectory = (
+        mechanical_equal_ratio_frequency_experiment(config)
+    )
     rev_conditions, rev_summary = analyze_reversibility(samples)
     _, triad_summary = analyze_agent_noise_entropy(
         samples, atol=config.identifiability_atol
@@ -193,6 +197,14 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
     _write(dephasing, tables / "dephasing_source_trajectories.csv")
     _write(dephasing_shapes, tables / "dephasing_source_shape_summary.csv")
     _write(thermal_response, tables / "thermal_characteristic_times.csv")
+    _write(
+        mechanical_equal_summary,
+        tables / "mechanical_equal_ratio_frequency_summary.csv",
+    )
+    _write(
+        mechanical_equal_trajectory,
+        tables / "mechanical_equal_ratio_frequency_trajectory.csv",
+    )
     _write(
         rev_conditions,
         tables / "physical_reversibility_by_condition.csv",
@@ -378,6 +390,11 @@ multi-probe metric, not a diamond norm.
 For thermal sources, thermal_characteristic_times.csv reports first-passage
 1/e scales T1* and T2*. They are descriptors of the sampled trajectory, not
 assumed exponential constants; recurrent models may cross and later revive.
+
+The mechanical_equal_ratio_frequency tables test two longitudinal mechanical
+spectral lines with matched dimensionless coupling ratio g/omega and matched
+thermal occupation. They quantify whether different frequencies still yield
+different signatures on the same physical-time grid.
 """,
         encoding="utf-8",
     )
@@ -426,6 +443,11 @@ inverse. See physical_reversibility_summary.csv.
         "matched_dephasing_max_trajectory_difference": float(
             matched_summary.iloc[0][
                 "max_normalized_trajectory_coherence_difference"
+            ]
+        ),
+        "mechanical_equal_ratio_max_same_time_difference": float(
+            mechanical_equal_summary.iloc[0][
+                "maximum_same_time_coherence_difference"
             ]
         ),
         "machine_learning_trained": False,

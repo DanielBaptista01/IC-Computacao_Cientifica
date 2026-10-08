@@ -16,6 +16,7 @@ from ic_quantum.data.physical_v2_generator import generate_physical_v2_samples
 from ic_quantum.data.physical_v2_protocol import PhysicalV2Config
 from ic_quantum.data.state_encoding import decode_complex_matrix
 from ic_quantum.analysis.physical_v2_response import (
+    mechanical_equal_ratio_frequency_experiment,
     summarize_thermal_characteristic_times,
 )
 from ic_quantum.dynamics.mechanical_phonon import thermal_truncation_tail_probability
@@ -248,3 +249,55 @@ def test_thermal_response_includes_both_pure_dephasing_and_relaxation_mechanisms
     ]
     assert pure["t1_first_1_over_e_crossing_s"].isna().all()
     assert np.allclose(pure["minimum_excited_population"], 1.0, atol=1e-9)
+
+
+
+def test_equal_dimensionless_mechanical_coupling_can_have_frequency_distinct_trajectory():
+    config = small_config()
+    # The compact config has only one longitudinal line, so construct the
+    # targeted two-frequency grid without changing the rest of the test corpus.
+    config = PhysicalV2Config(
+        probe_ids=config.probe_ids,
+        em_field_amplitudes_t=config.em_field_amplitudes_t,
+        em_drive_frequencies_hz=config.em_drive_frequencies_hz,
+        em_orientations=config.em_orientations,
+        em_gaussian_sigma_b_t=config.em_gaussian_sigma_b_t,
+        em_time_points=config.em_time_points,
+        rabi_rates_hz=config.rabi_rates_hz,
+        rabi_detunings_hz=config.rabi_detunings_hz,
+        rabi_phases_rad=config.rabi_phases_rad,
+        rabi_time_points=config.rabi_time_points,
+        thermal_mode_counts=config.thermal_mode_counts,
+        thermal_cutoffs_rad_s=config.thermal_cutoffs_rad_s,
+        thermal_temperature_ratios=config.thermal_temperature_ratios,
+        thermal_time_points=config.thermal_time_points,
+        photon_decay_rates_s=config.photon_decay_rates_s,
+        photon_time_points=config.photon_time_points,
+        thermal_photon_decay_rates_s=config.thermal_photon_decay_rates_s,
+        thermal_photon_temperatures_k=config.thermal_photon_temperatures_k,
+        thermal_photon_time_points=config.thermal_photon_time_points,
+        mechanical_frequencies_hz=config.mechanical_frequencies_hz,
+        mechanical_couplings_hz=config.mechanical_couplings_hz,
+        mechanical_temperatures_k=config.mechanical_temperatures_k,
+        mechanical_mode_dimension=config.mechanical_mode_dimension,
+        mechanical_time_points=config.mechanical_time_points,
+        mechanical_longitudinal_frequencies_hz=(0.5e6, 1.0e6),
+        mechanical_longitudinal_couplings_hz=(0.05e6, 0.10e6),
+        mechanical_longitudinal_occupations=(1.0,),
+        mechanical_longitudinal_time_max_s=2e-6,
+        mechanical_longitudinal_time_points=21,
+        radiation_initial_xqp=config.radiation_initial_xqp,
+        radiation_trapping_rates_s=config.radiation_trapping_rates_s,
+        radiation_time_points=config.radiation_time_points,
+        charge_couplings_hz=config.charge_couplings_hz,
+        charge_switching_rates_s=config.charge_switching_rates_s,
+        charge_time_points=config.charge_time_points,
+    )
+    summary, trajectory = mechanical_equal_ratio_frequency_experiment(config)
+    row = summary.iloc[0]
+    assert np.isclose(
+        row["coupling_a_hz"] / row["frequency_a_hz"],
+        row["coupling_b_hz"] / row["frequency_b_hz"],
+    )
+    assert row["maximum_same_time_coherence_difference"] > 1e-5
+    assert len(trajectory) == 21

@@ -7,6 +7,8 @@ import json
 import numpy as np
 import pandas as pd
 
+from ic_quantum.dynamics.mechanical_mode import mechanical_coherence_factor
+
 
 def _first_crossing(times: np.ndarray, values: np.ndarray, threshold: float) -> float:
     indices = np.flatnonzero(values <= threshold)
@@ -140,3 +142,88 @@ def summarize_dephasing_trajectory_shapes(frame: pd.DataFrame) -> pd.DataFrame:
             }
         )
     return pd.DataFrame(rows)
+
+
+
+def mechanical_equal_ratio_frequency_experiment(config) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Compare two mechanical spectral lines at equal dimensionless g/omega.
+
+    "Same perturbation intensity" is operationalized here as the same coupling
+    ratio g/omega and the same thermal occupation.  Different omega then changes
+    the physical-time trajectory even though the dimensionless coupling scale is
+    matched.
+    """
+    frequencies = sorted(float(v) for v in config.mechanical_longitudinal_frequencies_hz)
+    couplings = sorted(float(v) for v in config.mechanical_longitudinal_couplings_hz)
+    if len(frequencies) < 2 or len(couplings) < 2:
+        raise ValueError("Need at least two frequencies and couplings for the comparison.")
+
+    f1, f2 = frequencies[0], frequencies[-1]
+    g1 = couplings[0]
+    ratio = g1 / f1
+    g2 = min(couplings, key=lambda value: abs(value / f2 - ratio))
+    ratio2 = g2 / f2
+    if not np.isclose(ratio, ratio2, rtol=1e-10, atol=1e-15):
+        raise ValueError(
+            "Configured grid does not contain two frequencies with matched g/omega."
+        )
+
+    occupation = float(
+        config.mechanical_longitudinal_occupations[
+            len(config.mechanical_longitudinal_occupations) // 2
+        ]
+    )
+    times = np.asarray(config.mechanical_longitudinal_times_s, dtype=float)
+    rows = []
+    differences = []
+    for time in times:
+        q1 = mechanical_coherence_factor(
+            time=float(time),
+            mode_angular_frequency=2.0 * np.pi * f1,
+            coupling_rate=2.0 * np.pi * g1,
+            thermal_occupation=occupation,
+        )
+        q2 = mechanical_coherence_factor(
+            time=float(time),
+            mode_angular_frequency=2.0 * np.pi * f2,
+            coupling_rate=2.0 * np.pi * g2,
+            thermal_occupation=occupation,
+        )
+        difference = abs(q1 - q2)
+        differences.append(difference)
+        rows.append(
+            {
+                "time_s": float(time),
+                "frequency_a_hz": f1,
+                "frequency_b_hz": f2,
+                "coupling_a_hz": g1,
+                "coupling_b_hz": g2,
+                "matched_g_over_omega_proxy": ratio,
+                "thermal_occupation": occupation,
+                "coherence_a": q1,
+                "coherence_b": q2,
+                "absolute_coherence_difference": difference,
+            }
+        )
+
+    summary = pd.DataFrame(
+        [
+            {
+                "frequency_a_hz": f1,
+                "frequency_b_hz": f2,
+                "coupling_a_hz": g1,
+                "coupling_b_hz": g2,
+                "matched_g_over_omega_proxy": ratio,
+                "thermal_occupation": occupation,
+                "maximum_same_time_coherence_difference": float(
+                    max(differences)
+                ),
+                "interpretation": (
+                    "Equal dimensionless coupling ratio and thermal occupation "
+                    "do not force equal physical-time signatures when the "
+                    "mechanical spectral-line frequency differs."
+                ),
+            }
+        ]
+    )
+    return summary, pd.DataFrame(rows)
