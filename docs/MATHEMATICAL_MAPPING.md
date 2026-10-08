@@ -6,9 +6,9 @@ Esta documentação separa resultados estabelecidos da literatura dos modelos co
 
 Para um estado puro, o código constrói explicitamente
 
-$
+$$
 \rho = |\psi\rangle\langle\psi|.
-$
+$$
 
 `core/states.py` implementa os estados de referência e `core/validation.py` verifica Hermiticidade, traço unitário e positividade semidefinida.
 
@@ -16,27 +16,27 @@ $
 
 O primeiro controle positivo de reversibilidade é
 
-$
+$$
 H_A = \frac{\hbar\omega}{2}\sigma_z,\qquad
 U_A(t)=e^{-iH_At/\hbar},\qquad
 \rho'=U_A\rho U_A^\dagger.
-$
+$$
 
 `channels/unitary.py` define o Hamiltoniano e `dynamics/closed_system.py` calcula a exponencial matricial. A recuperação é testada com
 
-$
+$$
 \rho_{rec}=U_A^\dagger\rho' U_A\approx\rho.
-$
+$$
 
 ## Canais quânticos
 
 A dinâmica reduzida é calculada explicitamente por
 
-$
+$$
 \mathcal E(\rho)=\sum_i K_i\rho K_i^\dagger,
 \qquad
 \sum_iK_i^\dagger K_i=I.
-$
+$$
 
 `channels/` contém representações canônicas de dephasing, amplitude damping e depolarizing. `dynamics/open_system.py` implementa a soma de Kraus e a completude é testada numericamente.
 
@@ -46,9 +46,9 @@ Um canal não unitário não é rotulado simplesmente como "irreversível".
 
 O teste de dilatação de amplitude damping constrói uma dinâmica unitária em `S+A` e calcula
 
-$
+$$
 \rho'_S=\operatorname{Tr}_A[U_{SA}(\rho_S\otimes\rho_A)U_{SA}^\dagger].
-$
+$$
 
 O estado reduzido é comparado à representação de Kraus correspondente. Isso demonstra computacionalmente que unitariedade global não implica dinâmica unitária local.
 
@@ -56,19 +56,19 @@ O estado reduzido é comparado à representação de Kraus correspondente. Isso 
 
 Para a vetorização por colunas, a implementação usa
 
-$
+$$
 \operatorname{vec}(K\rho K^\dagger)
 =
 (K^*\otimes K)\operatorname{vec}(\rho),
-$
+$$
 
 de modo que o superoperador de um canal de Kraus é
 
-$
+$$
 \mathbf S_{\mathcal E}
 =
 \sum_i K_i^*\otimes K_i.
-$
+$$
 
 O módulo `dynamics/reversibility.py` então separa três perguntas matematicamente diferentes.
 
@@ -82,19 +82,19 @@ Isso **não** significa que a inversa seja uma operação física admissível.
 
 Para avaliar complete positivity, é construída a matriz de Choi
 
-$
+$$
 J(\mathcal E)
 =
 \sum_{ij}|i\rangle\langle j|
 \otimes
 \mathcal E(|i\rangle\langle j|).
-$
+$$
 
 A complete positivity é verificada por
 
-$
+$$
 J(\mathcal E)\succeq0,
-$
+$$
 
 e a preservação do traço pela condição apropriada sobre o traço parcial da matriz de Choi.
 
@@ -132,11 +132,11 @@ Essa taxonomia é uma ferramenta computacional da segunda etapa; ela não preten
 
 O código não assume que o nome de um canal identifica univocamente uma fonte física. Em particular, a infraestrutura deixa em aberto a pergunta científica de identificabilidade:
 
-$
+$$
 A_a\neq A_b
 \quad\text{pode coexistir com}\quad
 \mathcal E_a=\mathcal E_b?
-$
+$$
 
 Essa questão deverá ser investigada com dados temporais, parâmetros físicos, respostas a estados de prova e outras observáveis além da identificação nominal do canal.
 
@@ -185,29 +185,29 @@ Essa conclusão é deliberadamente limitada a unitárias no sistema reduzido. El
 
 A família `finite-mode-spin-boson-dephasing` implementa
 
-$
+$$
 H_S=\frac{\hbar\omega}{2}\sigma_z,\quad
 H_A=\sum_k\hbar\Omega_k b_k^\dagger b_k,
-$
-$
+$$
+$$
 H_{\mathrm{int}}=
 \sum_k\hbar\lambda_k\sigma_z(b_k+b_k^\dagger).
-$
+$$
 
 Na discretização térmica finita:
 
-$
+$$
 \Lambda(t)=
 \sum_k \frac{4\lambda_k^2}{\Omega_k^2}
 [1-\cos(\Omega_k t)]
 \coth\left(\frac{\Omega_k}{2T}\right),
-$
+$$
 
 e
 
-$
+$$
 \rho_{01}(t)=e^{-\Lambda(t)}\rho_{01}(0).
-$
+$$
 
 A representação de Kraus equivalente é usada para validar a dinâmica reduzida.
 Recorrências para frequências comensuráveis são tratadas como propriedade do
@@ -220,19 +220,19 @@ A família `markovian-photon-reservoir-decay` modela um sistema de dois níveis
 acoplado por troca de excitação a modos fotônicos. No limite Markoviano,
 não dirigido e a temperatura zero:
 
-$
+$$
 \dot\rho=
 \gamma\left[
 \sigma_-\rho\sigma_+
 -\frac12\{\sigma_+\sigma_-,\rho\}
 \right],
-$
+$$
 
 com
 
-$
+$$
 p(t)=1-e^{-\gamma t}.
-$
+$$
 
 Amplitude damping é consequência da redução e não a identidade causal.
 
@@ -240,16 +240,16 @@ Amplitude damping é consequência da redução e não a identidade causal.
 
 As famílias de troca finita e reservatório fotônico podem satisfazer
 
-$
+$$
 \sin^2(gt)=1-e^{-\gamma t}=p,
-$
+$$
 
 produzindo o mesmo canal reduzido. A infraestrutura testa essa igualdade em
 todos os estados de prova. Portanto, `channel_name` não define Agente Causal.
 
 ## Assinatura final
 
-$
+$$
 \Sigma =
 \{
 t,
@@ -260,7 +260,7 @@ S,P,C_{l_1},F,D,
 \text{superoperador},
 R
 \}.
-$
+$$
 
 Parâmetros físicos e identidade causal ficam no registro científico/metadata,
 não em `observable_features`.
@@ -270,9 +270,9 @@ não em `observable_features`.
 Para cada par $A_i,A_j$, estado e instante, todos os pontos paramétricos são
 comparados por
 
-$
+$$
 D(\rho_i,\rho_j)=\frac12\|\rho_i-\rho_j\|_1.
-$
+$$
 
 São preservados mínimos, médias, medianas, máximos, regiões de colisão,
 dependência de estado/tempo e variação intra-agente.
@@ -282,9 +282,9 @@ dependência de estado/tempo e variação intra-agente.
 A análise genérica reporta a invertibilidade numérica sob tolerância explícita.
 Para o spin-boson finito,
 
-$
+$$
 q(t)=e^{-\Lambda(t)}>0
-$
+$$
 
 para $\Lambda(t)$ finito. Assim, quando $q(t)$ cai abaixo da tolerância do teste de posto,
 o regime é registrado como analiticamente invertível porém numericamente

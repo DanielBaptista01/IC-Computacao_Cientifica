@@ -5,14 +5,14 @@ quantificação de Agentes Causais em sistemas quânticos.
 
 A formulação final preserva a teoria usual de sistemas abertos:
 
-$
+$$
 \text{Ambiente} \supset \{A_1,A_2,\ldots,A_N\},
-$
+$$
 
 e investiga se fontes ou mecanismos específicos presentes nessa descrição
 agregada podem ser modelados individualmente pela cadeia
 
-$
+$$
 \text{Fonte física}
 \rightarrow A_k
 \rightarrow H_{\mathrm{int}}^{(k)}
@@ -20,7 +20,7 @@ $
 \rightarrow \rho_k(t)
 \rightarrow \Sigma_k
 \rightarrow R_k.
-$
+$$
 
 O projeto não afirma unicidade universal da assinatura causal e não implementa
 Machine Learning ou Quantum Machine Learning.
@@ -120,9 +120,9 @@ O experimento inter-depth permanece reproduzível:
 
 A análise testa
 
-$
+$$
 A_i\neq A_j \quad\Longrightarrow?\quad \Sigma_i\neq\Sigma_j.
-$
+$$
 
 Todos os seis pares entre as quatro famílias são avaliados por estado, tempo e
 combinações paramétricas. Regiões de colisão são preservadas como
@@ -132,11 +132,11 @@ Há ainda um experimento controlado em que a troca finita e o reservatório
 fotônico Markoviano são parametrizados para gerar o mesmo canal reduzido de
 amplitude damping. Portanto,
 
-$
+$$
 \text{identidade do canal reduzido}
 \not\Rightarrow
 \text{identidade da fonte física}.
-$
+$$
 
 ## Agente Causal, ruído e entropia
 
@@ -148,11 +148,11 @@ A implementação mantém a distinção:
 
 O controle coerente fornece perturbações observáveis com entropia preservada:
 
-$
+$$
 \Delta S=0
 \not\Rightarrow
 \text{ausência de perturbação}.
-$
+$$
 
 São analisadas entropia, pureza, coerência $\ell_1$, fidelidade, distância de traço,
 vetor de Bloch, espectro e descritores de Choi/superoperador.
@@ -173,9 +173,9 @@ numérica efetiva.
 
 A transformação física não programada continua representada por
 
-$
+$$
 G_d \rightarrow \mathcal C_{k,d} \rightarrow G_{d+1}.
-$
+$$
 
 Ela pode ser identidade, unitária, CPTP por Kraus ou extensão estruturada; não
 é assumida como porta unitária em geral.
@@ -264,11 +264,11 @@ O pipeline gera:
 - assinaturas de estado por $\langle X\rangle$, $\langle Y\rangle$ e $\langle Z\rangle$, além de métricas informacionais;
 - identificabilidade pairwise das variedades parâmetro-tempo;
 - uma assinatura operacional de processo construída com quatro probes
-  linearmente independentes `|0>`, `|1>`, `|+>` e `|+i>`;
+  linearmente independentes $|0\rangle$, $|1\rangle$, $|+\rangle$ e $|+i\rangle$;
 - um experimento controlado em que duas fontes físicas diferentes são
-  parametrizadas para o mesmo canal reduzido de dephasing em um snapshot;
+  parametrizadas para o mesmo canal reduzido de `dephasing` em um snapshot;
 - reversibilidade por condição física;
-- T1*/T2* como primeiros cruzamentos de 1/e, sem impor ajuste exponencial a
+- $T_1^*/T_2^*$ como primeiros cruzamentos de $1/e$, sem impor ajuste exponencial a
   dinâmicas recorrentes;
 - comparação de mecanismos de dephasing;
 - comparação de duas linhas espectrais mecânicas com mesma razão $g/\omega$ e mesma

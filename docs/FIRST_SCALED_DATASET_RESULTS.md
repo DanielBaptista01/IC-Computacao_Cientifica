@@ -17,9 +17,9 @@ causal.
 
 ## Hipótese testada
 
-$
+$$
 A_i \neq A_j \Longrightarrow? \Sigma_i \neq \Sigma_j.
-$
+$$
 
 O teste foi realizado comparando, para o mesmo estado de prova, a mesma taxa
 numérica e o mesmo tempo, os estados reduzidos produzidos por:
@@ -33,7 +33,7 @@ A separação foi quantificada pela distância de traço.
 
 Entre 450 pares:
 
-- 125 apresentaram distância de traço <= 1e-10;
+- 125 apresentaram distância de traço $\le 10^{-10}$;
 - fração não-identificável: 0.2777777778;
 - distância inter-agente média: 0.3398406778;
 - mediana: 0.2795084972;
@@ -50,8 +50,8 @@ possa ser inferida universalmente de uma única assinatura reduzida neste protoc
 
 Todas as 75 comparações foram não-identificáveis dentro da tolerância.
 
-- média: aproximadamente 5.9e-18;
-- máximo numérico: aproximadamente 1.1e-16.
+- média: aproximadamente $5{,}9\times10^{-18}$;
+- máximo numérico: aproximadamente $1{,}1\times10^{-16}$.
 
 Isso ocorre porque, nos dois modelos implementados e com o agente de troca iniciado
 em $|0\rangle$, o estado $|0\rangle$ é invariável. Portanto, esse estado de prova não contém poder
@@ -97,15 +97,15 @@ separabilidade global das famílias.
 
 Os testes também confirmaram que, nesses modelos,
 
-$
+$$
 \delta\omega t = \text{constante}
-$
+$$
 
 produz a mesma transformação coerente, e que
 
-$
+$$
 g t = \text{constante}
-$
+$$
 
 produz a mesma dinâmica reduzida do modelo de troca.
 

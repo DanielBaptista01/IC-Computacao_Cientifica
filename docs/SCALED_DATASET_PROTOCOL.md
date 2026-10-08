@@ -8,9 +8,9 @@ controlado de estados, intensidades e tempos.
 
 A hipótese é explicitamente interrogativa:
 
-$
+$$
 A_i \neq A_j \Longrightarrow? \Sigma_i \neq \Sigma_j.
-$
+$$
 
 ## Famílias incluídas
 
@@ -23,7 +23,7 @@ Nenhum nome de canal é usado como identidade causal.
 ## Cobertura paramétrica
 
 O Dataset 001 usa taxas de $0{,}5$, $1{,}0$ e $2{,}0\,\mathrm{rad}\,\mathrm{s}^{-1}$, 25 tempos uniformes em
-$[0,2\pi]\,\mathrm{s}$ e os seis estados de prova ±X, ±Y, ±Z.
+$[0,2\pi]\,\mathrm{s}$ e os seis estados de prova $\pm X$, $\pm Y$, $\pm Z$.
 
 A escolha é uma **faixa teórica normalizada**, não uma calibração de hardware.
 Ela é motivada pelas variáveis adimensionais $\delta\omega\,t$ e $gt$:
@@ -32,7 +32,7 @@ Ela é motivada pelas variáveis adimensionais $\delta\omega\,t$ e $gt$:
 - inclui rotações coerentes parciais e ciclos completos;
 - inclui troca completa de excitação em $gt=\pi/2$;
 - inclui recorrências em $gt=n\pi$;
-- permite testar a degenerescência dinâmica de pares (rate,time) com o mesmo produto.
+- permite testar a degenerescência dinâmica de pares $(\text{rate},t)$ com o mesmo produto.
 
 Assim, a grade não foi escolhida apenas para aumentar o número de linhas.
 
@@ -40,9 +40,9 @@ Assim, a grade não foi escolhida apenas para aumentar o número de linhas.
 
 Com 2 famílias, 3 taxas, 25 tempos e 6 estados:
 
-$
+$$
 N_S = 2\times3\times25\times6 = 900.
-$
+$$
 
 Esse é o primeiro corpus sistemático validado. Não constitui o corpus final da IC.
 
@@ -81,9 +81,9 @@ em um experimento físico ela exigiria inferência/tomografia.
 Para condições com mesmo estado de prova, mesma taxa numérica e mesmo tempo,
 calcula-se
 
-$
+$$
 D(\rho_i,\rho_j)=\frac12\|\rho_i-\rho_j\|_1.
-$
+$$
 
 Se $D\le 10^{-10}$, o par é registrado como não-identificável dentro desse protocolo.
 
