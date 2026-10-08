@@ -26,6 +26,7 @@ from ic_quantum.analysis.physical_v2_response import (
     summarize_dephasing_trajectory_shapes,
     summarize_thermal_characteristic_times,
 )
+from ic_quantum.data.causal_agent_schema import MATURITY_LEVEL_DESCRIPTIONS
 from ic_quantum.data.physical_catalog import build_physical_source_registry
 from ic_quantum.data.physical_v2_export import export_physical_v2_dataset
 from ic_quantum.data.physical_v2_generator import generate_physical_v2_samples
@@ -290,6 +291,9 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
                 "physical_source": model.physical_source,
                 "causal_mechanism": model.causal_mechanism,
                 "maturity_level": model.maturity_level.value,
+                "maturity_description": MATURITY_LEVEL_DESCRIPTIONS[
+                    model.maturity_level
+                ],
                 "has_phenomenological_provenance": any(
                     ref.kind.value == "PHENOMENOLOGICAL"
                     for ref in model.references
