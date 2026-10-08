@@ -38,6 +38,16 @@ class ModelMaturityLevel(str, Enum):
     LEVEL_5 = "LEVEL_5"
 
 
+MATURITY_LEVEL_DESCRIPTIONS: dict[ModelMaturityLevel, str] = {
+    ModelMaturityLevel.LEVEL_0: "fonte_conhecida",
+    ModelMaturityLevel.LEVEL_1: "modelo_teorico_encontrado",
+    ModelMaturityLevel.LEVEL_2: "modelo_reproduzido",
+    ModelMaturityLevel.LEVEL_3: "implementacao_validada",
+    ModelMaturityLevel.LEVEL_4: "comparacao_com_referencia",
+    ModelMaturityLevel.LEVEL_5: "validacao_experimental",
+}
+
+
 class DynamicRegime(str, Enum):
     COHERENT_UNITARY = "coherent_unitary"
     INCOHERENT_CPTP = "incoherent_cptp"
