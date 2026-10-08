@@ -249,31 +249,30 @@ O catálogo reconciliado contém oito famílias/mecanismos causalmente distintos
 8. `bistable-charge-fluctuator-rtn` — armadilha/defeito de carga biestável
    modelado por random-telegraph noise.
 
-Essas famílias não são nove nomes de canais. O catálogo separa
+Essas famílias não são oito nomes de canais: cada entrada representa uma fonte/mecanismo físico documentado, não um rótulo de canal. O catálogo separa
 `physical_source`, `causal_mechanism`, parâmetros físicos, dinâmica efetiva,
 assinatura e reversibilidade. O modelo de radiação é explicitamente
 `PHENOMENOLOGICAL` na ponte entre energia/geometria depositada e a condição
 inicial de quasipartículas.
 
-O drive EM coerente usa a taxa efetiva de Rabi (Omega). O projeto não inventa
-uma conversão universal de (E_0), polarização e momento de dipolo para
-(Omega) sem uma plataforma física específica.
+O drive EM coerente usa a taxa efetiva de Rabi `Omega`. O projeto não inventa
+uma conversão universal de `E0`, polarização e momento de dipolo para
+`Omega` sem uma plataforma física específica.
 
 ### Análises v2
 
 O pipeline gera:
-- assinaturas de estado por (langle Xangle,langle Yangle,langle Zangle)
-  e métricas informacionais;
+- assinaturas de estado por `<X>`, `<Y>` e `<Z>`, além de métricas informacionais;
 - identificabilidade pairwise das variedades parâmetro-tempo;
 - uma assinatura operacional de processo construída com quatro probes
-  linearmente independentes (|0angle,|1angle,|+angle,|+iangle);
+  linearmente independentes `|0>`, `|1>`, `|+>` e `|+i>`;
 - um experimento controlado em que duas fontes físicas diferentes são
   parametrizadas para o mesmo canal reduzido de dephasing em um snapshot;
 - reversibilidade por condição física;
 - T1*/T2* como primeiros cruzamentos de 1/e, sem impor ajuste exponencial a
   dinâmicas recorrentes;
 - comparação de mecanismos de dephasing;
-- comparação de duas linhas espectrais mecânicas com mesmo (g/omega) e mesma
+- comparação de duas linhas espectrais mecânicas com mesmo `g/omega` e mesma
   ocupação térmica.
 
 A distância de processo usada no v2 é uma métrica operacional RMS baseada nas
@@ -294,7 +293,7 @@ físico nem parâmetros específicos do simulador.
 
 Continuam fora do corpus validado:
 - transporte microscópico completo de partículas ionizantes e a conversão
-  universal de energia/localização depositada em (x_{qp}(0));
+  universal de energia/localização depositada em `x_qp(0)`;
 - vibração macroscópica arbitrária de encapsulamento/chassi;
 - ensemble completo de defeitos para reproduzir genericamente um espectro 1/f;
 - calibração universal de campo elétrico bruto para uma taxa de Rabi;
@@ -306,5 +305,5 @@ aumentar o dataset. Nenhum ML/QML é treinado nesta IC.
 
 
 O modelo `markovian-photon-reservoir-decay` continua preservado no v1, mas
-não é duplicado como rótulo causal no v2: ele é o limite (T=0) da família
+não é duplicado como rótulo causal no v2: ele é o limite `T=0` da família
 `thermal-photon-reservoir`.
