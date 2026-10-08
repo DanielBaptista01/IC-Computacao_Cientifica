@@ -1,14 +1,14 @@
 # FINAL_LIMITATIONS
 
-- Simulacao, nao hardware quantico real.
+- Simulação, não hardware quântico real.
 - Sistema principal restrito a um qubit.
-- Quatro familias causalmente modeladas; nao e uma enumeracao de todas as fontes.
-- Grades teoricas normalizadas, nao calibracoes de hardware.
-- Ausencia de shots, erro de leitura e incerteza tomografica experimental.
-- Matriz densidade exata e ground truth do simulador.
-- Coerencia l1 depende da base computacional.
-- Identificabilidade e condicional ao protocolo investigado.
+- Quatro famílias causalmente modeladas; não é uma enumeração de todas as fontes.
+- Grades teóricas normalizadas, não calibrações de hardware.
+- Ausência de shots, erro de leitura e incerteza tomográfica experimental.
+- Matriz densidade exata é ground truth do simulador.
+- Coerência $\ell_1$ depende da base computacional.
+- Identificabilidade é condicional ao protocolo investigado.
 - Fontes distintas podem produzir o mesmo canal reduzido.
-- O banho spin-boson finito modela memoria/recorrencias de um reservatorio discreto.
+- O banho spin-boson finito modela memória/recorrências de um reservatório discreto.
 - Nenhum Machine Learning ou Quantum Machine Learning foi treinado.
-- Utunnel permanece parte da evolucao historica, nao resultado final demonstrado.
+- Utunnel permanece parte da evolução histórica, não resultado final demonstrado.

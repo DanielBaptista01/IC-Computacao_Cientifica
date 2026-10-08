@@ -38,6 +38,55 @@ jobs:
           path: ci-dataset/
       - name: Generate final IC dataset and evidence
         run: ic-finalize --config experiments/configs/ic_causal_agents_final_v1.json --output-dir results/final
+      - name: Generate physical-source causal dataset v2
+        run: ic-physical-v2 --config experiments/configs/ic_causal_agents_physical_v2.json --output-dir results/physical_v2
+      - name: Report physical-source v2 summary
+        run: |
+          echo "=== PHYSICAL V2 SUMMARY ==="
+          cat results/physical_v2/PHYSICAL_V2_SUMMARY.json
+          echo "=== STATE-RESPONSE IDENTIFIABILITY ==="
+          cat results/physical_v2/tables/physical_pair_summary.csv
+          echo "=== PROCESS-RESPONSE IDENTIFIABILITY ==="
+          cat results/physical_v2/tables/process_pair_summary.csv
+          echo "=== MATCHED EM / THERMAL DEPHASING ==="
+          cat results/physical_v2/tables/matched_em_thermal_dephasing_summary.csv
+          echo "=== THERMAL CHARACTERISTIC TIMES ==="
+          cat results/physical_v2/tables/thermal_characteristic_times.csv
+          echo "=== DEPHASING SHAPE SUMMARY ==="
+          cat results/physical_v2/tables/dephasing_source_shape_summary.csv
+          echo "=== EQUAL-RATIO MECHANICAL FREQUENCY TEST ==="
+          cat results/physical_v2/tables/mechanical_equal_ratio_frequency_summary.csv
+          echo "=== PHYSICAL REVERSIBILITY ==="
+          cat results/physical_v2/tables/physical_reversibility_summary.csv
+          echo "=== SOURCE STATUS ==="
+          cat results/physical_v2/tables/physical_source_status.csv
+          echo "=== SAMPLE COUNTS ==="
+          cat results/physical_v2/tables/physical_sample_counts.csv
+          echo "=== PARAMETER COVERAGE ==="
+          cat results/physical_v2/tables/physical_parameter_coverage.csv
+      - name: Upload physical-source v2 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ic-causal-agents-physical-v2
+          path: results/physical_v2/
+          retention-days: 90
+      - name: Publish physical-source v2 tagged release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view ic-2026-physical-v2 >/dev/null 2>&1; then
+            echo "Release ic-2026-physical-v2 already exists; leaving it unchanged."
+          else
+            zip -q -r ic-causal-agents-physical-v2.zip results/physical_v2/
+            gh release create ic-2026-physical-v2 \
+              ic-causal-agents-physical-v2.zip \
+              results/physical_v2/PHYSICAL_V2_MANIFEST.json \
+              results/physical_v2/PHYSICAL_V2_SUMMARY.json \
+              --target "$GITHUB_SHA" \
+              --title "IC 2026 — Expansão Físico-Causal v2" \
+              --notes "Expansão físico-causal da IC. Dataset: ic_causal_agents_physical_v2. O baseline ic-2026-final permanece congelado. Nenhum ML/QML treinado."
+          fi
       - name: Report final scientific summaries
         run: |
           echo "=== PAIRWISE IDENTIFIABILITY ==="
@@ -73,33 +122,24 @@ jobs:
           name: ic-causal-agents-final-v1
           path: results/final/
           retention-days: 90
-      - name: Generate physical-source expansion v2
-        run: ic-physical-v2 --config experiments/configs/ic_causal_agents_physical_v2.json --output-dir results/physical_v2
-      - name: Upload physical-source expansion v2
-        uses: actions/upload-artifact@v4
-        with:
-          name: ic-causal-agents-physical-v2
-          path: results/physical_v2/
-          retention-days: 90
-      - name: Publish physical-source v2 release
+      - name: Publish consolidated final IC release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view ic-2026-physical-v2 >/dev/null 2>&1; then
-            echo "Release ic-2026-physical-v2 already exists; leaving it unchanged."
-          else
-            zip -q -r ic-causal-agents-physical-v2.zip results/physical_v2/
-            gh release create ic-2026-physical-v2               ic-causal-agents-physical-v2.zip               results/physical_v2/PHYSICAL_V2_MANIFEST.json               results/physical_v2/PHYSICAL_V2_SUMMARY.json               --target "$GITHUB_SHA"               --title "IC 2026 — Expansão Físico-Causal v2"               --notes "Expansão físico-causal: EM, campo magnético, reservatório térmico e modo mecânico/fonônico. Sem ML/QML."
+          if gh release view ic-2026-final-v2 >/dev/null 2>&1; then
+            echo "Release ic-2026-final-v2 already exists; refusing to overwrite the scientific freeze."
+            exit 1
           fi
-      - name: Publish final tagged release
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if gh release view ic-2026-final >/dev/null 2>&1; then
-            echo "Release ic-2026-final already exists; leaving it unchanged."
-          else
-            zip -q -r ic-causal-agents-final-v1.zip results/final/
-            gh release create ic-2026-final               ic-causal-agents-final-v1.zip               results/final/FINAL_DATASET_MANIFEST.json               results/final/FINAL_SUMMARY.json               --target "$GITHUB_SHA"               --title "IC 2026 — Dataset e Evidências Finais"               --notes "Versão computacional congelada da IC. Dataset: ic_causal_agents_final_v1. Nenhum ML/QML treinado."
-          fi
+          zip -q -r ic-causal-agents-final-v1.zip results/final/
+          zip -q -r ic-causal-agents-physical-v2.zip results/physical_v2/
+          gh release create ic-2026-final-v2 \
+            ic-causal-agents-final-v1.zip \
+            ic-causal-agents-physical-v2.zip \
+            results/final/FINAL_DATASET_MANIFEST.json \
+            results/final/FINAL_SUMMARY.json \
+            results/physical_v2/PHYSICAL_V2_MANIFEST.json \
+            results/physical_v2/PHYSICAL_V2_SUMMARY.json \
+            --target "$GITHUB_SHA" \
+            --title "IC 2026 — Versão Final Consolidada v2" \
+            --notes "Freeze computacional final da IC após integração da expansão físico-causal v2. Inclui baseline mecanístico v1 e dataset físico-causal v2. Nenhum ML/QML foi treinado."

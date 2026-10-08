@@ -52,6 +52,8 @@ def coherent_detuning_model() -> CausalAgentModelRecord:
             "during a finite interaction window."
         ),
         target_system="single qubit",
+        physical_source="systematic coherent frequency offset or control-field detuning",
+        causal_mechanism="longitudinal modulation of the qubit splitting through sigma_z",
         relevant_degrees_of_freedom=("qubit", "frequency offset"),
         coupling_mechanism="effective longitudinal sigma_z Hamiltonian",
         interaction_hamiltonian=MathematicalField(
@@ -127,6 +129,8 @@ def finite_exchange_relaxation_model() -> CausalAgentModelRecord:
             "excitation coherently with the system. Discarding it produces reduced relaxation."
         ),
         target_system="single qubit",
+        physical_source="finite external two-level quantum degree of freedom",
+        causal_mechanism="coherent single-excitation exchange followed by discarding the external degree of freedom",
         relevant_degrees_of_freedom=("system qubit", "two-level causal agent"),
         coupling_mechanism="single-excitation exchange",
         interaction_hamiltonian=MathematicalField(

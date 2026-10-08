@@ -1,10 +1,16 @@
 # FINAL_IDENTIFIABILITY_ANALYSIS
 
-A analise testa A_i != A_j =>? Sigma_i != Sigma_j sem assumir resposta positiva.
-Para cada par de familias, estado de prova e tempo, todas as combinacoes dos
-pontos parametricos foram comparadas pela distancia de traco. Uma condicao e
-marcada como colisao quando existe ao menos um par parametrico abaixo da
-tolerancia configurada.
+A análise testa
+
+$$
+A_i\neq A_j \quad\Longrightarrow?\quad \Sigma_i\neq\Sigma_j,
+$$
+
+sem assumir resposta positiva.
+Para cada par de famílias, estado de prova e tempo, todas as combinações dos
+pontos paramétricos foram comparadas pela distância de traço. Uma condição e
+marcada como colisão quando existe ao menos um par parametrico abaixo da
+tolerância configurada.
 
 | agent_a | agent_b | probe_time_conditions | conditions_with_collision | condition_collision_fraction | mean_condition_min_trace_distance | global_mean_trace_distance | max_trace_distance |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -15,7 +21,7 @@ tolerancia configurada.
 | finite-mode-spin-boson-dephasing | markovian-photon-reservoir-decay | 1134 | 94 | 0.08289241623 | 0.2866797363 | 0.4124521431 | 0.9999965127 |
 | finite-two-level-exchange-relaxation | markovian-photon-reservoir-decay | 1134 | 94 | 0.08289241623 | 0.0311617559 | 0.3646227758 | 0.9999965127 |
 
-Regioes de colisao registradas: 748.
+Regiões de colisão registradas: 748.
 
-A existencia de colisoes e mantida como resultado cientifico. Os resultados
-nao sustentam unicidade universal da assinatura causal no sistema reduzido.
+A existência de colisoes e mantida como resultado científico. Os resultados
+não sustentam unicidade universal da assinatura causal no sistema reduzido.

@@ -38,6 +38,16 @@ class ModelMaturityLevel(str, Enum):
     LEVEL_5 = "LEVEL_5"
 
 
+MATURITY_LEVEL_DESCRIPTIONS: dict[ModelMaturityLevel, str] = {
+    ModelMaturityLevel.LEVEL_0: "fonte_conhecida",
+    ModelMaturityLevel.LEVEL_1: "modelo_teorico_encontrado",
+    ModelMaturityLevel.LEVEL_2: "modelo_reproduzido",
+    ModelMaturityLevel.LEVEL_3: "implementacao_validada",
+    ModelMaturityLevel.LEVEL_4: "comparacao_com_referencia",
+    ModelMaturityLevel.LEVEL_5: "validacao_experimental",
+}
+
+
 class DynamicRegime(str, Enum):
     COHERENT_UNITARY = "coherent_unitary"
     INCOHERENT_CPTP = "incoherent_cptp"
@@ -127,6 +137,8 @@ class CausalAgentModelRecord:
     physical_category: str
     physical_description: str
     target_system: str
+    physical_source: str = UNRESOLVED
+    causal_mechanism: str = UNRESOLVED
 
     relevant_degrees_of_freedom: tuple[str, ...] = ()
     coupling_mechanism: str = UNRESOLVED
@@ -183,10 +195,15 @@ class CausalAgentSampleRecord:
         are excluded by default because they may trivially encode the generating model.
         They can be opted in only for a scientifically justified supervised task.
         """
+        signature_payload = asdict(self.signature)
+        # Physical simulator parameters and exact simulator-only extras are scientific
+        # ground truth/metadata, not default observable features for future learning.
+        signature_payload.pop("physical_parameters", None)
+        signature_payload.pop("extra", None)
         payload = {
             "time": self.time,
             "initial_system_state": self.initial_system_state,
-            "signature": _jsonable(asdict(self.signature)),
+            "signature": _jsonable(signature_payload),
         }
         if include_control_parameters:
             payload["parameter_values"] = _jsonable(self.parameter_values)

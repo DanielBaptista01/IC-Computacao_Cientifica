@@ -41,6 +41,10 @@ def test_unitary_latent_transform_is_recovered_by_adjoint():
         kind=LatentTransformKind.UNITARY,
         dimension=2,
         agent_id="coherent_z",
+        physical_source="controlled longitudinal field offset",
+        coupling_mechanism="effective sigma_z coupling",
+        physical_parameters={"omega": 1.0, "time": 0.7},
+        provenance=("controlled baseline",),
         parameters={"omega": 1.0, "time": 0.7},
         unitary=unitary,
     )
@@ -82,3 +86,27 @@ def test_kraus_latent_transform_has_no_direct_unitary_inverse():
     bound = max_unitary_recovery_fidelity_to_pure_target(perturbed, rho)
     assert np.isclose(bound, 0.825, atol=1e-10)
     assert bound < 1.0
+
+
+def test_latent_transform_carries_physical_causal_context_without_changing_map():
+    rho = reference_density("+")
+    unitary = coherent_z_unitary(omega=0.3, time=0.4)
+    latent = LatentCausalTransform(
+        transform_id="C_physical_context_d2",
+        depth_after=2,
+        kind=LatentTransformKind.UNITARY,
+        dimension=2,
+        agent_id="external-magnetic-field-wave",
+        physical_source="external electromagnetic field (magnetic component)",
+        coupling_mechanism="Zeeman coupling",
+        physical_parameters={"field_amplitude": 1e-7, "time": 0.4},
+        provenance=("semiclassical field model",),
+        unitary=unitary,
+    )
+    assert latent.physical_source.startswith("external electromagnetic")
+    assert latent.coupling_mechanism == "Zeeman coupling"
+    assert latent.physical_parameters["field_amplitude"] == 1e-7
+    assert np.allclose(
+        latent.apply(rho),
+        unitary @ rho @ unitary.conjugate().T,
+    )

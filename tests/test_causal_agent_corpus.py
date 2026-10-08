@@ -49,6 +49,8 @@ def valid_model() -> CausalAgentModelRecord:
         physical_category="coherent_control_baseline",
         physical_description="Controlled Hamiltonian perturbation used as a reversible baseline.",
         target_system="single qubit",
+        physical_source="controlled laboratory frequency offset",
+        causal_mechanism="longitudinal sigma_z energy-splitting modulation",
         relevant_degrees_of_freedom=("qubit",),
         coupling_mechanism="effective longitudinal coherent perturbation",
         interaction_hamiltonian=MathematicalField(

@@ -51,20 +51,20 @@ def write_final_evidence(
     manifest_md.write_text(
         f"""# FINAL_DATASET_MANIFEST
 
-Dataset: {config.dataset_id}
-Schema: {config.schema_version}
-Commit de geracao: {metadata['git_commit_sha']}
-Familias causais validadas: {n_a}
-Amostras validas: {n_s}
+Dataset: `{config.dataset_id}`
+Schema: `{config.schema_version}`
+Commit de geração: `{metadata['git_commit_sha']}`
+Famílias causais validadas: {n_a}
+Amostras válidas: {n_s}
 Amostras rejeitadas: {metadata['rejected_samples']}
 Estados de prova: {len(config.probe_ids)}
 Pontos temporais: {config.time_points}
 
-O dataset separa scientific_records, observable_features, causal_labels,
-metadata e provenance. Os hashes SHA-256 sao registrados em
-FINAL_DATASET_MANIFEST.json.
+O dataset separa `scientific_records`, `observable_features`, `causal_labels`,
+`metadata` e `provenance`. Os hashes SHA-256 são registrados em
+`FINAL_DATASET_MANIFEST.json`.
 
-## Familias
+## Famílias
 
 """
         + "\n".join(
@@ -80,11 +80,17 @@ FINAL_DATASET_MANIFEST.json.
     ident_md.write_text(
         """# FINAL_IDENTIFIABILITY_ANALYSIS
 
-A analise testa A_i != A_j =>? Sigma_i != Sigma_j sem assumir resposta positiva.
-Para cada par de familias, estado de prova e tempo, todas as combinacoes dos
-pontos parametricos foram comparadas pela distancia de traco. Uma condicao e
-marcada como colisao quando existe ao menos um par parametrico abaixo da
-tolerancia configurada.
+A análise testa
+
+$$
+A_i\\neq A_j \\quad\\Longrightarrow?\\quad \\Sigma_i\\neq\\Sigma_j,
+$$
+
+sem assumir resposta positiva.
+Para cada par de famílias, estado de prova e tempo, todas as combinações dos
+pontos paramétricos foram comparadas pela distância de traço. Uma condição é
+marcada como colisão quando existe ao menos um par paramétrico abaixo da
+tolerância configurada.
 
 """
         + _markdown_table(
@@ -102,10 +108,10 @@ tolerancia configurada.
         )
         + f"""
 
-Regioes de colisao registradas: {len(collision_regions)}.
+Regiões de colisão registradas: {len(collision_regions)}.
 
-A existencia de colisoes e mantida como resultado cientifico. Os resultados
-nao sustentam unicidade universal da assinatura causal no sistema reduzido.
+A existência de colisões é mantida como resultado científico. Os resultados
+não sustentam unicidade universal da assinatura causal no sistema reduzido.
 """,
         encoding="utf-8",
     )
@@ -114,9 +120,9 @@ nao sustentam unicidade universal da assinatura causal no sistema reduzido.
     reversibility_md.write_text(
         """# FINAL_REVERSIBILITY_ANALYSIS
 
-A classificacao e feita por condicao dinamica, nao como rotulo permanente da
-familia. Distinguem-se unitariedade direta, invertibilidade linear, existencia
-de inversa CPTP e nao-invertibilidade reduzida.
+A classificação é feita por condição dinâmica, não como rótulo permanente da
+família. Distinguem-se unitariedade direta, invertibilidade linear, existência
+de inversa CPTP e não-invertibilidade reduzida.
 
 """
         + _markdown_table(
@@ -130,13 +136,13 @@ de inversa CPTP e nao-invertibilidade reduzida.
         )
         + """
 
-Recuperacao condicionada, acesso ao ambiente e mitigacao nao sao inferidos
+Recuperação condicionada, acesso ao ambiente e mitigação não são inferidos
 automaticamente a partir do superoperador reduzido.
 
-No spin-boson finito, q(t)=exp[-Lambda(t)] permanece analiticamente positivo
-para expoente finito. Regimes abaixo da tolerancia numerica de posto sao
-registrados como analiticamente invertiveis e numericamente efetivamente
-singulares, em vez de serem apresentados como singularidades matematicas exatas.
+No spin-boson finito, $q(t)=e^{-\\Lambda(t)}$ permanece analiticamente positivo
+para $\\Lambda(t)$ finito. Regimes abaixo da tolerância numérica de posto são
+registrados como analiticamente invertíveis e numericamente efetivamente
+singulares, em vez de serem apresentados como singularidades matemáticas exatas.
 """,
         encoding="utf-8",
     )
@@ -151,13 +157,13 @@ singulares, em vez de serem apresentados como singularidades matematicas exatas.
     scientific_md.write_text(
         f"""# FINAL_SCIENTIFIC_RESULTS
 
-## Triade Agente Causal - Ruido - Entropia
+## Tríade Agente Causal–Ruído–Entropia
 
-No controle coerente unitario, o maximo de |Delta S| no corpus foi
-{_fmt(float(coherent['max_abs_delta_entropy']))}, enquanto a maxima distancia
-de traco em relacao a entrada foi
-{_fmt(float(coherent['max_trace_distance_to_input']))}. Assim, a simulacao
-reproduz perturbacoes observaveis com entropia preservada.
+No controle coerente unitário, o máximo de $|\\Delta S|$ no corpus foi
+{_fmt(float(coherent['max_abs_delta_entropy']))}, enquanto a máxima distância
+de traço em relação à entrada foi
+{_fmt(float(coherent['max_trace_distance_to_input']))}. Assim, a simulação
+reproduz perturbações observáveis com entropia preservada.
 
 """
         + _markdown_table(
@@ -175,21 +181,21 @@ reproduz perturbacoes observaveis com entropia preservada.
         )
         + f"""
 
-## Colisao causal controlada
+## Colisão causal controlada
 
-O modelo de troca finita e o reservatorio fotonico Markoviano sao modelos de
+O modelo de troca finita e o reservatório fotônico Markoviano são modelos de
 fonte distintos, mas foram parametrizados para produzir o mesmo canal de
-amplitude damping. A maior distancia de traco entre suas saidas, considerando
+`amplitude damping`. A maior distância de traço entre suas saídas, considerando
 todos os estados de prova, foi {_fmt(max_collision_error)}.
 
 Esse resultado demonstra, dentro dos modelos implementados, que identidade do
-canal reduzido nao implica identidade da fonte causal.
+canal reduzido não implica identidade da fonte causal.
 
-## Conclusao computacional permitida
+## Conclusão computacional permitida
 
-Fontes/mecanismos especificos podem ser modelados individualmente e podem
-produzir assinaturas distinguiveis em determinadas regioes. Tambem existem
-regioes de nao-identificabilidade; nao se conclui unicidade universal.
+Fontes/mecanismos específicos podem ser modelados individualmente e podem
+produzir assinaturas distinguíveis em determinadas regiões. Também existem
+regiões de não-identificabilidade; não se conclui unicidade universal.
 """,
         encoding="utf-8",
     )
@@ -198,9 +204,9 @@ regioes de nao-identificabilidade; nao se conclui unicidade universal.
     dataset_results_md.write_text(
         f"""# FINAL_DATASET_RESULTS
 
-Dataset: {config.dataset_id}
+Dataset: `{config.dataset_id}`
 Familias causais: {n_a}
-Amostras validas: {n_s}
+Amostras válidas: {n_s}
 Amostras rejeitadas: {metadata['rejected_samples']}
 Estados de prova: {len(config.probe_ids)}
 Pontos temporais: {config.time_points}
@@ -236,7 +242,7 @@ Qualquer falha aborta a geracao final; nao ha descarte silencioso.
     reproducibility_md.write_text(
         f"""# FINAL_REPRODUCIBILITY
 
-Versao do dataset: {config.dataset_id}
+Versão do dataset: `{config.dataset_id}`
 Commit capturado na geracao: {metadata['git_commit_sha']}
 Config SHA-256: {metadata['config_sha256']}
 
@@ -263,7 +269,7 @@ requirements-lock.txt.
 - Grades teoricas normalizadas, nao calibracoes de hardware.
 - Ausencia de shots, erro de leitura e incerteza tomografica experimental.
 - Matriz densidade exata e ground truth do simulador.
-- Coerencia l1 depende da base computacional.
+- Coerência $\\ell_1$ depende da base computacional.
 - Identificabilidade e condicional ao protocolo investigado.
 - Fontes distintas podem produzir o mesmo canal reduzido.
 - O banho spin-boson finito modela memoria/recorrencias de um reservatorio discreto.

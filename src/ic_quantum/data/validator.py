@@ -41,9 +41,21 @@ def model_validation_errors(model: CausalAgentModelRecord) -> list[str]:
         ("physical_category", model.physical_category),
         ("physical_description", model.physical_description),
         ("target_system", model.target_system),
+        ("physical_source", model.physical_source),
+        ("causal_mechanism", model.causal_mechanism),
     ):
         if not value.strip():
             errors.append(f"{name} must be non-empty.")
+
+    if model.maturity_level in {
+        ModelMaturityLevel.LEVEL_3,
+        ModelMaturityLevel.LEVEL_4,
+        ModelMaturityLevel.LEVEL_5,
+    }:
+        if model.physical_source == "unresolved":
+            errors.append("LEVEL_3+ models require an explicit physical_source.")
+        if model.causal_mechanism == "unresolved":
+            errors.append("LEVEL_3+ models require an explicit causal_mechanism.")
 
     if not model.references:
         errors.append("A causal-agent model cannot enter the corpus without provenance.")

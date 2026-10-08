@@ -91,6 +91,8 @@ def finite_mode_spin_boson_dephasing_model() -> CausalAgentModelRecord:
             "computational-basis populations and may exhibit finite-bath revivals."
         ),
         target_system="single qubit",
+        physical_source="finite thermal bosonic bath",
+        causal_mechanism="longitudinal sigma_z coupling to thermally populated bosonic modes",
         relevant_degrees_of_freedom=("system spin/qubit", "finite bosonic bath modes"),
         coupling_mechanism="longitudinal sigma_z displacement of bosonic modes",
         system_hamiltonian=MathematicalField(
@@ -223,6 +225,8 @@ def markovian_photon_reservoir_decay_model() -> CausalAgentModelRecord:
             "temperature the excited population decays exponentially."
         ),
         target_system="single qubit/two-level system",
+        physical_source="electromagnetic photon reservoir",
+        causal_mechanism="rotating-wave excitation exchange followed by Markovian reservoir reduction",
         relevant_degrees_of_freedom=("two-level system", "photon reservoir modes"),
         coupling_mechanism="rotating-wave excitation exchange with photon modes",
         system_hamiltonian=MathematicalField(

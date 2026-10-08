@@ -56,6 +56,8 @@ class LatentCausalTransform:
     physical_source: str | None = None
     coupling_mechanism: str | None = None
     physical_parameters: dict[str, Any] = field(default_factory=dict)
+    interaction_time: float | None = None
+    effective_channel: str | None = None
     provenance: tuple[str, ...] = ()
     parameters: dict[str, Any] = field(default_factory=dict)
     unitary: np.ndarray | None = None
@@ -68,6 +70,8 @@ class LatentCausalTransform:
             raise ValueError("depth_after must be non-negative.")
         if self.dimension <= 0:
             raise ValueError("dimension must be positive.")
+        if self.interaction_time is not None and self.interaction_time < 0:
+            raise ValueError("interaction_time must be non-negative when provided.")
 
         if self.kind is LatentTransformKind.IDENTITY:
             if any(
