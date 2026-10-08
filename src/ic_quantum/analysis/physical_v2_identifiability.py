@@ -180,3 +180,114 @@ def dephasing_source_trajectory_comparison(samples) -> pd.DataFrame:
                 }
             )
     return pd.DataFrame(rows)
+
+
+
+PROCESS_PROBES: tuple[str, ...] = ("0", "1", "+", "+i")
+
+
+def _process_condition_vectors(
+    samples,
+    required_probes: tuple[str, ...] = PROCESS_PROBES,
+) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+    """Build tomographically informative output vectors per dynamic condition.
+
+    For each (agent, parameter point, time), concatenate the output Bloch vectors
+    for four linearly independent qubit probes.  This is an operational process
+    signature, not a diamond-norm channel representation.
+    """
+    grouped: dict[tuple[str, str, float], dict[str, CausalAgentSampleRecord]] = {}
+    for sample in samples:
+        key = (
+            sample.agent_model_id,
+            sample.metadata["parameter_point_id"],
+            float(sample.time),
+        )
+        grouped.setdefault(key, {})[sample.initial_system_state] = sample
+
+    per_agent: dict[str, list[tuple[float, np.ndarray]]] = {}
+    for (agent, _point, time), by_probe in grouped.items():
+        if not all(probe in by_probe for probe in required_probes):
+            continue
+        vector = np.concatenate(
+            [_bloch(by_probe[probe]) for probe in required_probes]
+        )
+        per_agent.setdefault(agent, []).append((time, vector))
+
+    result: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+    for agent, rows in per_agent.items():
+        times = np.asarray([row[0] for row in rows], dtype=float)
+        vectors = np.vstack([row[1] for row in rows])
+        result[agent] = (times, vectors)
+    return result
+
+
+def analyze_process_signature_overlap(
+    samples,
+    *,
+    atol: float,
+    required_probes: tuple[str, ...] = PROCESS_PROBES,
+) -> dict[str, pd.DataFrame]:
+    """Compare physical sources using a multi-probe process-response embedding.
+
+    Distance is the RMS one-qubit trace distance across the required probes:
+        d = sqrt(mean_i D(rho_i^A, rho_i^B)^2).
+    It is an operational protocol metric, not the diamond distance.
+    """
+    conditions = _process_condition_vectors(samples, required_probes)
+    agents = sorted(conditions)
+    scale = 0.5 / np.sqrt(float(len(required_probes)))
+    rows = []
+
+    for agent_a, agent_b in combinations(agents, 2):
+        times_a, vectors_a = conditions[agent_a]
+        times_b, vectors_b = conditions[agent_b]
+
+        raw_ab, _ = cKDTree(vectors_b).query(vectors_a, k=1)
+        raw_ba, _ = cKDTree(vectors_a).query(vectors_b, k=1)
+        nearest = scale * np.concatenate([raw_ab, raw_ba])
+
+        nz_a = vectors_a[times_a > 0.0]
+        nz_b = vectors_b[times_b > 0.0]
+        if len(nz_a) and len(nz_b):
+            nz_ab, _ = cKDTree(nz_b).query(nz_a, k=1)
+            nz_ba, _ = cKDTree(nz_a).query(nz_b, k=1)
+            nonzero_min = float(
+                scale * min(float(np.min(nz_ab)), float(np.min(nz_ba)))
+            )
+        else:
+            nonzero_min = float("nan")
+
+        rows.append(
+            {
+                "agent_a": agent_a,
+                "agent_b": agent_b,
+                "process_probe_count": len(required_probes),
+                "conditions_a": len(vectors_a),
+                "conditions_b": len(vectors_b),
+                "minimum_process_signature_distance": float(np.min(nearest)),
+                "minimum_nonzero_time_process_distance": nonzero_min,
+                "mean_symmetric_nearest_process_distance": float(
+                    np.mean(nearest)
+                ),
+                "median_symmetric_nearest_process_distance": float(
+                    np.median(nearest)
+                ),
+                "fraction_nearest_process_collision": float(
+                    np.mean(nearest <= atol)
+                ),
+            }
+        )
+
+    summary = pd.DataFrame(rows)
+    matrix = pd.DataFrame(0.0, index=agents, columns=agents)
+    for row in rows:
+        a = row["agent_a"]
+        b = row["agent_b"]
+        value = row["mean_symmetric_nearest_process_distance"]
+        matrix.loc[a, b] = matrix.loc[b, a] = value
+
+    return {
+        "process_pair_summary": summary,
+        "process_mean_nearest_distance_matrix": matrix,
+    }
