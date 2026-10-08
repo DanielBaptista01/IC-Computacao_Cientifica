@@ -66,7 +66,7 @@ class PhysicalV2Config:
     photon_time_points: int = 41
 
     thermal_photon_decay_rates_s: tuple[float, ...] = (1e4, 1e5)
-    thermal_photon_temperatures_k: tuple[float, ...] = (0.02, 0.10, 0.50)
+    thermal_photon_temperatures_k: tuple[float, ...] = (0.0, 0.02, 0.10, 0.50)
     thermal_photon_transition_frequency_hz: float = 5e9
     thermal_photon_time_max_s: float = 200e-6
     thermal_photon_time_points: int = 41
@@ -213,7 +213,6 @@ class PhysicalV2Config:
             self.em_parameter_count * self.em_time_points
             + self.rabi_parameter_count * self.rabi_time_points
             + self.thermal_parameter_count * self.thermal_time_points
-            + len(self.photon_decay_rates_s) * self.photon_time_points
             + self.thermal_photon_parameter_count * self.thermal_photon_time_points
             + self.mechanical_parameter_count * self.mechanical_time_points
             + self.mechanical_longitudinal_parameter_count
@@ -237,7 +236,6 @@ class PhysicalV2Config:
             "external_em_magnetic": list(self.em_times_s),
             "external_em_rabi": list(self.rabi_times_s),
             "thermal_bosonic": list(self.thermal_times_s),
-            "photon_reservoir": list(self.photon_times_s),
             "thermal_photon_reservoir": list(self.thermal_photon_times_s),
             "mechanical_exchange": list(self.mechanical_times_s),
             "mechanical_longitudinal": list(self.mechanical_longitudinal_times_s),
@@ -257,13 +255,14 @@ class PhysicalV2Config:
                 "Existing exact finite-mode spin-boson model in natural units; "
                 "temperature ratios and mode counts probe dephasing and revivals."
             ),
-            "photon_reservoir": (
-                "T1-like zero-temperature radiative rates from 10 to 100 microseconds "
-                "as a theoretical two-level-system relaxation grid."
+            "photon_reservoir_legacy_fields": (
+                "photon_decay_rates_s/photon_time_* are retained only for configuration "
+                "backward compatibility with v1-era code and are not sampled as a separate "
+                "v2 causal family."
             ),
             "thermal_photon_reservoir": (
-                "Finite-temperature Markovian photon bath at 5 GHz. Temperatures span "
-                "20-500 mK to probe absorption and emission without claiming a calibrated cryostat."
+                "One Markovian photon-bath family spans T=0 and 20-500 mK at 5 GHz, "
+                "so the zero-temperature limit is not duplicated as a separate causal label."
             ),
             "mechanical_exchange": (
                 "GHz acoustic modes and MHz qubit-phonon couplings are representative "
