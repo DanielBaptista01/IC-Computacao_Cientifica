@@ -310,8 +310,10 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
 
 Dataset: {config.dataset_id}
 
-This expansion quantifies nine explicit physical-source/mechanism families while
-preserving the frozen mechanistic v1 baseline. No ML/QML is trained.
+This expansion quantifies eight non-redundant physical-source/mechanism families
+while preserving the frozen mechanistic v1 baseline. The zero-temperature photon
+reservoir remains in v1 and is represented in v2 as the T=0 limit of the single
+thermal-photon-reservoir family. No ML/QML is trained.
 
 - Valid samples: {len(samples)}
 - Physical-source/mechanism families: {len(registry.list_ids())}
