@@ -6,7 +6,6 @@ from itertools import product
 
 import numpy as np
 
-from ic_quantum.channels.amplitude_damping import amplitude_damping_kraus
 from ic_quantum.core.probes import final_probe_densities
 from ic_quantum.data.causal_agent_schema import CausalAgentSampleRecord
 from ic_quantum.data.channel_descriptors import (
@@ -29,7 +28,6 @@ from ic_quantum.dynamics.external_field import (
     gaussian_quasistatic_field_coherence_factor,
     gaussian_quasistatic_field_kraus,
 )
-from ic_quantum.dynamics.markovian_reservoir import markovian_decay_probability
 from ic_quantum.dynamics.mechanical_phonon import (
     mechanical_phonon_kraus,
     thermal_mean_occupation,
@@ -346,34 +344,8 @@ def generate_physical_v2_samples(
                     )
                 )
 
-    model = registry.get("markovian-photon-reservoir-decay")
-    for pidx, decay_rate in enumerate(config.photon_decay_rates_s):
-        for time in config.photon_times_s:
-            probability = markovian_decay_probability(decay_rate, time)
-            parameters = {
-                "decay_rate": float(decay_rate),
-                "interaction_time": float(time),
-            }
-            kraus = amplitude_damping_kraus(probability)
-            channel, choi = describe_kraus_channel(kraus)
-            for probe_id, rho in probes.items():
-                samples.append(
-                    _sample(
-                        model=model,
-                        parameter_point_id=f"photon_reservoir_{pidx:03d}",
-                        probe_id=probe_id,
-                        rho=rho,
-                        time=time,
-                        parameters=parameters,
-                        channel=channel,
-                        choi=choi,
-                        after=apply_kraus(rho, kraus),
-                        representation_origin="markovian_photon_reservoir",
-                        physical_regime="radiative_relaxation",
-                        extra={"effective_relaxation_probability": probability},
-                    )
-                )
-
+    # Zero-temperature radiative decay remains in frozen v1. In v2 it is
+    # the T=0 limit of thermal-photon-reservoir and is not duplicated as a label.
 
     # 5) Finite-temperature electromagnetic photon reservoir.
     model = registry.get("thermal-photon-reservoir")
