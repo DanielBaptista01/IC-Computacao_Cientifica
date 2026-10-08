@@ -223,54 +223,85 @@ não são apresentados como resultados finais demonstrados.
 Consulte docs/MATHEMATICAL_MAPPING.md e results/final/evidence/.
 
 
+
 ## Expansão físico-causal v2
 
-A tag ic-2026-final e o dataset ic_causal_agents_final_v1 permanecem
-congelados como baseline mecanístico. A expansão posterior aproxima o Agente
-Causal das fontes físicas que motivaram a pesquisa e utiliza o identificador:
+A tag `ic-2026-final` e o dataset `ic_causal_agents_final_v1` permanecem
+congelados como baseline mecanístico. A expansão físico-causal usa:
 
     ic_causal_agents_physical_v2
 
-Famílias físico-causais validadas no v2:
+O catálogo reconciliado contém nove famílias/mecanismos causalmente distintos:
 
-1. external-magnetic-field-wave — componente magnética de campo/onda
-   eletromagnética externa; inclui regime Zeeman coerente e ensemble
-   longitudinal quasistático Gaussiano;
-2. finite-mode-spin-boson-dephasing — reservatório bosônico térmico finito;
-3. markovian-photon-reservoir-decay — reservatório eletromagnético de fótons;
-4. mechanical-phonon-mode — modo mecânico/acústico quantizado acoplado ao
-   qubit;
-5. ionizing-radiation-quasiparticle-burst — radiação ionizante
-   (raio cósmico/gama) condicionada à população de quasipartículas pós-impacto;
-6. bistable-charge-fluctuator-rtn — armadilha/defeito de carga biestável com
-   ruído telegráfico.
+1. `external-magnetic-field-wave` — campo magnético externo: evolução Zeeman
+   coerente e ensemble longitudinal quasistático;
+2. `external-electromagnetic-rabi-drive` — onda EM coerente próxima à
+   ressonância, com acoplamento efetivo de Rabi;
+3. `finite-mode-spin-boson-dephasing` — banho bosônico térmico finito;
+4. `markovian-photon-reservoir-decay` — reservatório fotônico Markoviano no
+   limite de temperatura nula;
+5. `thermal-photon-reservoir` — reservatório fotônico Markoviano a temperatura
+   finita, com emissão e absorção;
+6. `mechanical-phonon-mode` — modo acústico/mecânico quantizado com troca de
+   excitação;
+7. `single-mode-mechanical-phonon-dephasing` — modo vibracional quantizado com
+   acoplamento longitudinal e dephasing recorrente;
+8. `ionizing-radiation-quasiparticle-burst` — evento ionizante condicionado à
+   dinâmica pós-impacto de quasipartículas;
+9. `bistable-charge-fluctuator-rtn` — armadilha/defeito de carga biestável
+   modelado por random-telegraph noise.
 
-A família de radiação é explicitamente fenomenológica na ponte entre energia
-depositada/geometria do evento e a condição inicial de quasipartículas. O código
-não inventa um Hamiltoniano microscópico para esse trecho.
+Essas famílias não são nove nomes de canais. O catálogo separa
+`physical_source`, `causal_mechanism`, parâmetros físicos, dinâmica efetiva,
+assinatura e reversibilidade. O modelo de radiação é explicitamente
+`PHENOMENOLOGICAL` na ponte entre energia/geometria depositada e a condição
+inicial de quasipartículas.
 
-A geração v2 usa escalas temporais específicas de cada fonte. Por isso a análise
-pairwise principal mede sobreposição de variedades de assinatura por
-nearest-neighbour em distância de traço, em vez de equiparar artificialmente
-tempos de microssegundos, milissegundos e unidades naturais.
+O drive EM coerente usa a taxa efetiva de Rabi (Omega). O projeto não inventa
+uma conversão universal de (E_0), polarização e momento de dipolo para
+(Omega) sem uma plataforma física específica.
+
+### Análises v2
+
+O pipeline gera:
+- assinaturas de estado por (langle Xangle,langle Yangle,langle Zangle)
+  e métricas informacionais;
+- identificabilidade pairwise das variedades parâmetro-tempo;
+- uma assinatura operacional de processo construída com quatro probes
+  linearmente independentes (|0angle,|1angle,|+angle,|+iangle);
+- um experimento controlado em que duas fontes físicas diferentes são
+  parametrizadas para o mesmo canal reduzido de dephasing em um snapshot;
+- reversibilidade por condição física;
+- T1*/T2* como primeiros cruzamentos de 1/e, sem impor ajuste exponencial a
+  dinâmicas recorrentes;
+- comparação de mecanismos de dephasing;
+- comparação de duas linhas espectrais mecânicas com mesmo (g/omega) e mesma
+  ocupação térmica.
+
+A distância de processo usada no v2 é uma métrica operacional RMS baseada nas
+saídas dos quatro probes, e **não** é apresentada como distância diamond.
+
+### Reprodutibilidade
 
 Comando:
 
     ic-physical-v2 --config experiments/configs/ic_causal_agents_physical_v2.json --output-dir results/physical_v2
 
-A saída separa novamente scientific_records, observable_features, causal_labels,
-metadata e provenance. observable_features não inclui physical_source,
-causal_mechanism, agent_model_id, regime físico ou parâmetros específicos do
-simulador.
+A saída separa `scientific_records`, `observable_features`,
+`causal_labels`, metadata e provenance. O conjunto `observable_features`
+não inclui `agent_model_id`, `physical_source`, `causal_mechanism`, regime
+físico nem parâmetros específicos do simulador.
 
-### Escopo físico ainda não fechado
+### Limites não preenchidos artificialmente
 
-Não foram promovidos a famílias validadas separadas:
+Continuam fora do corpus validado:
+- transporte microscópico completo de partículas ionizantes e a conversão
+  universal de energia/localização depositada em (x_{qp}(0));
+- vibração macroscópica arbitrária de encapsulamento/chassi;
+- ensemble completo de defeitos para reproduzir genericamente um espectro 1/f;
+- calibração universal de campo elétrico bruto para uma taxa de Rabi;
+- propagação espacial correlacionada em muitos qubits;
+- validação experimental em hardware.
 
-- acoplamento elétrico de dipolo -d.E como família independente;
-- transporte completo de partículas ionizantes e geometria de deposição;
-- propagação espacial correlacionada em múltiplos qubits;
-- ensemble completo de defeitos capaz de gerar um espectro 1/f;
-- vibração macroscópica arbitrária de encapsulamento/chassi.
-
-Esses casos permanecem extensões ou hipóteses, não resultados simulados.
+Esses pontos são limitações ou trabalhos futuros, não classes inventadas para
+aumentar o dataset. Nenhum ML/QML é treinado nesta IC.
