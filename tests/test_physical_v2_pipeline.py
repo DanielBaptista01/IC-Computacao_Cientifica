@@ -93,6 +93,9 @@ def test_export_separates_physical_source_labels_from_features(tmp_path):
     assert "physical_source" in labels.columns
     assert "causal_mechanism" in labels.columns
     assert "physical_source" in scientific.columns
+    assert "effective_channel" in scientific.columns
+    assert "maturity_description" in scientific.columns
+    assert "effective_channel" not in features.columns
     metadata = json.loads(paths["metadata"].read_text())
     assert metadata["number_of_agent_families"] == 8
     assert (
