@@ -7,9 +7,14 @@ from ic_quantum.dynamics.charge_fluctuator import (
     random_telegraph_coherence_factor,
     random_telegraph_dephasing_kraus,
 )
+from ic_quantum.dynamics.electromagnetic_drive import em_drive_unitary
 from ic_quantum.dynamics.external_field import (
     external_magnetic_field_unitary,
     integrated_zeeman_angle,
+)
+from ic_quantum.dynamics.mechanical_mode import (
+    apply_mechanical_mode_dephasing,
+    mechanical_coherence_factor,
 )
 from ic_quantum.dynamics.mechanical_phonon import (
     mechanical_joint_angular_hamiltonian,
@@ -22,6 +27,13 @@ from ic_quantum.dynamics.radiation import (
     ionizing_radiation_relaxation_probability,
     quasiparticle_fraction_and_hazard,
 )
+from ic_quantum.dynamics.thermal_reservoir import (
+    bose_occupation,
+    generalized_amplitude_damping_kraus,
+    apply_thermal_photon_reservoir,
+)
+from ic_quantum.channels.amplitude_damping import amplitude_damping_kraus
+from ic_quantum.dynamics.closed_system import apply_unitary
 
 
 def test_external_field_zero_amplitude_is_identity():
@@ -161,3 +173,75 @@ def test_random_telegraph_exact_factor_matches_conditional_generator():
             time=t,
         )
     )
+
+
+
+def test_resonant_em_rabi_pi_pulse_swaps_ground_to_excited():
+    rho0 = standard_probe_densities()["0"]
+    rabi_rate = 2.0
+    unitary = em_drive_unitary(
+        rabi_rate=rabi_rate,
+        detuning=0.0,
+        phase=0.0,
+        time=np.pi / rabi_rate,
+    )
+    out = apply_unitary(rho0, unitary)
+    assert np.allclose(
+        out, standard_probe_densities()["1"], atol=1e-10, rtol=0.0
+    )
+
+
+def test_thermal_photon_reservoir_reduces_to_amplitude_damping_at_zero_temperature():
+    rho = standard_probe_densities()["+i"]
+    gamma = 0.7
+    time = 1.1
+    nbar = bose_occupation(2.0 * np.pi * 5e9, 0.0)
+    assert nbar == 0.0
+    thermal = apply_kraus(
+        rho,
+        generalized_amplitude_damping_kraus(gamma, nbar, time),
+    )
+    canonical = apply_kraus(
+        rho,
+        amplitude_damping_kraus(1.0 - np.exp(-gamma * time)),
+    )
+    assert np.allclose(thermal, canonical, atol=1e-10, rtol=0.0)
+
+
+def test_thermal_photon_reservoir_converges_to_expected_fixed_point():
+    omega = 2.0 * np.pi * 5e9
+    temperature = 0.5
+    gamma = 2.0
+    nbar = bose_occupation(omega, temperature)
+    out = apply_thermal_photon_reservoir(
+        standard_probe_densities()["1"],
+        decay_rate=gamma,
+        transition_angular_frequency=omega,
+        temperature_kelvin=temperature,
+        time=50.0,
+    )
+    expected_excited = nbar / (2.0 * nbar + 1.0)
+    assert np.isclose(out[1, 1].real, expected_excited, atol=1e-10)
+
+
+def test_longitudinal_mechanical_mode_recurrence_and_population_preservation():
+    omega = 2.0
+    coupling = 0.4
+    occupation = 1.5
+    period = 2.0 * np.pi / omega
+    assert np.isclose(
+        mechanical_coherence_factor(
+            period, omega, coupling, occupation
+        ),
+        1.0,
+        atol=1e-10,
+    )
+    rho = standard_probe_densities()["+i"]
+    out = apply_mechanical_mode_dephasing(
+        rho,
+        time=0.73,
+        mode_angular_frequency=omega,
+        coupling_rate=coupling,
+        thermal_occupation=occupation,
+    )
+    assert np.allclose(np.diag(out), np.diag(rho), atol=1e-10, rtol=0.0)
