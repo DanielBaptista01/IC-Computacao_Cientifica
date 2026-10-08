@@ -104,5 +104,46 @@
   ],
   "charge_time_min_positive_s": 1e-7,
   "charge_time_max_s": 0.01,
-  "charge_time_points": 41
+  "charge_time_points": 41,
+  "rabi_rates_hz": [
+    250000,
+    1000000
+  ],
+  "rabi_detunings_hz": [
+    0,
+    500000
+  ],
+  "rabi_phases_rad": [
+    0,
+    1.5707963267948966
+  ],
+  "rabi_time_max_s": 0.00001,
+  "rabi_time_points": 41,
+  "thermal_photon_decay_rates_s": [
+    10000,
+    100000
+  ],
+  "thermal_photon_temperatures_k": [
+    0.02,
+    0.1,
+    0.5
+  ],
+  "thermal_photon_transition_frequency_hz": 5000000000,
+  "thermal_photon_time_max_s": 0.0002,
+  "thermal_photon_time_points": 41,
+  "mechanical_longitudinal_frequencies_hz": [
+    500000,
+    1000000
+  ],
+  "mechanical_longitudinal_couplings_hz": [
+    50000,
+    100000
+  ],
+  "mechanical_longitudinal_occupations": [
+    0,
+    1,
+    5
+  ],
+  "mechanical_longitudinal_time_max_s": 0.00001,
+  "mechanical_longitudinal_time_points": 41
 }
