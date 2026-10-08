@@ -23,6 +23,7 @@ from ic_quantum.dynamics.charge_fluctuator import (
     random_telegraph_spectral_density,
 )
 from ic_quantum.dynamics.closed_system import apply_unitary
+from ic_quantum.dynamics.electromagnetic_drive import em_drive_unitary
 from ic_quantum.dynamics.external_field import (
     external_magnetic_field_unitary,
     gaussian_quasistatic_field_coherence_factor,
@@ -33,10 +34,18 @@ from ic_quantum.dynamics.mechanical_phonon import (
     mechanical_phonon_kraus,
     thermal_mean_occupation,
 )
+from ic_quantum.dynamics.mechanical_mode import (
+    mechanical_coherence_factor,
+    mechanical_dephasing_exponent,
+)
 from ic_quantum.dynamics.open_system import apply_kraus
 from ic_quantum.dynamics.radiation import (
     ionizing_radiation_kraus,
     quasiparticle_fraction_and_hazard,
+)
+from ic_quantum.dynamics.thermal_reservoir import (
+    bose_occupation,
+    generalized_amplitude_damping_kraus,
 )
 from ic_quantum.dynamics.spin_boson import (
     finite_mode_coherence_factor,
@@ -223,6 +232,55 @@ def generate_physical_v2_samples(
                 )
         pidx += 1
 
+
+    # 2) Near-resonant coherent electromagnetic wave (effective Rabi coupling).
+    model = registry.get("external-electromagnetic-rabi-drive")
+    for pidx, (rabi_hz, detuning_hz, phase) in enumerate(
+        product(
+            config.rabi_rates_hz,
+            config.rabi_detunings_hz,
+            config.rabi_phases_rad,
+        )
+    ):
+        rabi_rate = 2.0 * np.pi * rabi_hz
+        detuning = 2.0 * np.pi * detuning_hz
+        for time in config.rabi_times_s:
+            parameters = {
+                "rabi_rate": float(rabi_rate),
+                "detuning": float(detuning),
+                "phase": float(phase),
+                "interaction_time": float(time),
+            }
+            unitary = em_drive_unitary(
+                rabi_rate=rabi_rate,
+                detuning=detuning,
+                phase=phase,
+                time=time,
+            )
+            channel, choi = describe_unitary_channel(unitary)
+            for probe_id, rho in probes.items():
+                samples.append(
+                    _sample(
+                        model=model,
+                        parameter_point_id=f"em_rabi_{pidx:03d}",
+                        probe_id=probe_id,
+                        rho=rho,
+                        time=time,
+                        parameters=parameters,
+                        channel=channel,
+                        choi=choi,
+                        after=apply_unitary(rho, unitary),
+                        representation_origin="semiclassical_rotating_frame_RWA",
+                        physical_regime="coherent_near_resonant_em_drive",
+                        extra={
+                            "rabi_rate_hz": float(rabi_hz),
+                            "detuning_hz": float(detuning_hz),
+                            "phase_rad": float(phase),
+                        },
+                    )
+                )
+
+    # 3) Finite thermal bosonic pure-dephasing source.
     model = registry.get("finite-mode-spin-boson-dephasing")
     for pidx, (mode_count, cutoff, ratio) in enumerate(
         product(
@@ -316,6 +374,58 @@ def generate_physical_v2_samples(
                     )
                 )
 
+
+    # 5) Finite-temperature electromagnetic photon reservoir.
+    model = registry.get("thermal-photon-reservoir")
+    transition_omega = (
+        2.0 * np.pi * config.thermal_photon_transition_frequency_hz
+    )
+    for pidx, (decay_rate, temperature) in enumerate(
+        product(
+            config.thermal_photon_decay_rates_s,
+            config.thermal_photon_temperatures_k,
+        )
+    ):
+        nbar = bose_occupation(transition_omega, temperature)
+        equilibrium_excited = nbar / (2.0 * nbar + 1.0)
+        for time in config.thermal_photon_times_s:
+            parameters = {
+                "decay_rate": float(decay_rate),
+                "transition_angular_frequency": float(transition_omega),
+                "temperature_kelvin": float(temperature),
+                "interaction_time": float(time),
+            }
+            kraus = generalized_amplitude_damping_kraus(
+                decay_rate, nbar, time
+            )
+            channel, choi = describe_kraus_channel(kraus)
+            for probe_id, rho in probes.items():
+                samples.append(
+                    _sample(
+                        model=model,
+                        parameter_point_id=f"thermal_photon_{pidx:03d}",
+                        probe_id=probe_id,
+                        rho=rho,
+                        time=time,
+                        parameters=parameters,
+                        channel=channel,
+                        choi=choi,
+                        after=apply_kraus(rho, kraus),
+                        representation_origin="thermal_lindblad_semigroup",
+                        physical_regime="finite_temperature_photon_exchange",
+                        extra={
+                            "thermal_mean_occupation": float(nbar),
+                            "equilibrium_excited_population": float(
+                                equilibrium_excited
+                            ),
+                            "transition_frequency_hz": float(
+                                config.thermal_photon_transition_frequency_hz
+                            ),
+                        },
+                    )
+                )
+
+    # 6) Quantized mechanical/acoustic excitation-exchange mode.
     model = registry.get("mechanical-phonon-mode")
     for pidx, (frequency_hz, coupling_hz, temperature) in enumerate(
         product(
@@ -367,6 +477,63 @@ def generate_physical_v2_samples(
                     )
                 )
 
+
+    # 7) Single-mode mechanical/phonon longitudinal pure dephasing.
+    model = registry.get("single-mode-mechanical-phonon-dephasing")
+    for pidx, (frequency_hz, coupling_hz, occupation) in enumerate(
+        product(
+            config.mechanical_longitudinal_frequencies_hz,
+            config.mechanical_longitudinal_couplings_hz,
+            config.mechanical_longitudinal_occupations,
+        )
+    ):
+        omega = 2.0 * np.pi * frequency_hz
+        coupling = 2.0 * np.pi * coupling_hz
+        for time in config.mechanical_longitudinal_times_s:
+            parameters = {
+                "mode_angular_frequency": float(omega),
+                "coupling_rate": float(coupling),
+                "thermal_occupation": float(occupation),
+                "interaction_time": float(time),
+            }
+            q = mechanical_coherence_factor(
+                time=time,
+                mode_angular_frequency=omega,
+                coupling_rate=coupling,
+                thermal_occupation=occupation,
+            )
+            exponent = mechanical_dephasing_exponent(
+                time=time,
+                mode_angular_frequency=omega,
+                coupling_rate=coupling,
+                thermal_occupation=occupation,
+            )
+            kraus = spin_boson_dephasing_kraus(q)
+            channel, choi = describe_kraus_channel(kraus)
+            for probe_id, rho in probes.items():
+                samples.append(
+                    _sample(
+                        model=model,
+                        parameter_point_id=f"mechanical_longitudinal_{pidx:03d}",
+                        probe_id=probe_id,
+                        rho=rho,
+                        time=time,
+                        parameters=parameters,
+                        channel=channel,
+                        choi=choi,
+                        after=apply_kraus(rho, kraus),
+                        representation_origin="exact_single_mode_longitudinal_bosonic_map",
+                        physical_regime="mechanical_longitudinal_dephasing",
+                        extra={
+                            "coherence_factor": float(q),
+                            "dephasing_exponent": float(exponent),
+                            "mode_frequency_hz": float(frequency_hz),
+                            "coupling_hz": float(coupling_hz),
+                        },
+                    )
+                )
+
+    # 8) Event-conditioned ionizing-radiation/quasiparticle burst.
     model = registry.get("ionizing-radiation-quasiparticle-burst")
     c_qp = 1.2 * (2.0 * np.pi * config.radiation_qubit_frequency_hz)
     for pidx, (x0, trapping) in enumerate(
@@ -417,6 +584,7 @@ def generate_physical_v2_samples(
                     )
                 )
 
+    # 9) Bistable charge/TLS random-telegraph source.
     model = registry.get("bistable-charge-fluctuator-rtn")
     for pidx, (coupling_hz, switching_rate) in enumerate(
         product(config.charge_couplings_hz, config.charge_switching_rates_s)
