@@ -1,91 +1,117 @@
 # Auditoria científico-computacional — expansão físico-causal v2
 
-## Escopo
+## Regra de inclusão
 
-A versão ic_causal_agents_final_v1 permanece congelada como baseline
-mecanístico. Esta auditoria avalia quais fontes físicas originalmente motivadoras
-da IC podem ser promovidas a famílias causalmente modeladas sem reduzir a fonte ao
-nome de um canal.
+Uma família só entra no corpus validado quando existe, no domínio declarado:
 
-Critério de inclusão:
+fenômeno -> mecanismo -> equação -> parâmetros -> implementação -> teste ->
+simulação -> assinatura.
 
-fenômeno físico -> mecanismo -> equação -> parâmetros -> implementação -> teste
--> simulação -> assinatura.
+Nomes de canais não são usados como identidade física. Modelos que ainda não
+fecham essa cadeia permanecem explicitamente fenomenológicos, não resolvidos ou
+fora de escopo.
 
-## Estado auditado
+## Estado final da auditoria de requisitos
 
-| Fonte candidata | Situação antes do v2 | Decisão |
+| Requisito | Estado | Decisão |
 | --- | --- | --- |
-| Campo/onda eletromagnética externa | somente reservatório fotônico e detuning abstrato | implementar componente magnética semiclassica + regime quasistático |
-| Reservatório térmico | spin-boson finito já validado | reutilizar como fonte térmica explícita, preservando unidades naturais |
-| Vibração mecânica/fônons | não havia família mecânica explícita | implementar modo acústico quantizado + traço parcial |
-| Radiação cósmica/ionizante | ausente | implementar apenas ponte pós-impacto via quasipartículas; não inventar Hamiltoniano da partícula |
-| Campo magnético | parcialmente implícito em detuning | tornar fonte/orientação/amplitude/frequência explícitas |
-| Ruído de carga/TLS | ausente | implementar flutuador biestável com random telegraph noise exato |
-| Reservatório eletromagnético de fótons | já validado | preservar como fonte física radiativa |
-| Quasipartículas | ausentes como estado causal intermediário | quantificar cinética pós-impacto no modelo de radiação |
+| Separar fonte, agente, mecanismo, canal, ruído e métricas | DONE | schema e exporter preservam campos distintos |
+| Transformação Causal Latente com contexto físico | DONE | source, mechanism, physical_parameters e provenance |
+| Campo magnético/EM externo | DONE | Zeeman coerente + ensemble quasistático |
+| Onda EM coerente próxima à ressonância | DONE | Rabi/RWA com Omega efetivo |
+| Banho bosônico térmico | DONE | spin-boson finito |
+| Reservatório fotônico T=0 | DONE | relaxação Markoviana |
+| Reservatório fotônico a T>0 | DONE | generalized amplitude damping derivado da equação térmica |
+| Vibração/fônon por troca de excitação | DONE | modo acústico quantizado + unitária global + traço parcial |
+| Vibração/fônon longitudinal | DONE | modo bosônico único, dephasing e recorrência |
+| Ruído de carga/TLS | DONE | flutuador biestável RTN + PSD |
+| Radiação ionizante/quasipartículas | DONE/PARTIAL | dinâmica pós-impacto quantificada; ponte deposição -> x_qp(0) permanece fenomenológica |
+| Reversibilidade por condição | DONE | unitária direta, inversa linear/CPTP e singularidade reduzida distinguidas |
+| Tríade Agente–Ruído–Entropia | DONE | métricas e controles coerentes preservam DeltaS=0 com perturbação |
+| Identificabilidade por estado | DONE | overlap de variedades parâmetro-tempo |
+| Identificabilidade de processo | DONE | embedding multi-probe operacional; não é diamond norm |
+| Não-identificabilidade controlada | DONE | duas causas físicas podem compartilhar o mesmo canal de dephasing em um snapshot |
+| Dataset separado de labels e pronto para pesquisa posterior | DONE | scientific/features/labels separados, sem ML |
+| Main paralela reconciliada | DONE | uma teoria/pipeline autoritativos; caminhos paralelos são facades |
+| Hardware/validação experimental | BLOCKED | não há dados experimentais nesta IC |
+| Transporte microscópico completo de radiação | BLOCKED | fundamento/escopo insuficientes para uma transformação quantitativa geral |
+| Vibração arbitrária de chassi/pacote | BLOCKED | requer plataforma e função de transferência mecânica |
+| Ensemble universal 1/f de defeitos | BLOCKED | um RTN físico foi validado; extrapolação universal não é assumida |
+| E0/polarização -> Omega universal | BLOCKED | requer matriz de dipolo e geometria específicas da plataforma |
 
-## Decisões epistemológicas
+## Nove famílias físico-causais
 
-### Campo eletromagnético
+O catálogo autoritativo contém mecanismos distintos, não duplicações por nome:
 
-O v2 modela a componente magnética de um campo externo em um qubit spin-1/2
-efetivo por acoplamento Zeeman. O regime determinístico é unitário. O regime
-quasistático Gaussiano é uma média de ensemble e gera dephasing. Assim, a mesma
-categoria de fonte física pode possuir classes de reversibilidade diferentes.
+1. external-magnetic-field-wave;
+2. external-electromagnetic-rabi-drive;
+3. finite-mode-spin-boson-dephasing;
+4. markovian-photon-reservoir-decay;
+5. thermal-photon-reservoir;
+6. mechanical-phonon-mode;
+7. single-mode-mechanical-phonon-dephasing;
+8. ionizing-radiation-quasiparticle-burst;
+9. bistable-charge-fluctuator-rtn.
 
-A família não representa automaticamente toda interferência eletromagnética e não
-substitui uma futura implementação de acoplamento elétrico de dipolo.
+O helper estático de campo magnético incorporado da implementação paralela foi
+mantido como API, mas não virou uma décima identidade causal, pois representa o
+mesmo mecanismo Zeeman já coberto por external-magnetic-field-wave.
 
-### Térmico
+## Identificabilidade
 
-O spin-boson finito é reclassificado semanticamente como fonte física de banho
-bosônico térmico, sem alterar sua matemática. A temperatura do modelo original é
-uma escala energética/frequencial em unidades naturais; não é convertida
-silenciosamente em kelvin de um dispositivo específico.
+A análise por estado usa distância de traço entre saídas para o mesmo probe e
+procura vizinhos entre as variedades parâmetro-tempo de cada fonte.
 
-### Mecânico
+A análise de processo concatena as respostas de quatro probes linearmente
+independentes (0, 1, +, +i). Sua distância é a RMS das distâncias de traço das
+quatro saídas. Ela testa distinguibilidade operacional no protocolo escolhido e
+não substitui uma distância diamond.
 
-O modelo usa um modo mecânico/acústico quantizado e interação
-Jaynes-Cummings. A dinâmica reduzida é derivada de uma unitária global e de um
-estado térmico do modo. O espaço de Fock é truncado numericamente e a dimensão da
-truncatura é registrada como metadata.
+Um experimento dedicado constrói:
+- um campo magnético longitudinal quasistático Gaussiano;
+- um banho spin-boson térmico finito;
 
-### Radiação ionizante
+com o mesmo fator de coerência no snapshot selecionado. Assim, os canais
+reduzidos coincidem nesse ponto embora a causa física seja diferente. A
+trajetória temporal normalizada é analisada separadamente para buscar informação
+adicional. Esse caso é preservado como evidência de não-identificabilidade de
+snapshot, e não tratado como falha do modelo.
 
-A cadeia física é preservada como:
+## Reversibilidade
 
-evento ionizante -> deposição de energia -> fônons de alta energia ->
-quasipartículas -> aumento de Gamma_1 -> relaxação do qubit.
+A classificação continua sendo feita por condição (theta,t), nunca como rótulo
+absoluto da fonte. Uma mesma família EM possui regiões unitárias diretamente
+invertíveis e regiões de ensemble não unitárias. Mapas reduzidos não unitários
+podem continuar linearmente invertíveis sem que sua inversa seja CPTP.
 
-A simulação começa em x_qp(0). A conversão de energia/localização/multiplicidade
-do evento para x_qp(0) permanece não resolvida. Por isso o registro possui
-proveniência PHENOMENOLOGICAL no elo fonte->canal e não declara um Hamiltoniano
-microscópico fictício.
+## Quantificação térmica e mecânica
 
-### Carga/defeito biestável
+T1* e T2* são reportados como primeiros cruzamentos amostrados de 1/e. Eles não
+são chamados de constantes de decaimento quando a dinâmica apresenta recorrência
+ou não é exponencial.
 
-A fonte é um defeito/armadilha de carga com dois estados. Seu efeito é uma
-modulação longitudinal telegráfica da frequência do qubit. O canal de dephasing é
-consequência da média sobre o processo, não a identidade do agente.
-
-## Análise de identificabilidade
-
-As seis fontes usam escalas temporais diferentes. Comparar numericamente tempos
-iguais de um campo EM e de um banho em unidades naturais não possui significado
-causal geral. O v2 adota análise de sobreposição de assinaturas por estado de prova,
-calculando distância de traço ao vizinho mais próximo entre as variedades
-paramétrico-temporais de cada fonte.
-
-O valor em t=0 é mantido como colisão física real. O relatório inclui também o
-mínimo excluindo t=0.
-
-Para mecanismos de dephasing são comparadas separadamente formas temporais
-representativas de campo quasistático Gaussiano, spin-boson térmico e RTN de carga.
+Para vibração longitudinal, o teste de frequência mantém a mesma razão
+dimensionless g/omega e a mesma ocupação térmica em duas linhas espectrais. A
+comparação usa o mesmo tempo físico, permitindo testar se frequência distinta
+gera assinatura temporal distinta mesmo sob intensidade adimensional
+operacionalmente casada.
 
 ## Maturidade
 
-As seis famílias do catálogo v2 são LEVEL_3 quanto à implementação numérica.
-Isso não significa validação experimental. Em particular, o modelo de radiação é
-LEVEL_3 para a dinâmica fenomenológica pós-impacto, não para transporte de
-partículas ou predição de x_qp(0) a partir de energia depositada.
+LEVEL_3 significa implementação numérica validada no domínio teórico declarado.
+Não significa comparação com hardware nem validação experimental. A família de
+radiação é LEVEL_3 apenas para a dinâmica fenomenológica pós-impacto a partir de
+x_qp(0).
+
+Os níveis superiores continuam reservados para comparação quantitativa com
+referência independente/experimento e validação experimental, quando aplicável.
+
+## Regra epistemológica final
+
+O resultado que o corpus pode testar é:
+
+fontes físicas específicas podem ser individualizadas por mecanismo, parâmetros,
+dinâmica e assinatura em determinados regimes observacionais.
+
+O projeto **não** conclui que toda fonte possui uma assinatura universalmente
+única.
