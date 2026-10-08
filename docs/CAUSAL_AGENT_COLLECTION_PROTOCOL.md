@@ -77,7 +77,9 @@ $$
 
 $$
 \rho\succeq0,\qquad \operatorname{Tr}(\rho)=1.
-$$ Canais que deveriam ser físicos são verificados como CPTP.
+$
+
+Canais que deveriam ser físicos são verificados como CPTP.
 Modelos numéricos posteriores devem declarar convergência, estabilidade e tolerâncias.
 
 ## 11. Versionamento e reprodutibilidade
