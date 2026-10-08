@@ -18,6 +18,7 @@ from ic_quantum.data.final_export import (
     _strict_json,
     current_git_sha,
 )
+from ic_quantum.data.causal_agent_schema import MATURITY_LEVEL_DESCRIPTIONS
 from ic_quantum.data.physical_catalog import build_physical_source_registry
 from ic_quantum.data.physical_v2_protocol import PhysicalV2Config
 
@@ -41,6 +42,14 @@ def export_physical_v2_dataset(
             {
                 "physical_source": model.physical_source,
                 "causal_mechanism": model.causal_mechanism,
+                "effective_channel": (
+                    model.effective_dynamics.expression
+                    if model.effective_dynamics.expression is not None
+                    else model.effective_dynamics.status.value
+                ),
+                "maturity_description": MATURITY_LEVEL_DESCRIPTIONS[
+                    model.maturity_level
+                ],
                 "physical_parameters_json": _strict_json(
                     sample.signature.physical_parameters
                 ),
@@ -74,6 +83,8 @@ def export_physical_v2_dataset(
         "parameter_values_json",
         "physical_parameters_json",
         "physical_regime",
+        "effective_channel",
+        "maturity_description",
     }
     leaked = forbidden.intersection(features.columns)
     if leaked:
