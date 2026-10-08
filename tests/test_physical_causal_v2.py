@@ -7,11 +7,11 @@ from ic_quantum.data.physical_generator_v2 import generate_physical_v2_samples
 from ic_quantum.data.physical_export_v2 import export_physical_v2
 
 
-def test_parallel_catalog_path_resolves_to_authoritative_nine_family_registry():
+def test_parallel_catalog_path_resolves_to_authoritative_eight_family_registry():
     canonical = build_physical_source_registry()
     compatibility = build_physical_v2_registry()
     assert compatibility.list_ids() == canonical.list_ids()
-    assert len(compatibility.list_ids()) == 9
+    assert len(compatibility.list_ids()) == 8
 
 
 def test_parallel_v2_api_symbols_remain_available():
