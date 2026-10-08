@@ -308,18 +308,18 @@ def run_physical_v2_pipeline(output_dir: Path, config) -> dict:
     (evidence / "PHYSICAL_V2_SCIENTIFIC_RESULTS.md").write_text(
         f"""# PHYSICAL_V2_SCIENTIFIC_RESULTS
 
-Dataset: {config.dataset_id}
+Dataset: `{config.dataset_id}`
 
 This expansion quantifies eight non-redundant physical-source/mechanism families
 while preserving the frozen mechanistic v1 baseline. The zero-temperature photon
-reservoir remains in v1 and is represented in v2 as the T=0 limit of the single
+reservoir remains in v1 and is represented in v2 as the $T=0$ limit of the single
 thermal-photon-reservoir family. No ML/QML is trained.
 
 - Valid samples: {len(samples)}
 - Physical-source/mechanism families: {len(registry.list_ids())}
 - Pairwise source pairs: {len(pair_summary)}
 - Multi-probe process pairs: {len(process_overlap["process_pair_summary"])}
-- All source records are LEVEL_3 numerically validated within their stated domains.
+- All source records are `LEVEL_3` numerically validated within their stated domains.
 - The ionizing-radiation family is explicitly phenomenological at the bridge
   from deposited radiation energy/geometry to the initial excess quasiparticle
   fraction.
@@ -384,21 +384,21 @@ The zero-time identity is retained as a real collision. A separate nonzero-time
 minimum is also reported. This is a signature-overlap analysis, not proof that a
 single reduced-state snapshot uniquely determines microscopic cause.
 
-See the physical_pair_summary, physical_probe_overlap,
-physical_mean_nearest_distance_matrix, process_pair_summary,
-process_mean_nearest_distance_matrix, matched_em_thermal_dephasing_summary,
-dephasing_source_trajectories and dephasing_source_shape_summary tables.
+See `physical_pair_summary`, `physical_probe_overlap`,
+`physical_mean_nearest_distance_matrix`, `process_pair_summary`,
+`process_mean_nearest_distance_matrix`, `matched_em_thermal_dephasing_summary`,
+`dephasing_source_trajectories` and `dephasing_source_shape_summary` tables.
 
 The process-response metric concatenates four linearly independent qubit probes
-(0, 1, +, +i) and reports RMS trace distance across them. It is an operational
+($|0\\rangle$, $|1\\rangle$, $|+\\rangle$, $|+i\\rangle$) and reports RMS trace distance across them. It is an operational
 multi-probe metric, not a diamond norm.
 
-For thermal sources, thermal_characteristic_times.csv reports first-passage
-1/e scales T1* and T2*. They are descriptors of the sampled trajectory, not
+For thermal sources, `thermal_characteristic_times.csv` reports first-passage
+$1/e$ scales $T_1^*$ and $T_2^*$. They are descriptors of the sampled trajectory, not
 assumed exponential constants; recurrent models may cross and later revive.
 
-The mechanical_equal_ratio_frequency tables test two longitudinal mechanical
-spectral lines with matched dimensionless coupling ratio g/omega and matched
+The `mechanical_equal_ratio_frequency` tables test two longitudinal mechanical
+spectral lines with matched dimensionless coupling ratio $g/\\omega$ and matched
 thermal occupation. They quantify whether different frequencies still yield
 different signatures on the same physical-time grid.
 """,
@@ -413,7 +413,7 @@ ensemble, thermal, mechanical, radiative, radiation-conditioned and
 charge-fluctuator regimes may instead be nonunitary or only linearly invertible.
 
 No claim of physical recoverability is inferred solely from a non-CPTP linear
-inverse. See physical_reversibility_summary.csv.
+inverse. See `physical_reversibility_summary.csv`.
 """,
         encoding="utf-8",
     )
