@@ -39,19 +39,22 @@ fora de escopo.
 | Ensemble universal 1/f de defeitos | BLOCKED | um RTN físico foi validado; extrapolação universal não é assumida |
 | E0/polarização -> Omega universal | BLOCKED | requer matriz de dipolo e geometria específicas da plataforma |
 
-## Nove famílias físico-causais
+## Oito famílias físico-causais não redundantes
 
 O catálogo autoritativo contém mecanismos distintos, não duplicações por nome:
 
 1. external-magnetic-field-wave;
 2. external-electromagnetic-rabi-drive;
 3. finite-mode-spin-boson-dephasing;
-4. markovian-photon-reservoir-decay;
-5. thermal-photon-reservoir;
-6. mechanical-phonon-mode;
-7. single-mode-mechanical-phonon-dephasing;
-8. ionizing-radiation-quasiparticle-burst;
-9. bistable-charge-fluctuator-rtn.
+4. thermal-photon-reservoir;
+5. mechanical-phonon-mode;
+6. single-mode-mechanical-phonon-dephasing;
+7. ionizing-radiation-quasiparticle-burst;
+8. bistable-charge-fluctuator-rtn.
+
+O markovian-photon-reservoir-decay permanece no v1 como baseline histórico,
+mas não é contado novamente no v2: T=0 é tratado como limite da mesma família
+thermal-photon-reservoir.
 
 O helper estático de campo magnético incorporado da implementação paralela foi
 mantido como API, mas não virou uma décima identidade causal, pois representa o
