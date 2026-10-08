@@ -17,9 +17,9 @@ causal.
 
 ## Hipótese testada
 
-[
+$
 A_i \neq A_j \Longrightarrow? \Sigma_i \neq \Sigma_j.
-]
+$
 
 O teste foi realizado comparando, para o mesmo estado de prova, a mesma taxa
 numérica e o mesmo tempo, os estados reduzidos produzidos por:
@@ -46,7 +46,7 @@ possa ser inferida universalmente de uma única assinatura reduzida neste protoc
 
 ## Dependência do estado de prova
 
-### |0>
+### Estado $|0\rangle$
 
 Todas as 75 comparações foram não-identificáveis dentro da tolerância.
 
@@ -54,20 +54,20 @@ Todas as 75 comparações foram não-identificáveis dentro da tolerância.
 - máximo numérico: aproximadamente 1.1e-16.
 
 Isso ocorre porque, nos dois modelos implementados e com o agente de troca iniciado
-em |0>, o estado |0> é invariável. Portanto, esse estado de prova não contém poder
+em $|0\rangle$, o estado $|0\rangle$ é invariável. Portanto, esse estado de prova não contém poder
 de distinção entre essas duas famílias.
 
-### |1>
+### Estado $|1\rangle$
 
 - média: 0.48;
 - máximo: 1;
 - 10/75 pares não-identificáveis.
 
 O valor máximo 1 ocorre em condições de troca completa de excitação, nas quais a
-dinâmica de relaxação leva |1> a |0>, enquanto a perturbação longitudinal coerente
-mantém as populações de |1>.
+dinâmica de relaxação leva $|1\rangle$ a $|0\rangle$, enquanto a perturbação longitudinal coerente
+mantém as populações de $|1\rangle$.
 
-### Estados equatoriais |+>, |->, |+i>, |-i>
+### Estados equatoriais $|+\rangle$, $|-\rangle$, $|+i\rangle$, $|-i\rangle$
 
 Cada um apresentou:
 
@@ -97,15 +97,15 @@ separabilidade global das famílias.
 
 Os testes também confirmaram que, nesses modelos,
 
-[
+$
 \delta\omega t = \text{constante}
-]
+$
 
 produz a mesma transformação coerente, e que
 
-[
+$
 g t = \text{constante}
-]
+$
 
 produz a mesma dinâmica reduzida do modelo de troca.
 
@@ -122,14 +122,14 @@ Nas 900 amostras:
 - `class_II_reduced_nonunitary_noninvertible`: 42.
 
 As 450 amostras do modelo coerente pertencem à Classe I. O modelo de troca,
-entretanto, muda de classificação conforme (g t):
+entretanto, muda de classificação conforme $gt$:
 
 - em recorrências com canal reduzido identidade, pode aparecer como Classe I;
 - em regime intermediário, o mapa reduzido pode ser linearmente invertível, mas
   sem inversa CPTP;
 - em troca completa, o canal reduzido torna-se não invertível.
 
-Consequentemente, a classificação R_k não deve ser tratada como rótulo imutável de
+Consequentemente, a classificação $R_k$ não deve ser tratada como rótulo imutável de
 uma família causal; ela pode depender de parâmetros e tempo.
 
 ## Conclusão sustentada por este experimento
